@@ -84,6 +84,5 @@ def reset_database():
     ip_store.clear()
 
     return jsonify({'message': 'Database reset successful'}), 200
-
 if __name__ == '__main__':
     app.run(debug=True)
