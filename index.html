@@ -2,280 +2,103 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Our Personality Chemistry</title>
-  <script src="https://gw.alipayobjects.com/os/lib/antv/g6/4.3.11/dist/g6.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Link Directory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
 
-    #mountNode {
-      min-height: 400px;
-    }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
 
-    .legend-line {
-      height: 3px;
-      width: 20px;
-      display: inline-block;
-    }
-  </style>
+        .link-section {
+            margin-bottom: 30px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        h2 {
+            color: #3498db;
+            margin-top: 0;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        a {
+            color: #2980b9;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #e74c3c;
+            text-decoration: underline;
+        }
+
+        .external-link::after {
+            content: " ↗";
+            font-size: 0.8em;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+    </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1 class="mt-4 mb-4">Our Personality Chemistry</h1>
+    <h1>My Link Directory</h1>
 
-    <div id="mountNode"></div>
-
-    <div class="row mt-4">
-      <div class="col">
-        <button onclick="showAllEdges()" class="btn btn-secondary">All</button>
-      </div>
-      <div class="col">
-        <button onclick="showCompatibility('Perfect')" class="btn btn-primary">Perfect</button>
-      </div>
-      <div class="col">
-        <button onclick="showCompatibility('Good')" class="btn btn-success">Good</button>
-      </div>
-      <div class="col">
-        <button onclick="showCompatibility('OK')" class="btn btn-info">OK</button>
-      </div>
-      <div class="col">
-        <button onclick="showCompatibility('Not Bad')" class="btn btn-warning">Not Bad</button>
-      </div>
-      <div class="col">
-        <button onclick="showCompatibility('Disaster')" class="btn btn-danger">Disaster</button>
-      </div>
+    <div class="link-section">
+        <h2>Internal Pages</h2>
+        <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="services.html">Our Services</a></li>
+            <li><a href="portfolio.html">Portfolio</a></li>
+            <li><a href="contact.html">Contact Information</a></li>
+        </ul>
     </div>
 
-    <div class="mt-4">
-      <h2>Add New Person</h2>
-      <input type="text" id="nameInput" placeholder="Name" class="form-control mb-2">
-      <select id="typeInput" class="form-control mb-2">
-        <option value="">Select Personality Type</option>
-        <option value="INTJ">INTJ</option>
-        <option value="INTP">INTP</option>
-        <option value="ENTJ">ENTJ</option>
-        <option value="ENTP">ENTP</option>
-        <option value="INFJ">INFJ</option>
-        <option value="INFP">INFP</option>
-        <option value="ENFJ">ENFJ</option>
-        <option value="ENFP">ENFP</option>
-        <option value="ISTJ">ISTJ</option>
-        <option value="ISFJ">ISFJ</option>
-        <option value="ESTJ">ESTJ</option>
-        <option value="ESFJ">ESFJ</option>
-        <option value="ISTP">ISTP</option>
-        <option value="ISFP">ISFP</option>
-        <option value="ESTP">ESTP</option>
-        <option value="ESFP">ESFP</option>
-      </select>
-      <button onclick="addPerson()" class="btn btn-primary">Add Person</button>
+    <div class="link-section">
+        <h2>Resources</h2>
+        <ul>
+            <li><a href="downloads/brochure.pdf">Download Our Brochure</a></li>
+            <li><a href="blog/index.html">Visit Our Blog</a></li>
+            <li><a href="faq.html">Frequently Asked Questions</a></li>
+        </ul>
     </div>
-  </div>
 
-  <script>
-    let graph;
-    let data = {
-      nodes: [],
-      edges: [],
-      combos: []
-    };
+    <div class="link-section">
+        <h2>External Links</h2>
+        <ul>
+            <li><a href="https://www.example.com" class="external-link" target="_blank">Example Website</a></li>
+            <li><a href="https://www.wikipedia.org" class="external-link" target="_blank">Wikipedia</a></li>
+            <li><a href="https://www.github.com" class="external-link" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
 
-    const compatibilityColors = {
-      'Perfect': '#2D8FF4',
-      'Good': '#36B162',
-      'OK': '#B3D465',
-      'Not Bad': '#FBC140',
-      'Disaster': '#F03A36'
-    };
-
-    // Update this to your deployed backend URL
-    const API_URL = 'https://sravanparkalaa.pythonanywhere.com/';
-
-    function initGraph() {
-      const container = document.getElementById('mountNode');
-      const width = container.scrollWidth;
-      const height = container.scrollHeight || 500;
-
-      graph = new G6.Graph({
-        container: 'mountNode',
-        width,
-        height,
-        layout: {
-          type: 'circular'
-        },
-        defaultNode: {
-          type: 'circle',
-          size: 40,
-          style: {
-            fill: '#91d5ff',
-            stroke: '#40a9ff',
-            lineWidth: 2
-          },
-          labelCfg: {
-            position: 'bottom',
-            offset: 10,
-            style: {
-              fill: '#000',
-              fontSize: 12
-            }
-          }
-        },
-        defaultEdge: {
-          style: {
-            stroke: '#e2e2e2',
-            lineWidth: 2
-          },
-          labelCfg: {
-            autoRotate: true,
-            refY: 20,
-            style: {
-              fill: '#000',
-              fontSize: 10
-            }
-          }
-        },
-        modes: {
-          default: ['drag-canvas', 'zoom-canvas', 'drag-node']
-        }
-      });
-
-      fetchPersons();
-    }
-
-    async function fetchPersons() {
-      try {
-        const response = await axios.get(`${API_URL}/api/persons`);
-        data.nodes = response.data.map((person, index) => ({
-          id: `node_${person.id}`,
-          label: `${person.name}\n${person.mbti}`,
-          comboId: `combo_${person.id}`
-        }));
-        data.combos = response.data.map((person, index) => ({
-          id: `combo_${person.id}`,
-          label: person.mbti
-        }));
-        updateEdges();
-        graph.data(data);
-        graph.render();
-      } catch (error) {
-        console.error('Error fetching persons:', error);
-      }
-    }
-
-    async function addPerson() {
-      const name = document.getElementById('nameInput').value;
-      const mbti = document.getElementById('typeInput').value;
-      if (!name || !mbti) {
-        alert('Please enter both name and personality type');
-        return;
-      }
-
-      try {
-        const response = await axios.post(`https://sravanparkalaa.pythonanywhere.com/api/persons`, { name, mbti });
-        const newPerson = response.data;
-
-        const newNode = {
-          id: `node_${newPerson.id}`,
-          label: `${newPerson.name}\n${newPerson.mbti}`,
-          comboId: `combo_${newPerson.id}`
-        };
-        data.nodes.push(newNode);
-
-        const newCombo = {
-          id: `combo_${newPerson.id}`,
-          label: newPerson.mbti
-        };
-        data.combos.push(newCombo);
-
-        updateEdges();
-        graph.changeData(data);
-
-        document.getElementById('nameInput').value = '';
-        document.getElementById('typeInput').value = '';
-      } catch (error) {
-        console.error('Error adding person:', error);
-        alert('Failed to add person. Please try again.');
-      }
-    }
-
-    function updateEdges() {
-      data.edges = [];
-      for (let i = 0; i < data.nodes.length; i++) {
-        for (let j = i + 1; j < data.nodes.length; j++) {
-          const compatibility = getCompatibility(data.nodes[i].comboId.split('_')[1], data.nodes[j].comboId.split('_')[1]);
-          data.edges.push({
-            source: data.nodes[i].id,
-            target: data.nodes[j].id,
-            label: compatibility,
-            style: {
-              stroke: compatibilityColors[compatibility]
-            }
-          });
-        }
-      }
-    }
-
-    function getCompatibility(type1, type2) {
-      // This is a simplified compatibility check. In a real application,
-      // you would have a more comprehensive compatibility matrix.
-      var count = 0;
-      for (let i = 0; i < type1.length; i++) {
-        if (type1[i] == type2[i]) {
-          count += 1;
-        }
-      }
-      compatibilityMatrix = {
-        4: 'Perfect',
-        3: 'Good',
-        2: 'OK',
-        1: 'Not Bad',
-        0: 'Disaster'
-      }
-      return compatibilityMatrix[count];
-    }
-
-    function showCompatibility(label) {
-      graph.getEdges().forEach(edge => {
-        const model = edge.getModel();
-        if (model.label === label) {
-          edge.update({
-            style: {
-              stroke: compatibilityColors[label],
-              opacity: 1
-            }
-          });
-        } else {
-          edge.update({
-            style: {
-              opacity: 0.1
-            }
-          });
-        }
-      });
-      graph.paint();
-    }
-
-    function showAllEdges() {
-      graph.getEdges().forEach(edge => {
-        const model = edge.getModel();
-        edge.update({
-          style: {
-            stroke: compatibilityColors[model.label],
-            opacity: 1
-          }
-        });
-      });
-      graph.paint();
-    }
-
-    initGraph();
-  </script>
+    <footer>
+        &copy; 2025 My Website. All rights reserved.
+    </footer>
 </body>
 
 </html>
