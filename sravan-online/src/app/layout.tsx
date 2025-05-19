@@ -1,7 +1,8 @@
-'use client';
+// RootLayout.tsx (server component)
+import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider, createTheme } from "@mui/material";
+import ThemeRegistry from "./ThemeRegistry";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,49 +14,18 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#1976d2",
-    },
-    secondary: {
-      main: "#dc004e",
-    },
-    background: {
-      default: "#f5f5f5",
-      paper: "#fff",
-    },
-  },
-  typography: {
-    h1: {
-      fontSize: "2rem",
-      fontWeight: 700,
-    },
-    h2: {
-      fontSize: "1.5rem",
-      fontWeight: 600,
-    },
-    h3: {
-      fontSize: "1.25rem",
-      fontWeight: 500,
-    },
-  }
-});
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <ThemeProvider theme={theme}>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          {children}
-        </body>
-      </html>
-    </ThemeProvider>
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <ThemeRegistry>{children}</ThemeRegistry>
+      </body>
+    </html>
   );
 }
