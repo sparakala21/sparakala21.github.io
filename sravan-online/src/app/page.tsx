@@ -1,28 +1,26 @@
 "use client";
 
 import * as React from 'react';
-import { Button, Container, Typography, Box  } from '@mui/material';
+import { Button, Container, Typography, Box } from '@mui/material';
 
 export default function Home() {
   return (
      <Container 
        sx={{ 
-         bgcolor: 'eggshell', 
+         bgcolor: '#f0ead6',
          height: "100vh",
-         display: 'flex',
-         flexDirection: 'row', // Change to column layout
-         alignItems: 'flex-start', // Align items to the left
-         pt: 4, // Add some padding at the top
+         padding: 3,
+         position: 'relative', // Add this for absolute positioning context
        }}
      >
         <Typography
           variant="h1"
           sx={{
-
-            justifyContent: 'left',
-            marginBottom: '20px',}}>
+            marginBottom: '20px',
+          }}>
           Hello World
         </Typography>
+        
         <Box sx={{ textAlign: 'right' }}>
           <Button
             variant="contained"
@@ -34,7 +32,20 @@ export default function Home() {
               },
             }}
           >
-            Press to press button
+            Resume
+          </Button>
+
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: 'primary.main',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: 'primary.dark',
+              },
+            }}
+          >
+            Contact me
           </Button>
         </Box>
      </Container>
