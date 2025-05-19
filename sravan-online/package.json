@@ -1,7 +1,7 @@
 {
   "name": "sravan-online",
   "version": "0.1.0",
-  "homepage": "https://gitname.github.io/sravan-online",
+  "homepage": "https://sparakala21.github.io/sravan-online",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
