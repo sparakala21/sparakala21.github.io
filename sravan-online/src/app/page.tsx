@@ -3,7 +3,7 @@
 import * as React from 'react';
 import {Container, Typography } from '@mui/material';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar'; // Importing the AppBar component
-
+import SummaryCard from '@/components/SummaryCard';
 export default function Home() {
   return (
     <>
@@ -29,6 +29,53 @@ export default function Home() {
         >
           Hey!
         </Typography>
+        <Typography 
+          variant="h2" 
+          component="h2" 
+          gutterBottom
+          sx={{ 
+            mt: 2, // Margin top
+            mb: 4, // Margin bottom 
+            align: 'center', // Center align text
+          }}
+        >
+          I'm Sravan
+        </Typography>
+        <Container
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'row', sm: 'row' }, // Stack on small screens, row on larger
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            flexWrap: 'wrap', // Allow wrapping
+            gap: 2, // Space between cards
+            padding: 2, // Padding around the container
+            backgroundColor: '#ffffff', // Background color
+            borderRadius: 2, // Rounded corners
+            boxShadow: 1, // Shadow for depth
+          }}
+        >
+        <SummaryCard
+          title="About Me"
+          description="I am a software engineer with a great fear of making web apps and learning new technologies."
+        />
+        <SummaryCard
+          title="My Projects"
+          description="I have some projects. Check out my GitHub for more details."
+        />
+        <SummaryCard
+          title="Contact Me"
+          description="Feel free to reach out to me via email or connect with me on LinkedIn."
+        />
+        <SummaryCard
+          title="My Resume"
+          description="You can find my resume here. I am open to new opportunities and collaborations."
+        />
+        <SummaryCard
+          title="My Blog"
+          description="I write about my journey and experiences as a software engineer. Check out my blog for more insights."
+        />
+        </Container>
       </Container>
     </>
   );
