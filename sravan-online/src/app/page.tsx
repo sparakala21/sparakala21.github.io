@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from 'react';
-import {Container } from '@mui/material';
+import {Container, Typography } from '@mui/material';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar'; // Importing the AppBar component
 
 export default function Home() {
@@ -12,10 +12,23 @@ export default function Home() {
         sx={{ 
           bgcolor: '#f0ead6',
           minHeight: "calc(100vh - 64px)", // Adjust for AppBar height
-          padding: 3,
+          py: 4, // Vertical padding (top/bottom)
+          px: { xs: 2, sm: 3, md: 4 }, // Responsive horizontal padding
           position: 'relative',
         }}
       >
+        <Typography 
+          variant="h1" 
+          component="h1" 
+          gutterBottom
+          sx={{ 
+            mt: 2, // Margin top
+            mb: 4, // Margin bottom 
+            align: 'center', // Center align text
+          }}
+        >
+          Hey!
+        </Typography>
       </Container>
     </>
   );
