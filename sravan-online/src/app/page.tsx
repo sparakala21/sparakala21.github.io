@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from 'react';
-import {Container, Typography } from '@mui/material';
+import {Container } from '@mui/material';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar'; // Importing the AppBar component
 
 export default function Home() {
