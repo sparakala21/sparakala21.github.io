@@ -16,14 +16,6 @@ export default function Home() {
           position: 'relative',
         }}
       >
-        <Typography
-          variant="h1"
-          sx={{
-            marginBottom: '20px',
-            paddingTop: 2, // Add some space at the top
-          }}>
-          Hello World
-        </Typography>
       </Container>
     </>
   );
