@@ -2,8 +2,9 @@
 
 import * as React from 'react';
 import {Container, Typography } from '@mui/material';
-import ResponsiveAppBar from '@/components/ResponsiveAppBar'; // Importing the AppBar component
+import ResponsiveAppBar from '@/components/ResponsiveAppBar';
 import SummaryCard from '@/components/SummaryCard';
+import LatestCommitCard from '@/components/LatestCommitCard'; 
 export default function Home() {
   return (
     <>
@@ -17,18 +18,6 @@ export default function Home() {
           position: 'relative',
         }}
       >
-        <Typography 
-          variant="h1" 
-          component="h1" 
-          gutterBottom
-          sx={{ 
-            mt: 2, // Margin top
-            mb: 4, // Margin bottom 
-            align: 'center', // Center align text
-          }}
-        >
-          Hey!
-        </Typography>
         <Typography 
           variant="h2" 
           component="h2" 
@@ -70,10 +59,6 @@ export default function Home() {
         <SummaryCard
           title="My Resume"
           description="You can find my resume here. I am open to new opportunities and collaborations."
-        />
-        <SummaryCard
-          title="Website Changelog"
-          description="I write about my journey and experiences as a software engineer. Check out my blog for more insights."
         />
         </Container>
       </Container>

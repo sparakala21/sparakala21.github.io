@@ -4,6 +4,7 @@
 import { ThemeProvider, createTheme } from "@mui/material";
 import React from "react";
 
+// Create a single theme with all properties combined
 const theme = createTheme({
   palette: {
     primary: {
@@ -30,7 +31,28 @@ const theme = createTheme({
       fontSize: "1.25rem",
       fontWeight: 500,
     },
-  }
+  },
+  components: {
+    MuiButtonBase: {
+      defaultProps: {
+        disableRipple: true, // Disables ripple globally
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          transition: 'transform 0.1s, background-color 0.1s',
+          '&:active': {
+            transform: 'translateY(2px)', // Small movement on click
+          },
+          '&:hover': {
+            backgroundColor: 'rgba(255, 255, 255, 0.05)', // Very subtle hover state
+          },
+          outline: '000000'
+        },
+      },
+    },
+  },
 });
 
 export default function ThemeRegistry({
