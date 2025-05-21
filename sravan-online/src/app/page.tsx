@@ -72,7 +72,7 @@ export default function Home() {
           description="You can find my resume here. I am open to new opportunities and collaborations."
         />
         <SummaryCard
-          title="My Blog"
+          title="Website Changelog"
           description="I write about my journey and experiences as a software engineer. Check out my blog for more insights."
         />
         </Container>
