@@ -39,7 +39,7 @@ export default function Home() {
             align: 'center', // Center align text
           }}
         >
-          I&aposm Sravan
+          I\'m Sravan
         </Typography>
         <Container
           sx={{
@@ -48,7 +48,7 @@ export default function Home() {
             justifyContent: 'space-around',
             alignItems: 'center',
             flexWrap: 'wrap', // Allow wrapping
-            gap: 2, // Space between cards
+            gap: 1, // Space between cards
             padding: 2, // Padding around the container
             backgroundColor: '#ffffff', // Background color
             borderRadius: 2, // Rounded corners
