@@ -39,7 +39,7 @@ export default function Home() {
             align: 'center', // Center align text
           }}
         >
-          I\'m Sravan
+          I&apos;m Sravan
         </Typography>
         <Container
           sx={{
