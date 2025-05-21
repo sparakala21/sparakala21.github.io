@@ -4,7 +4,6 @@ import * as React from 'react';
 import {Container, Typography } from '@mui/material';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar';
 import SummaryCard from '@/components/SummaryCard';
-import LatestCommitCard from '@/components/LatestCommitCard'; 
 export default function Home() {
   return (
     <>
