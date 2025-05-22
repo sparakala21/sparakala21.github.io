@@ -3,6 +3,7 @@
 import * as React from 'react';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar';
 import { Container, Typography } from '@mui/material';
+import Button from '@mui/material/Button';
 
 export default function Story() {
     return (
@@ -30,16 +31,7 @@ export default function Story() {
                 >
                     ATChess
                 </Typography>
-                <image
-                    // src="/images/at-chess.png"
-                    alt="ATChess"
-                    style={{
-                        maxWidth: '100%',
-                        height: 'auto',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                    }}
-                />
+
                 <Typography
                     variant="h2"
                     component="h2"
@@ -65,8 +57,33 @@ export default function Story() {
                     ATChess is a chess variant that allows players to play chess in Active-Time instead of turn-based.
                     The game has all the same rules as chess, but players make moves based on cooldowns instead of turns.
                     Instead of checkmate, the game ends when one players king is captured.
-                    I&apos;m currently working on porting the game to a web site.
                 </Typography>
+                                <Button
+                    disableRipple // This removes the ripple effect
+                    color="secondary"
+                    sx={{ 
+                      my: 2, 
+                      color: 'white', 
+                      display: 'block',
+                      transition: 'transform 0.1s, background-color 0.1s',
+                      '&:active': {
+                        transform: 'translateY(2px)', // Small movement on click
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)' // Subtle background change
+                      },
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)' // Very subtle hover state
+                      }
+                    }}
+                  >
+                    <a href="https://atchess.onrender.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                            textDecoration: 'none',
+                            color: 'secondary',
+                        }}
+                    >Click here to check it out!</a>
+                </Button>
                 <Typography
                     variant="h1"
                     component="h1"
@@ -79,16 +96,7 @@ export default function Story() {
                 >
                     Music Recommender
                 </Typography>
-                <image
-                    // src="/images/spotify.png"
-                    alt="Unnamed Spotify Recommendation System"
-                    style={{   
-                        maxWidth: '100%',
-                        height: 'auto',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                    }}
-                />
+
                 <Typography
                     variant="h2"
                     component="h2"
@@ -131,16 +139,6 @@ export default function Story() {
                 >
                     Thunder Mountain Curry
                 </Typography>
-                <image
-                    // src="/../../../public/thunder-mountain-curry.png"
-                    alt="Thunder Mountain Curry"
-                    style={{    
-                        maxWidth: '100%',
-                        height: 'auto',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                    }}
-                />
                 <Typography
                     variant="h2"
                     component="h2"
