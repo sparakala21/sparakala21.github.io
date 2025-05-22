@@ -56,7 +56,8 @@ export default function Story() {
                 >
                     ATChess is a chess variant that allows players to play chess in Active-Time instead of turn-based.
                     The game has all the same rules as chess, but players make moves based on cooldowns instead of turns.
-                    Instead of checkmate, the game ends when one players king is captured.
+                    Instead of checkmate, the game ends when one players king is captured. 
+                    I worked on this project with James Baker, Emmanuel David, Brenden Kiely, and Marcus Moreno.
                 </Typography>
                                 <Button
                     disableRipple // This removes the ripple effect
@@ -125,7 +126,7 @@ export default function Story() {
                     The graph is built using the Spotify API to get the top artists for each user.
                     The graph is then used to find the best artists to recommend to you.
                     Unfortunately as of last year, the endpoints I used to get related artists is no longer available to the public.
-                    this project has since been abandones, but I may pick it up again in the future.
+                    this project has since been abandoned, but I may pick it up again in the future.
                 </Typography>
                 <Typography
                     variant="h1"

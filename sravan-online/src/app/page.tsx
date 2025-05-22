@@ -45,7 +45,7 @@ export default function Home() {
         >
         <SummaryCard
           title="About Me"
-          description="I am a software engineer with a great fear of making web apps and learning new technologies."
+          description="Just like anyone else, I consider myself a multifaceted person. I could be a lot of things. A software engineer, a data scientist, a teacher, a roboticist, a cricket player, and chess player. I hope you can find experiences that resonate with you. If not, I hope enjoy the games I have linked here and there. :)"
         />
         <SummaryCard
           title="My Projects"
