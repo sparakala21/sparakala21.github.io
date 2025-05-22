@@ -65,7 +65,7 @@ export default function Story() {
                     ATChess is a chess variant that allows players to play chess in Active-Time instead of turn-based.
                     The game has all the same rules as chess, but players make moves based on cooldowns instead of turns.
                     Instead of checkmate, the game ends when one players king is captured.
-                    I'm currently working on porting the game to a web site.
+                    I&apos;m currently working on porting the game to a web site.
                 </Typography>
                 <Typography
                     variant="h1"
