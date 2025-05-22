@@ -31,7 +31,7 @@ export default function Story() {
                     ATChess
                 </Typography>
                 <image
-                    src="/images/at-chess.png"
+                    // src="/images/at-chess.png"
                     alt="ATChess"
                     style={{
                         maxWidth: '100%',
@@ -80,7 +80,7 @@ export default function Story() {
                     Music Recommender
                 </Typography>
                 <image
-                    src="/images/spotify.png"
+                    // src="/images/spotify.png"
                     alt="Unnamed Spotify Recommendation System"
                     style={{   
                         maxWidth: '100%',
@@ -132,7 +132,7 @@ export default function Story() {
                     Thunder Mountain Curry
                 </Typography>
                 <image
-                    src="/../../../public/thunder-mountain-curry.png"
+                    // src="/../../../public/thunder-mountain-curry.png"
                     alt="Thunder Mountain Curry"
                     style={{    
                         maxWidth: '100%',
