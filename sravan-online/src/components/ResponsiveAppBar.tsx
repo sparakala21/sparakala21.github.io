@@ -14,7 +14,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
 
 const pageRoutes = [
-  { name: 'My Story', path: '/my-story' },
+  { name: 'Resume', path: '/resume' },
   { name: 'Projects', path: '/projects' },
   { name: 'Contact', path: '/contact-me' }
 ];
