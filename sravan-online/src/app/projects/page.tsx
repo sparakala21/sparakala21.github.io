@@ -7,7 +7,6 @@ import Button from '@mui/material/Button';
 
 export default function Story() {
     return (
-
         <>
             <ResponsiveAppBar />
             <Container
@@ -26,7 +25,7 @@ export default function Story() {
                     sx={{
                         mt: 2, // Margin top
                         mb: 4, // Margin bottom 
-                        align: 'center', // Center align text
+                        textAlign: 'center', // Fixed: was 'align'
                     }}
                 >
                     ATChess
@@ -39,7 +38,7 @@ export default function Story() {
                     sx={{
                         mt: 2, // Margin top
                         mb: 4, // Margin bottom 
-                        align: 'center', // Center align text
+                        textAlign: 'center', // Fixed: was 'align'
                     }}
                 >
                     Description
@@ -51,7 +50,7 @@ export default function Story() {
                     sx={{
                         mt: 2, // Margin top
                         mb: 4, // Margin bottom 
-                        align: 'center', // Center align text
+                        textAlign: 'center', // Fixed: was 'align'
                     }}
                 >
                     ATChess is a chess variant that allows players to play chess in Active-Time instead of turn-based.
@@ -59,13 +58,14 @@ export default function Story() {
                     Instead of checkmate, the game ends when one players king is captured. 
                     I worked on this project with James Baker, Emmanuel David, Brenden Kiely, and Marcus Moreno.
                 </Typography>
-                                <Button
+                <Button
                     disableRipple // This removes the ripple effect
                     color="secondary"
                     sx={{ 
                       my: 2, 
                       color: 'white', 
                       display: 'block',
+                      mx: 'auto', // Center the button
                       transition: 'transform 0.1s, background-color 0.1s',
                       '&:active': {
                         transform: 'translateY(2px)', // Small movement on click
@@ -75,15 +75,17 @@ export default function Story() {
                         backgroundColor: 'rgba(255, 255, 255, 0.05)' // Very subtle hover state
                       }
                     }}
-                  >
+                >
                     <a href="https://atchess.onrender.com"
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
                             textDecoration: 'none',
-                            color: 'secondary',
+                            color: 'inherit', // Fixed: inherit button's color
                         }}
-                    >Click here to check it out!</a>
+                    >
+                        Click here to check it out!
+                    </a>
                 </Button>
                 <Typography
                     variant="h1"
@@ -92,7 +94,7 @@ export default function Story() {
                     sx={{
                         mt: 2, // Margin top
                         mb: 4, // Margin bottom 
-                        align: 'center', // Center align text
+                        textAlign: 'center', // Fixed: was 'align'
                     }}
                 >
                     Music Recommender
@@ -105,7 +107,7 @@ export default function Story() {
                     sx={{
                         mt: 2, // Margin top
                         mb: 4, // Margin bottom 
-                        align: 'center', // Center align text
+                        textAlign: 'center', // Fixed: was 'align'
                     }}
                 >
                     Description
@@ -117,17 +119,43 @@ export default function Story() {
                     sx={{
                         mt: 2, // Margin top
                         mb: 4, // Margin bottom 
-                        align: 'center', // Center align text
+                        textAlign: 'center', // Fixed: was 'align'
                     }}
                 >
                     This is a music recommendation system based on the Spotify API.
-                    It then uses graph theory to find the best artists to recommend to you.
-                    The system uses a graph to represent the relationships between artists and users.
-                    The graph is built using the Spotify API to get the top artists for each user.
-                    The graph is then used to find the best artists to recommend to you.
                     Unfortunately as of last year, the endpoints I used to get related artists is no longer available to the public.
-                    this project has since been abandoned, but I may pick it up again in the future.
+                    this project has since been abandoned, but I may pick it up again in the future. 
+                    Thank you to my Professor Ahmed Eleish for helping me with this project.
                 </Typography>
+                <Button
+                    disableRipple // This removes the ripple effect
+                    color="secondary"
+                    sx={{ 
+                      my: 2, 
+                      color: 'white', 
+                      display: 'block',
+                      mx: 'auto', // Center the button
+                      transition: 'transform 0.1s, background-color 0.1s',
+                      '&:active': {
+                        transform: 'translateY(2px)', // Small movement on click
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)' // Subtle background change
+                      },
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)' // Very subtle hover state
+                      }
+                    }}
+                >
+                    <a href="music-recommender/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                            textDecoration: 'none',
+                            color: 'inherit', // Fixed: inherit button's color
+                        }}
+                    >
+                        Click here to learn more!
+                    </a>
+                </Button>
                 <Typography
                     variant="h1"
                     component="h1"
@@ -135,7 +163,7 @@ export default function Story() {
                     sx={{
                         mt: 2, // Margin top
                         mb: 4, // Margin bottom 
-                        align: 'center', // Center align text
+                        textAlign: 'center', // Fixed: was 'align'
                     }}
                 >
                     Thunder Mountain Curry
@@ -147,7 +175,7 @@ export default function Story() {
                     sx={{
                         mt: 2, // Margin top
                         mb: 4, // Margin bottom 
-                        align: 'center', // Center align text
+                        textAlign: 'center', // Fixed: was 'align'
                     }}
                 >
                     Description
@@ -155,5 +183,4 @@ export default function Story() {
             </Container>
         </>
     )
-
 }
