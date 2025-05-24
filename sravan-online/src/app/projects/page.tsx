@@ -4,7 +4,8 @@ import * as React from 'react';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar';
 import { Container, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
-
+import MuiButton from '@mui/material/Button';
+import Link from 'next/link';
 export default function Story() {
     return (
         <>
@@ -58,35 +59,35 @@ export default function Story() {
                     Instead of checkmate, the game ends when one players king is captured. 
                     I worked on this project with James Baker, Emmanuel David, Brenden Kiely, and Marcus Moreno.
                 </Typography>
-                <Button
-                    disableRipple // This removes the ripple effect
-                    color="secondary"
-                    sx={{ 
-                      my: 2, 
-                      color: 'black', 
-                      display: 'block',
-                      mx: 'auto', // Center the button
-                      transition: 'transform 0.1s, background-color 0.1s',
-                      '&:active': {
-                        transform: 'translateY(2px)', // Small movement on click
-                        backgroundColor: 'rgba(255, 255, 255, 0.1)' // Subtle background change
-                      },
-                      '&:hover': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)' // Very subtle hover state
-                      }
+                <Container
+                    sx={{
+                        display: 'flex',
+                        flexDirection: { xs: 'row', sm: 'row' }, // Stack on small screens, row on larger
+                        justifyContent: 'space-around',
+                        alignItems: 'center',
+                        flexWrap: 'wrap', // Allow wrapping
+                        gap: 1, // Space between cards
+                        padding: 2, // Padding around the container
+                        backgroundColor: '2C2C2C', // Background color
+                        borderRadius: 2, // Rounded corners
+                        boxShadow: 1, // Shadow for depth
                     }}
                 >
-                    <a href="https://atchess.onrender.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                            textDecoration: 'none',
-                            color: 'inherit', // Fixed: inherit button's color
-                        }}
+                    <MuiButton
+                    color ="secondary"
                     >
-                        Click here to check it out!
-                    </a>
-                </Button>
+                        <a href="https://atchess.onrender.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                textDecoration: 'none',
+                                color: 'inherit', // Fixed: inherit button's color
+                            }}
+                        >
+                            Click here then send the url to a friend to play!
+                        </a>
+                    </MuiButton>
+                </Container>
                 <Typography
                     variant="h1"
                     component="h1"
@@ -127,35 +128,38 @@ export default function Story() {
                     this project has since been abandoned, but I may pick it up again in the future. 
                     Thank you to my Professor Ahmed Eleish for helping me with this project.
                 </Typography>
-                <Button
-                    disableRipple // This removes the ripple effect
-                    color="secondary"
-                    sx={{ 
-                      my: 2, 
-                      color: 'black', 
-                      display: 'block',
-                      mx: 'auto', // Center the button
-                      transition: 'transform 0.1s, background-color 0.1s',
-                      '&:active': {
-                        transform: 'translateY(2px)', // Small movement on click
-                        backgroundColor: 'rgba(255, 255, 255, 0.1)' // Subtle background change
-                      },
-                      '&:hover': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)' // Very subtle hover state
-                      }
+                <Container
+                    sx={{
+                        display: 'flex',
+                        flexDirection: { xs: 'row', sm: 'row' }, // Stack on small screens, row on larger
+                        justifyContent: 'space-around',
+                        alignItems: 'center',
+                        flexWrap: 'wrap', // Allow wrapping
+                        gap: 1, // Space between cards
+                        padding: 1, // Padding around the container
+                        backgroundColor: '#2C2C2C', // Background color
+                        borderRadius: 2, // Rounded corners
+                        boxShadow: 1, // Shadow for depth
+                        
                     }}
                 >
-                    <a href="music-recommender/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                            textDecoration: 'none',
-                            color: 'inherit', // Fixed: inherit button's color
-                        }}
-                    >
-                        Click here to learn more!
-                    </a>
-                </Button>
+                    <Link href={'/music-recommender'} passHref style={{ textDecoration: 'none' }}>
+                        <MuiButton>
+                            <Typography
+                                variant="h3"
+                                component="h3"
+                                gutterBottom
+                                sx={{
+                                    mt: 2, // Margin top
+                                    mb: 4, // Margin bottom 
+                                    textAlign: 'center', // Fixed: was 'align'
+                                }}
+                            >
+                                Read more
+                            </Typography>
+                        </MuiButton>
+                    </Link>
+                </Container>
                 <Typography
                     variant="h1"
                     component="h1"

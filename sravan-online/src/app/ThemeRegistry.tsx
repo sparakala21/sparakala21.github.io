@@ -39,6 +39,8 @@ const theme = createTheme({
     MuiButtonBase: {
       defaultProps: {
         disableRipple: true, // Disables ripple globally
+        color: 'white',
+
       },
     },
     MuiButton: {
@@ -52,6 +54,44 @@ const theme = createTheme({
             backgroundColor: 'rgba(255, 255, 255, 0.05)', // Very subtle hover state
           },
           outline: '000000'
+        },
+      },
+    },
+    // Add explicit width constraints
+    MuiContainer: {
+      defaultProps: {
+        maxWidth: false, // Options: 'xs', 'sm', 'md', 'lg', 'xl', or false for no limit
+      },
+      styleOverrides: {
+        root: {
+          width: '100%', // Explicit pixel width
+          margin: '0 auto',   // Center the container
+          paddingLeft: '8px',
+          paddingRight: '16px',
+        },
+      },
+    },
+    // Make AppBar match the same width
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          '& .MuiToolbar-root': {
+            maxWidth: '1200px', // Match container width
+            margin: '0 auto',
+            width: '100%',
+          },
+        },
+      },
+    },
+    // Alternative: Style all content areas consistently
+    MuiBox: {
+      styleOverrides: {
+        root: {
+          '&.main-content': {
+            maxWidth: '1200px',
+            margin: '0 auto',
+            width: '100%',
+          },
         },
       },
     },
