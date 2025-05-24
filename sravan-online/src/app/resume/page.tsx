@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar';
-import { Container, Typography } from '@mui/material';
+import { Container } from '@mui/material';
 import PDFPage from '@/components/PDFPage';
 
 export default function Story() {
