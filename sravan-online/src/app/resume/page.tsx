@@ -19,18 +19,6 @@ export default function Story() {
                     position: 'relative',
                 }}
             >
-                <Typography
-                    variant="h2"
-                    component="h2"
-                    gutterBottom
-                    sx={{
-                        mt: 2,
-                        mb: 4,
-                        textAlign: 'center', // Fixed alignment
-                    }}
-                >
-                    A brief overview of my journey
-                </Typography>
                 <PDFPage/>
             </Container>
         </>
