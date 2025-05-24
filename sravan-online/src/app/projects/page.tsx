@@ -3,7 +3,6 @@
 import * as React from 'react';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar';
 import { Container, Typography } from '@mui/material';
-import Button from '@mui/material/Button';
 import MuiButton from '@mui/material/Button';
 import Link from 'next/link';
 export default function Story() {
@@ -140,7 +139,7 @@ export default function Story() {
                         backgroundColor: '#2C2C2C', // Background color
                         borderRadius: 2, // Rounded corners
                         boxShadow: 1, // Shadow for depth
-                        
+
                     }}
                 >
                     <Link href={'/music-recommender'} passHref style={{ textDecoration: 'none' }}>
