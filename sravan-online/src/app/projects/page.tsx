@@ -113,8 +113,8 @@ export default function Story() {
                     Description
                 </Typography>
                 <Typography
-                    variant="body1"
-                    component="p"   
+                    variant="h3"
+                    component="h3"   
                     gutterBottom
                     sx={{
                         mt: 2, // Margin top
