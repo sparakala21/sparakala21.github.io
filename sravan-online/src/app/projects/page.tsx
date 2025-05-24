@@ -44,8 +44,8 @@ export default function Story() {
                     Description
                 </Typography>
                 <Typography
-                    variant="body1"
-                    component="p"
+                    variant="h3"
+                    component="h3"
                     gutterBottom
                     sx={{
                         mt: 2, // Margin top
@@ -63,7 +63,7 @@ export default function Story() {
                     color="secondary"
                     sx={{ 
                       my: 2, 
-                      color: 'white', 
+                      color: 'black', 
                       display: 'block',
                       mx: 'auto', // Center the button
                       transition: 'transform 0.1s, background-color 0.1s',
@@ -132,7 +132,7 @@ export default function Story() {
                     color="secondary"
                     sx={{ 
                       my: 2, 
-                      color: 'white', 
+                      color: 'black', 
                       display: 'block',
                       mx: 'auto', // Center the button
                       transition: 'transform 0.1s, background-color 0.1s',
