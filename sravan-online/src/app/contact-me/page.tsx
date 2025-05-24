@@ -42,6 +42,22 @@ export default function Story() {
                 >
                     Ways to contact me
                 </Typography>
+                <Typography
+                    variant="h3"
+                    component="h3"
+                    gutterBottom
+                    sx={{
+                        mt: 2, // Margin top
+                        mb: 4, // Margin bottom 
+                        align: 'center', // Center align text
+                    }}
+                >
+                    <a href="mailto:sravanparakala@gmail.com">
+                    Personal Email
+                    </a>
+                    LinkedIn <a href="https://www.linkedin.com/in/sravan-parakala/">here</a>
+                    GitHub <a href="github.com/sparakala21">here</a>
+                </Typography>
             </Container>
         </>
     )
