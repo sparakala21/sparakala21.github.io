@@ -45,19 +45,7 @@ export default function Home() {
         >
         <SummaryCard
           title="About Me"
-          description="Just like anyone else, I consider myself a multifaceted person. I could be a lot of things. A software engineer, a data scientist, a teacher, a roboticist, a cricket player, and chess player. I hope you can find experiences that resonate with you. If not, I hope enjoy the games I have linked here and there. :)"
-        />
-        <SummaryCard
-          title="My Projects"
-          description="I have some projects. Check out my GitHub for more details."
-        />
-        <SummaryCard
-          title="Contact Me"
-          description="Feel free to reach out to me via email or connect with me on LinkedIn."
-        />
-        <SummaryCard
-          title="My Resume"
-          description="You can find my resume here. I am open to new opportunities and collaborations."
+          description="I play chess, I like to code and I love to learn and teach."
         />
         </Container>
       </Container>

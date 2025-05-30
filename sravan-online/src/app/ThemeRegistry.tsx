@@ -3,6 +3,7 @@
 
 import { ThemeProvider, createTheme } from "@mui/material";
 import React from "react";
+import {MuiBox} from "@mui/material/Box";
 
 // Create a single theme with all properties combined
 const theme = createTheme({
@@ -77,18 +78,6 @@ const theme = createTheme({
         root: {
           '& .MuiToolbar-root': {
             maxWidth: '1200px', // Match container width
-            margin: '0 auto',
-            width: '100%',
-          },
-        },
-      },
-    },
-    // Alternative: Style all content areas consistently
-    MuiBox: {
-      styleOverrides: {
-        root: {
-          '&.main-content': {
-            maxWidth: '1200px',
             margin: '0 auto',
             width: '100%',
           },
