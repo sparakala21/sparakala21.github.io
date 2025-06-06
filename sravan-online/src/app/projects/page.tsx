@@ -99,6 +99,10 @@ export default function Story() {
                 >
                     Music Recommender
                 </Typography>
+                
+                <Link href={'/music-recommender'} passHref style={{ textDecoration: 'none', color: 'inherit' }}>
+                      <Typography sx={{ textAlign: 'center' }}>{'click here'}</Typography>
+                    </Link>
 
                 <Typography
                     variant="h2"
