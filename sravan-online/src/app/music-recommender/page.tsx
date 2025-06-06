@@ -192,7 +192,7 @@ const EmbeddingVisualizer: React.FC = () => {
             Artist Collaboration Network
         </Typography>
         <Typography variant="h3" >
-          Using the power of Dimensionality Reduction, we can visualize the relationships between artists based on other similar artists. I'll have a writeup ready soon.
+          Using the power of Dimensionality Reduction, we can visualize the relationships between artists based on other similar artists. I&apos;ll have a writeup ready soon.
         </Typography>
         <div className="flex gap-4 mb-4">
           <div>
