@@ -13,7 +13,7 @@ interface Node {
 
 interface EmbeddingMetadata {
   method: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface EmbeddingData {
