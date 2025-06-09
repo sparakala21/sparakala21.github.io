@@ -202,7 +202,7 @@ export default function Contact() {
                             <Typography 
                                 variant="h6" 
                                 gutterBottom
-                                sx={{ color: 'white', fontWeight: 'bold' }}
+                                sx={{ color: 'black', fontWeight: 'bold' }}
                             >
                                 Let's Build Something Amazing Together
                             </Typography>
