@@ -8,8 +8,8 @@ import {
     Box, 
     Card, 
     CardContent, 
-    Grid,
     Fade,
+    useTheme
 } from '@mui/material';
 import { 
     Email as EmailIcon, 
@@ -18,6 +18,7 @@ import {
 } from '@mui/icons-material';
 
 export default function Contact() {
+    const theme = useTheme();
     
     const contactMethods = [
         {
@@ -46,17 +47,16 @@ export default function Contact() {
     return (
         <>
             <ResponsiveAppBar />
-            <Box
-            >
-                <Container
-                    sx={{
-                        bgcolor: '#f0ead6',
-                        minHeight: "calc(100vh - 64px)",
-                        py: 4, 
-                        px: { xs: 2, sm: 3, md: 4 },
-                        position: 'relative',
-                    }}
-                >
+            <Container
+                            sx={{
+                                bgcolor: '#f0ead6',
+                                minHeight: "calc(100vh - 64px)", // Adjust for AppBar height
+                                py: 4, // Vertical padding (top/bottom)
+                                px: { xs: 2, sm: 3, md: 4 }, // Responsive horizontal padding
+                                position: 'relative',
+                            }}
+                        >
+                <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
                     <Fade in timeout={800}>
                         <Box textAlign="center" mb={6}>
                             <Typography
@@ -87,9 +87,24 @@ export default function Contact() {
                         </Box>
                     </Fade>
 
-                    <Grid container spacing={4} justifyContent="center">
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: 4,
+                            justifyContent: 'center',
+                            alignItems: 'stretch'
+                        }}
+                    >
                         {contactMethods.map((method, index) => (
-                            <Grid item xs={12} sm={6} md={4} key={method.title}>
+                            <Box
+                                key={method.title}
+                                sx={{
+                                    flex: '1 1 300px',
+                                    maxWidth: '350px',
+                                    minWidth: '280px'
+                                }}
+                            >
                                 <Fade in timeout={1000 + index * 200}>
                                     <Card
                                         sx={{
@@ -108,7 +123,13 @@ export default function Contact() {
                                                 }
                                             }
                                         }}
-                                        onClick={() => window.open(method.link, '_blank')}
+                                        onClick={() => {
+                                            if (method.link.startsWith('mailto:')) {
+                                                window.location.href = method.link;
+                                            } else {
+                                                window.open(method.link, '_blank');
+                                            }
+                                        }}
                                     >
                                         <CardContent 
                                             sx={{ 
@@ -162,9 +183,9 @@ export default function Contact() {
                                         </CardContent>
                                     </Card>
                                 </Fade>
-                            </Grid>
+                            </Box>
                         ))}
-                    </Grid>
+                    </Box>
 
                     <Fade in timeout={1600}>
                         <Box 
@@ -183,7 +204,7 @@ export default function Contact() {
                                 gutterBottom
                                 sx={{ color: 'white', fontWeight: 'bold' }}
                             >
-                                Let&apos;s Build Something Amazing Together
+                                Let's Build Something Amazing Together
                             </Typography>
                             <Typography 
                                 variant="body1"
@@ -193,13 +214,13 @@ export default function Contact() {
                                     mx: 'auto'
                                 }}
                             >
-                                I&apos;m always excited to discuss new opportunities, 
+                                I'm always excited to discuss new opportunities, 
                                 innovative projects, and creative collaborations.
                             </Typography>
                         </Box>
                     </Fade>
                 </Container>
-            </Box>
+            </Container>
         </>
     );
 }
