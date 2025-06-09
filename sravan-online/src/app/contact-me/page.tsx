@@ -10,7 +10,6 @@ import {
     CardContent, 
     Grid,
     Fade,
-    useTheme
 } from '@mui/material';
 import { 
     Email as EmailIcon, 
@@ -19,7 +18,6 @@ import {
 } from '@mui/icons-material';
 
 export default function Contact() {
-    const theme = useTheme();
     
     const contactMethods = [
         {
@@ -83,7 +81,7 @@ export default function Contact() {
                                     mx: 'auto'
                                 }}
                             >
-                                I'd love to hear from you. Whether you have a question, 
+                                I&apos;d love to hear from you. Whether you have a question, 
                                 collaboration idea, or just want to say hello!
                             </Typography>
                         </Box>
@@ -185,7 +183,7 @@ export default function Contact() {
                                 gutterBottom
                                 sx={{ color: 'white', fontWeight: 'bold' }}
                             >
-                                Let's Build Something Amazing Together
+                                Let&apos;s Build Something Amazing Together
                             </Typography>
                             <Typography 
                                 variant="body1"
@@ -195,7 +193,7 @@ export default function Contact() {
                                     mx: 'auto'
                                 }}
                             >
-                                I'm always excited to discuss new opportunities, 
+                                I&apos;m always excited to discuss new opportunities, 
                                 innovative projects, and creative collaborations.
                             </Typography>
                         </Box>
