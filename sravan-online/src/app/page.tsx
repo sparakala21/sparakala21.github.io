@@ -45,7 +45,7 @@ export default function Home() {
         >
         <SummaryCard
           title="About Me"
-          description="I play chess, I like to code and I love to learn and teach."
+          description="I love chess, I love to code and I love to learn and I love to teach."
         />
         </Container>
       </Container>

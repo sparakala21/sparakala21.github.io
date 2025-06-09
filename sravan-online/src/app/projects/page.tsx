@@ -158,7 +158,7 @@ export default function Story() {
                                     textAlign: 'center', // Fixed: was 'align'
                                 }}
                             >
-                                Read more
+                                Click here to view the project
                             </Typography>
                         </MuiButton>
                     </Link>
