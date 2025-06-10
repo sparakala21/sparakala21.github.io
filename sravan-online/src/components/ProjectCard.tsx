@@ -56,7 +56,7 @@ export default function ProjectCard({
                 sx={{
                     mt: 2,
                     mb: 4,
-                    textAlign: 'center',
+                    textAlign: 'left',
                     color: 'white'
                 }}
             >
@@ -76,8 +76,8 @@ export default function ProjectCard({
                                 sx={{
                                     mt: 2,
                                     mb: 4,
-                                    textAlign: 'center',
-                                    color: 'inherit', // Inherit color from button
+                                    textAlign: 'left',
+                                    color: 'white', // Inherit color from button
                                 }}
                             >
                                 {buttonText}
@@ -97,8 +97,8 @@ export default function ProjectCard({
                                 sx={{
                                     mt: 2,
                                     mb: 4,
-                                    textAlign: 'center',
-                                    color: 'inherit', // Inherit color from button
+                                    textAlign: 'left',
+                                    color: 'white', // Inherit color from button
                                 }}
                             >
                                 {buttonText}

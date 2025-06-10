@@ -44,7 +44,7 @@ export default function Story() {
 
                 <ProjectCard 
                     title="Wayk"
-                    description="Wayk is an app that has all the features of a standard maps app but with a focus on the user experience of pedestrians. It has a unique feature that allows users to report obstructions in the road, such as construction, potholes, and other hazards. We used the OpenStreetMaps API to get the map data and the Google Maps API to get the directions. We also used generative AI to automatically validate the reports and to generate a summary of the reports for the user."
+                    description="Wayk is an app that has all the features of a standard maps app but with a focus on the user experience of pedestrians. It has a unique feature that allows users to report obstructions in the road, such as construction, potholes, and other hazards. We used the OpenStreetMaps API to get the map data and the Google Maps API to get the directions. We also used generative AI to automatically validate the reports and to generate a summary of the reports for the user. It was built as part of a hackathon at RPI."
                     buttonText="View Project"
                     buttonLink="https://github.com/WaykRPI/Wayk"
                     isExternal={true}
