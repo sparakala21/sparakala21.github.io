@@ -63,43 +63,31 @@ export default function ProjectCard({
                 {description}
             </Typography>
             
-            <Container
-                sx={{
-                    display: 'flex',
-                    flexDirection: { xs: 'row', sm: 'row' },
-                    justifyContent: 'space-around',
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                    gap: 1,
-                    padding: 2,
-                    backgroundColor: '#f0eadc',
-                    borderRadius: 2,
-                    boxShadow: 1,
-                }}
-            >
                 {isExternal ? (
                     <MuiButton
                         sx={{
-                            color: '#2C2C2C'
+                            color: '#f0eadc'
                         }}
                     >
-                        <a 
-                            href={buttonLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                                textDecoration: 'none',
-                                color: 'inherit',
-                            }}
-                        >
-                            {buttonText}
-                        </a>
+                        <Typography
+                                variant="h3"
+                                component="h3"
+                                gutterBottom
+                                sx={{
+                                    mt: 2,
+                                    mb: 4,
+                                    textAlign: 'center',
+                                    color: 'inherit', // Inherit color from button
+                                }}
+                            >
+                                {buttonText}
+                        </Typography>
                     </MuiButton>
                 ) : (
                     <Link href={buttonLink} passHref style={{ textDecoration: 'none' }}>
                         <MuiButton
                             sx={{
-                                color: '#2C2C2C'
+                                color: '#f0eadc'
                             }}
                         >
                             <Typography
@@ -110,6 +98,7 @@ export default function ProjectCard({
                                     mt: 2,
                                     mb: 4,
                                     textAlign: 'center',
+                                    color: 'inherit', // Inherit color from button
                                 }}
                             >
                                 {buttonText}
@@ -117,7 +106,6 @@ export default function ProjectCard({
                         </MuiButton>
                     </Link>
                 )}
-            </Container>
         </Container>
     );
 }
