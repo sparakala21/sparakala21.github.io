@@ -24,6 +24,8 @@ export default function Story() {
                     buttonText="Play!"
                     buttonLink="https://atchess.onrender.com"
                     isExternal={true}
+                    imageURL="/pictures/atchess.png"
+                    imageAlt="ATChess Game Screenshot"
                 />
 
                 <ProjectCard 
@@ -32,14 +34,16 @@ export default function Story() {
                     buttonText="View Project"
                     buttonLink="/artist2vec"
                     isExternal={false}
+                    imageURL="/pictures/artist2vec.png"
+                    imageAlt="Artist2Vec Project Screenshot"
                 />
 
                 <ProjectCard 
                     title="Thunder Mountain Curry"
                     description="Thunder Mountain Curry is a local restaurant in Troy, NY. Due to the restrictions from my school, they had to move off campus. As a way to help them continue to sell to RPI students, We created an app for them to take orders and recieve payments online."
                     buttonText="View Project"
-                    buttonLink="/thunder-mountain-curry"
-                    isExternal={false}
+                    buttonLink="https://github.com/sparakala21/TMC"
+                    isExternal={true}
                 />
 
                 <ProjectCard 
