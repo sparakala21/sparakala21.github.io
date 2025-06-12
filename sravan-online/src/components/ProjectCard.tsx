@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from 'react';
-import { Container, Typography, Box } from '@mui/material';
+import { Container, Typography, Box} from '@mui/material';
 import MuiButton from '@mui/material/Button';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface ProjectCardProps {
     title: string;
@@ -80,7 +81,7 @@ export default function ProjectCard({
                 
                 {/* Image beside description */}
                 {imageURL && (
-                    <img 
+                    <Image 
                         src={imageURL} 
                         alt={imageAlt || title} 
                         style={{ 
