@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from 'react';
-import {Container, Typography } from '@mui/material';
+import {Box, Container, Typography } from '@mui/material';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar';
 import SummaryCard from '@/components/SummaryCard';
 export default function Home() {
@@ -17,18 +17,6 @@ export default function Home() {
           position: 'relative',
         }}
       >
-        <Typography 
-          variant="h2" 
-          component="h2" 
-          gutterBottom
-          sx={{ 
-            mt: 2, // Margin top
-            mb: 4, // Margin bottom 
-            align: 'center', // Center align text
-          }}
-        >
-          I&apos;m Sravan
-        </Typography>
         <Container
           sx={{
             display: 'flex',
@@ -43,10 +31,20 @@ export default function Home() {
             boxShadow: 1, // Shadow for depth
           }}
         >
-        <SummaryCard
+
+        <Box
+            sx={{
+              backgroundImage: 'url(pictures/background.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              width: '100%',
+              height: 839,
+            }}
+          />
+        {/* <SummaryCard
           title="About Me"
           description="I love chess, I love to code and I love to learn and I love to teach."
-        />
+        /> */}
         </Container>
       </Container>
     </>
