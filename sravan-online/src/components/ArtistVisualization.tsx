@@ -24,12 +24,12 @@ interface EmbeddingsData {
 
 const ArtistVisualization: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef<THREE.Scene>();
-  const rendererRef = useRef<THREE.WebGLRenderer>();
-  const cameraRef = useRef<THREE.PerspectiveCamera>();
-  const pointsRef = useRef<THREE.Points>();
-  const labelsRef = useRef<THREE.Group>();
-  const animationIdRef = useRef<number>();
+  const sceneRef = useRef<THREE.Scene>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera>(null);
+  const pointsRef = useRef<THREE.Points>(null);
+  const labelsRef = useRef<THREE.Group>(null);
+  const animationIdRef = useRef<number>(null);
 
   const [data, setData] = useState<EmbeddingsData | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<'tsne' | 'pca' | 'umap'>('pca');
