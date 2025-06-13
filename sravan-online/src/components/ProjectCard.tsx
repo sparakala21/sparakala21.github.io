@@ -82,13 +82,13 @@ export default function ProjectCard({
                 {/* Image beside description */}
                 {imageURL && (
                     <Image 
-                        src={imageURL} 
-                        alt={imageAlt || title} 
+                        src={imageURL}
+                        width={200}
+                        height={150}
+                        alt={imageAlt || title}
                         style={{ 
-                            width: '200px', 
-                            height: 'auto', 
                             borderRadius: '8px',
-                            flexShrink: 0 // Prevent image from shrinking
+                            flexShrink: 0 
                         }} 
                     />
                 )}
