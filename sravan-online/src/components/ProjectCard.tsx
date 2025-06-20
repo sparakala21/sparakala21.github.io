@@ -73,7 +73,7 @@ export default function ProjectCard({
                         mb: 4,
                         textAlign: 'left',
                         color: 'white',
-                        flex: 1, // Take remaining space
+                        flex: 1, 
                     }}
                 >
                     {description}

@@ -41,10 +41,10 @@ export default function Home() {
               height: 839,
             }}
           />
-        {/* <SummaryCard
+        <SummaryCard
           title="About Me"
-          description="I love chess, I love to code and I love to learn and I love to teach."
-        /> */}
+          description="Right now I am working on a better version of my Artist2Vec visualization project that I call artist2vec3d. Add it to the end of the URL to see what I have so far."
+        />
         </Container>
       </Container>
     </>
