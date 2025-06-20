@@ -124,7 +124,7 @@ export default function Writeup() {
                             of the musical landscape.
                         </Typography>
 
-                        <Link href={'/artist2vec/artist2vec2d'} passHref style={{ textDecoration: 'none' }}>
+                        <Link href={'/artist2vec2d'} passHref style={{ textDecoration: 'none' }}>
                             <MuiButton
                                 sx={{
                                     color: '#2C2C2C'
@@ -142,7 +142,7 @@ export default function Writeup() {
                             </MuiButton>
                         </Link>
 
-                        <Link href={'/artist2vec/artist2vec3d'} passHref style={{ textDecoration: 'none' }}>
+                        <Link href={'/artist2vec3d'} passHref style={{ textDecoration: 'none' }}>
                             <MuiButton
                                 sx={{
                                     color: '#2C2C2C'
