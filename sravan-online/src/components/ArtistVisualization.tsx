@@ -30,13 +30,14 @@ const ArtistVisualization: React.FC = () => {
   const pointsRef = useRef<THREE.Points>(null);
   const labelsRef = useRef<THREE.Group>(null);
   const animationIdRef = useRef<number>(null);
+  const raycasterRef = useRef<THREE.Raycaster>(new THREE.Raycaster());
 
   const [data, setData] = useState<EmbeddingsData | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<'tsne' | 'pca' | 'umap'>('pca');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [hoveredNode, setHoveredNode] = useState<EmbeddingNode | null>(null);
   const [showLabels, setShowLabels] = useState(false);
+  const [selectedNode, setSelectedNode] = useState<EmbeddingNode | null>(null);
 
   // Load embeddings data
   const loadData = async (method: string) => {
@@ -98,7 +99,7 @@ const ArtistVisualization: React.FC = () => {
     scene.add(labelsGroup);
     labelsRef.current = labelsGroup;
 
-    // Mouse controls (basic rotation)
+    // Mouse controls
     let isMouseDown = false;
     let mouseX = 0;
     let mouseY = 0;
@@ -140,10 +141,92 @@ const ArtistVisualization: React.FC = () => {
       cameraRef.current.position.multiplyScalar(scale);
     };
 
+    const handleClick = (event: MouseEvent) => {
+      console.log('Click detected'); // Debug log
+      
+      if (!rendererRef.current || !cameraRef.current || !sceneRef.current || !pointsRef.current || !data) {
+        console.log('Missing refs or data:', {
+          renderer: !!rendererRef.current,
+          camera: !!cameraRef.current,
+          scene: !!sceneRef.current,
+          points: !!pointsRef.current,
+          data: !!data
+        });
+        return;
+      }
+
+      // Calculate mouse position in normalized device coordinates (-1 to +1)
+      const rect = rendererRef.current.domElement.getBoundingClientRect();
+      const mouse = new THREE.Vector2();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      
+      console.log('Mouse coordinates:', mouse.x, mouse.y); // Debug log
+
+      // Configure raycaster for points - increase threshold significantly
+      raycasterRef.current.params.Points = { threshold: 3.0 }; // Increased threshold
+      raycasterRef.current.setFromCamera(mouse, cameraRef.current);
+
+      // Find intersections with the points
+      const intersects = raycasterRef.current.intersectObject(pointsRef.current);
+      console.log('Intersections found:', intersects.length); // Debug log
+      console.log('Points object:', pointsRef.current); // Debug the points object
+      console.log('Data nodes length:', data.nodes.length); // Debug data
+
+      if (intersects.length > 0) {
+        // Get the index of the clicked point
+        const intersection = intersects[0];
+        const index = intersection.index;
+        
+        console.log('Intersection details:', intersection); // Debug full intersection
+        console.log('Intersection index:', index); // Debug log
+        
+        if (index !== undefined && data.nodes[index]) {
+          const clickedNode = data.nodes[index];
+          console.log('Clicked artist:', clickedNode.name);
+          console.log('Full node data:', clickedNode); // Debug full node
+          
+          // Optional: Update selected node state
+          setSelectedNode(clickedNode);
+        } else {
+          console.log('Index issue - index:', index, 'nodes length:', data.nodes.length);
+        }
+      } else {
+        console.log('No intersections found - trying alternative approach...');
+        
+        // Alternative: Check if we can find the closest point manually
+        const cameraPosition = cameraRef.current.position;
+        const positions = pointsRef.current.geometry.attributes.position.array;
+        let closestIndex = -1;
+        let closestDistance = Infinity;
+        
+        // Project each 3D point to screen space and find closest to mouse click
+        for (let i = 0; i < positions.length; i += 3) {
+          const point3D = new THREE.Vector3(positions[i], positions[i + 1], positions[i + 2]);
+          const point2D = point3D.clone().project(cameraRef.current);
+          
+          const distance = Math.sqrt(
+            Math.pow(point2D.x - mouse.x, 2) + Math.pow(point2D.y - mouse.y, 2)
+          );
+          
+          if (distance < 0.1 && distance < closestDistance) { // 0.1 is the click tolerance
+            closestDistance = distance;
+            closestIndex = i / 3;
+          }
+        }
+        
+        if (closestIndex >= 0 && data.nodes[closestIndex]) {
+          console.log('Found closest point manually:', data.nodes[closestIndex].name);
+          setSelectedNode(data.nodes[closestIndex]);
+        }
+      }
+    };
+
     renderer.domElement.addEventListener('mousedown', handleMouseDown);
     renderer.domElement.addEventListener('mouseup', handleMouseUp);
     renderer.domElement.addEventListener('mousemove', handleMouseMove);
     renderer.domElement.addEventListener('wheel', handleWheel);
+    renderer.domElement.addEventListener('click', handleClick);
 
     // Cleanup function
     return () => {
@@ -184,8 +267,8 @@ const ArtistVisualization: React.FC = () => {
       positions[i * 3 + 1] = node.y * scale;
       positions[i * 3 + 2] = node.z * scale;
 
-      // Color based on position or you can use other attributes
-      const hue = (node.x * scale + 30) / 60; // Normalize to 0-1
+      // Color based on position 
+      const hue = (node.x * scale + 30) / 60;
       const color = new THREE.Color().setHSL(hue, 0.7, 0.6);
       colors[i * 3] = color.r;
       colors[i * 3 + 1] = color.g;
@@ -197,7 +280,7 @@ const ArtistVisualization: React.FC = () => {
 
     // Create points material
     const material = new THREE.PointsMaterial({
-      size: 0.8,
+      size: 2.0,
       vertexColors: true,
       transparent: true,
       opacity: 0.8,
@@ -219,10 +302,10 @@ const ArtistVisualization: React.FC = () => {
     if (!labelsRef.current) return;
 
     // Sample nodes to avoid too many labels
-    const sampledNodes = nodes.filter((_, i) => i % Math.max(1, Math.floor(nodes.length / 100)) === 0);
+    const sampledNodes = nodes.filter((_, i) => i % Math.max(1, Math.floor(nodes.length / 50)) === 0);
     
     sampledNodes.forEach(node => {
-      // Create text sprite (simplified approach)
+      // Create text sprite
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
       if (!context) return;
@@ -277,7 +360,7 @@ const ArtistVisualization: React.FC = () => {
     animate();
     
     window.addEventListener('resize', handleResize);
-    
+
     return () => {
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
@@ -285,7 +368,7 @@ const ArtistVisualization: React.FC = () => {
       window.removeEventListener('resize', handleResize);
       cleanup?.();
       
-      if (rendererRef.current && mountRef.current) {
+      if (rendererRef.current && mountRef.current && rendererRef.current.domElement.parentNode) {
         mountRef.current.removeChild(rendererRef.current.domElement);
         rendererRef.current.dispose();
       }
@@ -305,7 +388,7 @@ const ArtistVisualization: React.FC = () => {
   return (
     <div className="w-full h-screen bg-gray-900 relative">
       {/* Controls */}
-      <div className="absolute top-4 left-4 z-10 bg-gray-800 p-4 rounded-lg text-white">
+      <div className="absolute top-4 left-4 z-10 bg-gray-800 p-4 rounded-lg text-white max-w-xs">
         <h2 className="text-lg font-bold mb-4">Artist Collaboration Network</h2>
         
         <div className="mb-4">
@@ -337,10 +420,20 @@ const ArtistVisualization: React.FC = () => {
         </div>
 
         {data && (
-          <div className="text-sm text-gray-300">
+          <div className="text-sm text-gray-300 mb-4">
             <div>Method: {data.metadata.method}</div>
             <div>Nodes: {data.metadata.num_nodes}</div>
             <div>Dimensions: {data.metadata.dimensions}D</div>
+          </div>
+        )}
+
+        {selectedNode && (
+          <div className="bg-gray-700 p-3 rounded mb-4">
+            <h3 className="font-semibold text-sm mb-1">Selected Artist:</h3>
+            <div className="text-sm">
+              <div>Name: {selectedNode.name}</div>
+              {selectedNode.genre && <div>Genre: {selectedNode.genre}</div>}
+            </div>
           </div>
         )}
 
@@ -355,8 +448,9 @@ const ArtistVisualization: React.FC = () => {
 
       {/* Instructions */}
       <div className="absolute bottom-4 left-4 z-10 bg-gray-800 p-3 rounded-lg text-white text-sm">
-        <div>🖱️ Drag to rotate</div>
-        <div>🔄 Scroll to zoom</div>
+        <div>Drag to rotate</div>
+        <div>Scroll to zoom</div>
+        <div>Click points to select</div>
       </div>
 
       {/* 3D Canvas Container */}
