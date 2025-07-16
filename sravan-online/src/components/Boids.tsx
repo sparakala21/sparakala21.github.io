@@ -1,56 +1,66 @@
 'use client';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 
 class Boid {
-    position: THREE.Vector3;
-    velocity: THREE.Vector3;
-    acceleration: THREE.Vector3;
-    maxSpeed: number;
-    constructor(x, y, z) {
-        this.position = new THREE.Vector3(x, y, z);
-        this.velocity = new THREE.Vector3(
-        (Math.random() - 0.5) * 2,
-        (Math.random() - 0.5) * 2,
-        (Math.random() - 0.5) * 2
-        );
-        this.acceleration = new THREE.Vector3(0, 0, 0);
-        this.maxSpeed = 2;
-        this.maxForce = 0.03;
-        this.separationRadius = 25;
-        this.alignmentRadius = 50;
-        this.cohesionRadius = 50;
-    }
+  constructor(x, y, z, params = {}) {
+    this.position = new THREE.Vector3(x, y, z);
+    this.velocity = new THREE.Vector3(
+      (Math.random() - 0.5) * 2,
+      (Math.random() - 0.5) * 2,
+      (Math.random() - 0.5) * 2
+    );
+    this.acceleration = new THREE.Vector3(0, 0, 0);
+    this.maxSpeed = params.maxSpeed || 2;
+    this.maxForce = params.maxForce || 0.03;
+    this.separationRadius = params.separationRadius || 25;
+    this.alignmentRadius = params.alignmentRadius || 50;
+    this.cohesionRadius = params.cohesionRadius || 50;
+    this.separationWeight = params.separationWeight || 1.5;
+    this.alignmentWeight = params.alignmentWeight || 1.0;
+    this.cohesionWeight = params.cohesionWeight || 1.0;
+  }
 
-    update(boids) {
-        // Calculate forces
-        const sep = this.separate(boids);
-        const ali = this.align(boids);
-        const coh = this.cohesion(boids);
+  update(boids) {
+    // Calculate forces
+    const sep = this.separate(boids);
+    const ali = this.align(boids);
+    const coh = this.cohesion(boids);
 
-        // Weight the forces
-        sep.multiplyScalar(1.5);
-        ali.multiplyScalar(1.0);
-        coh.multiplyScalar(1.0);
+    // Weight the forces
+    sep.multiplyScalar(this.separationWeight);
+    ali.multiplyScalar(this.alignmentWeight);
+    coh.multiplyScalar(this.cohesionWeight);
 
-        // Apply forces
-        this.acceleration.add(sep);
-        this.acceleration.add(ali);
-        this.acceleration.add(coh);
+    // Apply forces
+    this.acceleration.add(sep);
+    this.acceleration.add(ali);
+    this.acceleration.add(coh);
 
-        // Update velocity
-        this.velocity.add(this.acceleration);
-        this.velocity.clampLength(0, this.maxSpeed);
+    // Update velocity
+    this.velocity.add(this.acceleration);
+    this.velocity.clampLength(0, this.maxSpeed);
 
-        // Update position
-        this.position.add(this.velocity);
+    // Update position
+    this.position.add(this.velocity);
 
-        // Reset acceleration
-        this.acceleration.multiplyScalar(0);
+    // Reset acceleration
+    this.acceleration.multiplyScalar(0);
 
-        // Wrap around edges
-        this.wrapAround();
-    }
+    // Wrap around edges
+    this.wrapAround();
+  }
+
+  updateParams(params) {
+    this.separationRadius = params.separationRadius;
+    this.alignmentRadius = params.alignmentRadius;
+    this.cohesionRadius = params.cohesionRadius;
+    this.separationWeight = params.separationWeight;
+    this.alignmentWeight = params.alignmentWeight;
+    this.cohesionWeight = params.cohesionWeight;
+    this.maxSpeed = params.maxSpeed;
+    this.maxForce = params.maxForce;
+  }
 
   separate(boids) {
     const steer = new THREE.Vector3(0, 0, 0);
@@ -150,6 +160,15 @@ const Boids = () => {
   const rendererRef = useRef(null);
   const boidsRef = useRef([]);
   const pointsRef = useRef(null);
+  const [showControls, setShowControls] = useState(false);
+
+  const updateParams = (newParams) => {
+    setParams(newParams);
+    // Update all existing boids
+    boidsRef.current.forEach(boid => {
+      boid.updateParams(newParams);
+    });
+  };
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -168,13 +187,14 @@ const Boids = () => {
     containerRef.current?.appendChild(renderer.domElement);
 
     // Create boids
-    const boidCount = 20;
+    const boidCount = params.boidCount;
     const boids = [];
     for (let i = 0; i < boidCount; i++) {
       const boid = new Boid(
         (Math.random() - 0.5) * 400,
         (Math.random() - 0.5) * 400,
-        (Math.random() - 0.5) * 400
+        (Math.random() - 0.5) * 400,
+        params
       );
       boids.push(boid);
     }
@@ -324,15 +344,182 @@ const Boids = () => {
   }, []);
 
   return (
-    <div 
-      ref={containerRef} 
-      style={{ 
-        width: '100vw', 
-        height: '100vh', 
-        overflow: 'hidden',
-        background: '#0a0a0a'
-      }} 
-    />
+    <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
+      <div 
+        ref={containerRef} 
+        style={{ 
+          width: '100%', 
+          height: '100%', 
+          overflow: 'hidden',
+          background: '#0a0a0a'
+        }} 
+      />
+      
+      {/* Toggle Button */}
+      <button
+        onClick={() => setShowControls(!showControls)}
+        style={{
+          position: 'absolute',
+          top: '20px',
+          right: '20px',
+          padding: '10px 15px',
+          background: 'rgba(255, 255, 255, 0.1)',
+          color: 'white',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
+          borderRadius: '5px',
+          cursor: 'pointer',
+          fontSize: '14px',
+          backdropFilter: 'blur(10px)'
+        }}
+      >
+        {showControls ? 'Hide Controls' : 'Show Controls'}
+      </button>
+
+      {/* Control Panel */}
+      {showControls && (
+        <div style={{
+          position: 'absolute',
+          top: '70px',
+          right: '20px',
+          width: '300px',
+          background: 'rgba(0, 0, 0, 0.8)',
+          color: 'white',
+          padding: '20px',
+          borderRadius: '10px',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          backdropFilter: 'blur(10px)',
+          fontSize: '14px'
+        }}>
+          <h3 style={{ margin: '0 0 20px 0', color: '#fff' }}>Boids Parameters</h3>
+          
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>
+              Separation Weight: {params.separationWeight.toFixed(2)}
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="3"
+              step="0.1"
+              value={params.separationWeight}
+              onChange={(e) => updateParams({...params, separationWeight: parseFloat(e.target.value)})}
+              style={{ width: '100%' }}
+            />
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>
+              Alignment Weight: {params.alignmentWeight.toFixed(2)}
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="3"
+              step="0.1"
+              value={params.alignmentWeight}
+              onChange={(e) => updateParams({...params, alignmentWeight: parseFloat(e.target.value)})}
+              style={{ width: '100%' }}
+            />
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>
+              Cohesion Weight: {params.cohesionWeight.toFixed(2)}
+            </label>
+            <input
+              type="range"
+              min="0"
+              max="3"
+              step="0.1"
+              value={params.cohesionWeight}
+              onChange={(e) => updateParams({...params, cohesionWeight: parseFloat(e.target.value)})}
+              style={{ width: '100%' }}
+            />
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>
+              Separation Radius: {params.separationRadius}
+            </label>
+            <input
+              type="range"
+              min="10"
+              max="100"
+              step="5"
+              value={params.separationRadius}
+              onChange={(e) => updateParams({...params, separationRadius: parseInt(e.target.value)})}
+              style={{ width: '100%' }}
+            />
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>
+              Alignment Radius: {params.alignmentRadius}
+            </label>
+            <input
+              type="range"
+              min="20"
+              max="150"
+              step="5"
+              value={params.alignmentRadius}
+              onChange={(e) => updateParams({...params, alignmentRadius: parseInt(e.target.value)})}
+              style={{ width: '100%' }}
+            />
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>
+              Cohesion Radius: {params.cohesionRadius}
+            </label>
+            <input
+              type="range"
+              min="20"
+              max="150"
+              step="5"
+              value={params.cohesionRadius}
+              onChange={(e) => updateParams({...params, cohesionRadius: parseInt(e.target.value)})}
+              style={{ width: '100%' }}
+            />
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>
+              Max Speed: {params.maxSpeed.toFixed(1)}
+            </label>
+            <input
+              type="range"
+              min="0.5"
+              max="5"
+              step="0.1"
+              value={params.maxSpeed}
+              onChange={(e) => updateParams({...params, maxSpeed: parseFloat(e.target.value)})}
+              style={{ width: '100%' }}
+            />
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>
+              Max Force: {params.maxForce.toFixed(3)}
+            </label>
+            <input
+              type="range"
+              min="0.01"
+              max="0.1"
+              step="0.005"
+              value={params.maxForce}
+              onChange={(e) => updateParams({...params, maxForce: parseFloat(e.target.value)})}
+              style={{ width: '100%' }}
+            />
+          </div>
+
+          <div style={{ marginTop: '20px', fontSize: '12px', color: '#ccc' }}>
+            <p><strong>Separation:</strong> Avoid crowding neighbors</p>
+            <p><strong>Alignment:</strong> Steer towards average heading</p>
+            <p><strong>Cohesion:</strong> Steer towards group center</p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
