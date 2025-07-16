@@ -1,5 +1,5 @@
-import ArtistVisualization from "@/components/ArtistVisualization";
+import Boids from "@/components/Boids";
 
 export default function VisualizationPage() {
-  return <ArtistVisualization />;
+  return <Boids />;
 }

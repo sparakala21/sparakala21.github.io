@@ -2,8 +2,32 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 
+interface BoidParams {
+  boidCount: number;
+  maxSpeed: number;
+  maxForce: number;
+  separationRadius: number;
+  alignmentRadius: number;
+  cohesionRadius: number;
+  separationWeight: number;
+  alignmentWeight: number;
+  cohesionWeight: number;
+}
+
 class Boid {
-  constructor(x, y, z, params = {}) {
+  position: THREE.Vector3;
+  velocity: THREE.Vector3;
+  acceleration: THREE.Vector3;
+  maxSpeed: number;
+  maxForce: number;
+  separationRadius: number;
+  alignmentRadius: number;
+  cohesionRadius: number;
+  separationWeight: number;
+  alignmentWeight: number;
+  cohesionWeight: number;
+
+  constructor(x: number, y: number, z: number, params: Partial<BoidParams> = {}) {
     this.position = new THREE.Vector3(x, y, z);
     this.velocity = new THREE.Vector3(
       (Math.random() - 0.5) * 2,
@@ -21,7 +45,7 @@ class Boid {
     this.cohesionWeight = params.cohesionWeight || 1.0;
   }
 
-  update(boids) {
+  update(boids: Boid[]) {
     // Calculate forces
     const sep = this.separate(boids);
     const ali = this.align(boids);
@@ -51,18 +75,18 @@ class Boid {
     this.wrapAround();
   }
 
-  updateParams(params) {
-    this.separationRadius = params.separationRadius;
-    this.alignmentRadius = params.alignmentRadius;
-    this.cohesionRadius = params.cohesionRadius;
-    this.separationWeight = params.separationWeight;
-    this.alignmentWeight = params.alignmentWeight;
-    this.cohesionWeight = params.cohesionWeight;
-    this.maxSpeed = params.maxSpeed;
-    this.maxForce = params.maxForce;
+  updateParams(params: Partial<BoidParams>) {
+    this.separationRadius = params.separationRadius || this.separationRadius;
+    this.alignmentRadius = params.alignmentRadius || this.alignmentRadius;
+    this.cohesionRadius = params.cohesionRadius || this.cohesionRadius;
+    this.separationWeight = params.separationWeight || this.separationWeight;
+    this.alignmentWeight = params.alignmentWeight || this.alignmentWeight;
+    this.cohesionWeight = params.cohesionWeight || this.cohesionWeight;
+    this.maxSpeed = params.maxSpeed || this.maxSpeed;
+    this.maxForce = params.maxForce || this.maxForce;
   }
 
-  separate(boids) {
+  separate(boids: Boid[]): THREE.Vector3 {
     const steer = new THREE.Vector3(0, 0, 0);
     let count = 0;
 
@@ -89,7 +113,7 @@ class Boid {
     return steer;
   }
 
-  align(boids) {
+  align(boids: Boid[]): THREE.Vector3 {
     const sum = new THREE.Vector3(0, 0, 0);
     let count = 0;
 
@@ -113,7 +137,7 @@ class Boid {
     return new THREE.Vector3(0, 0, 0);
   }
 
-  cohesion(boids) {
+  cohesion(boids: Boid[]): THREE.Vector3 {
     const sum = new THREE.Vector3(0, 0, 0);
     let count = 0;
 
@@ -133,7 +157,7 @@ class Boid {
     return new THREE.Vector3(0, 0, 0);
   }
 
-  seek(target) {
+  seek(target: THREE.Vector3): THREE.Vector3 {
     const desired = new THREE.Vector3().subVectors(target, this.position);
     desired.normalize();
     desired.multiplyScalar(this.maxSpeed);
@@ -154,15 +178,27 @@ class Boid {
   }
 }
 
-const Boids = () => {
-  const containerRef = useRef(null);
-  const sceneRef = useRef(null);
-  const rendererRef = useRef(null);
-  const boidsRef = useRef([]);
-  const pointsRef = useRef(null);
+const Boids: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const boidsRef = useRef<Boid[]>([]);
+  const pointsRef = useRef<THREE.Points | null>(null);
   const [showControls, setShowControls] = useState(false);
+  
+  const [params, setParams] = useState<BoidParams>({
+    boidCount: 200,
+    maxSpeed: 2,
+    maxForce: 0.03,
+    separationRadius: 25,
+    alignmentRadius: 50,
+    cohesionRadius: 50,
+    separationWeight: 1.5,
+    alignmentWeight: 1.0,
+    cohesionWeight: 1.0
+  });
 
-  const updateParams = (newParams) => {
+  const updateParams = (newParams: BoidParams) => {
     setParams(newParams);
     // Update all existing boids
     boidsRef.current.forEach(boid => {
@@ -172,6 +208,8 @@ const Boids = () => {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+
+    let animationId: number;
 
     // Scene setup
     const scene = new THREE.Scene();
@@ -188,7 +226,7 @@ const Boids = () => {
 
     // Create boids
     const boidCount = params.boidCount;
-    const boids = [];
+    const boids: Boid[] = [];
     for (let i = 0; i < boidCount; i++) {
       const boid = new Boid(
         (Math.random() - 0.5) * 400,
@@ -225,7 +263,7 @@ const Boids = () => {
     const material = new THREE.PointsMaterial({
       size: 4,
       vertexColors: true,
-      sizeAttenuation: true,
+    //   sizeAttenuation: true,
       transparent: true,
       opacity: 0.8
     });
@@ -242,26 +280,28 @@ const Boids = () => {
       }
 
       // Update geometry
-      const positions = pointsRef.current.geometry.attributes.position.array;
-      const colors = pointsRef.current.geometry.attributes.color.array;
-      
-      for (let i = 0; i < boidsRef.current.length; i++) {
-        const boid = boidsRef.current[i];
-        const i3 = i * 3;
+      if (pointsRef.current) {
+        const positions = pointsRef.current.geometry.attributes.position.array as Float32Array;
+        const colors = pointsRef.current.geometry.attributes.color.array as Float32Array;
         
-        positions[i3] = boid.position.x;
-        positions[i3 + 1] = boid.position.y;
-        positions[i3 + 2] = boid.position.z;
-        
-        // Update color based on speed
-        const speed = boid.velocity.length();
-        colors[i3] = speed / 2;
-        colors[i3 + 1] = 0.5;
-        colors[i3 + 2] = 1 - speed / 2;
-      }
+        for (let i = 0; i < boidsRef.current.length; i++) {
+          const boid = boidsRef.current[i];
+          const i3 = i * 3;
+          
+          positions[i3] = boid.position.x;
+          positions[i3 + 1] = boid.position.y;
+          positions[i3 + 2] = boid.position.z;
+          
+          // Update color based on speed
+          const speed = boid.velocity.length();
+          colors[i3] = speed / 2;
+          colors[i3 + 1] = 0.5;
+          colors[i3 + 2] = 1 - speed / 2;
+        }
 
-      pointsRef.current.geometry.attributes.position.needsUpdate = true;
-      pointsRef.current.geometry.attributes.color.needsUpdate = true;
+        pointsRef.current.geometry.attributes.position.needsUpdate = true;
+        pointsRef.current.geometry.attributes.color.needsUpdate = true;
+      }
 
       // Slowly rotate the camera
       const time = Date.now() * 0.0005;
@@ -270,7 +310,7 @@ const Boids = () => {
       camera.lookAt(0, 0, 0);
 
       renderer.render(scene, camera);
-      requestAnimationFrame(animate);
+      animationId = requestAnimationFrame(animate);
     };
 
     animate();
@@ -289,43 +329,42 @@ const Boids = () => {
     let mouseY = 0;
 
     const handleMouseDown = (event: MouseEvent) => {
-    isMouseDown = true;
-    mouseX = event.clientX;
-    mouseY = event.clientY;
+      isMouseDown = true;
+      mouseX = event.clientX;
+      mouseY = event.clientY;
     };
 
     const handleMouseUp = () => {
-    isMouseDown = false;
+      isMouseDown = false;
     };
 
     const handleMouseMove = (event: MouseEvent) => {
-    if (!isMouseDown ) return;
+      if (!isMouseDown) return;
 
-    const deltaX = event.clientX - mouseX;
-    const deltaY = event.clientY - mouseY;
+      const deltaX = event.clientX - mouseX;
+      const deltaY = event.clientY - mouseY;
 
-    // Rotate camera around origin
-    const spherical = new THREE.Spherical();
-    spherical.setFromVector3(camera.position);
-    spherical.theta -= deltaX * 0.01;
-    spherical.phi += deltaY * 0.01;
-    spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi));
+      // Rotate camera around origin
+      const spherical = new THREE.Spherical();
+      spherical.setFromVector3(camera.position);
+      spherical.theta -= deltaX * 0.01;
+      spherical.phi += deltaY * 0.01;
+      spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi));
 
-    camera.position.setFromSpherical(spherical);
-    camera.lookAt(0, 0, 0);
+      camera.position.setFromSpherical(spherical);
+      camera.lookAt(0, 0, 0);
 
-    mouseX = event.clientX;
-    mouseY = event.clientY;
+      mouseX = event.clientX;
+      mouseY = event.clientY;
 
-    renderer.render(scene, camera);
+      renderer.render(scene, camera);
     };
 
     const handleWheel = (event: WheelEvent) => {
-    
-    const scale = event.deltaY > 0 ? 1.1 : 0.9;
-    camera.position.multiplyScalar(scale);
+      const scale = event.deltaY > 0 ? 1.1 : 0.9;
+      camera.position.multiplyScalar(scale);
 
-    renderer.render(scene, camera);
+      renderer.render(scene, camera);
     };
 
     renderer.domElement.addEventListener('mousedown', handleMouseDown);
@@ -335,13 +374,16 @@ const Boids = () => {
 
     // Cleanup
     return () => {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
       window.removeEventListener('resize', handleResize);
       if (containerRef.current && renderer.domElement) {
         containerRef.current.removeChild(renderer.domElement);
       }
       renderer.dispose();
     };
-  }, []);
+  }, [params.boidCount]);
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
