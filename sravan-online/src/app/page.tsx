@@ -31,7 +31,7 @@ export default function Home() {
             boxShadow: 1, // Shadow for depth
           }}
         >
-
+{/* 
         <Box
             sx={{
               backgroundImage: 'url(pictures/background.png)',
@@ -40,7 +40,7 @@ export default function Home() {
               width: '100%',
               height: 839,
             }}
-          />
+          /> */}
         <SummaryCard
           title="About Me"
           description="Right now I am working on a better version of my Artist2Vec visualization project that I call artist2vec3d. Add it to the end of the URL to see what I have so far."
