@@ -12,6 +12,8 @@ interface BoidParams {
   separationWeight: number;
   alignmentWeight: number;
   cohesionWeight: number;
+  predatorAvoidanceRadius: number;
+  predatorAvoidanceWeight: number;
 }
 
 class Boid {
@@ -26,6 +28,8 @@ class Boid {
   separationWeight: number;
   alignmentWeight: number;
   cohesionWeight: number;
+  predatorAvoidanceRadius: number;
+  predatorAvoidanceWeight: number;
 
   constructor(x: number, y: number, z: number, params: Partial<BoidParams> = {}) {
     this.position = new THREE.Vector3(x, y, z);
@@ -43,23 +47,28 @@ class Boid {
     this.separationWeight = params.separationWeight || 1.5;
     this.alignmentWeight = params.alignmentWeight || 1.0;
     this.cohesionWeight = params.cohesionWeight || 1.0;
+    this.predatorAvoidanceRadius = params.predatorAvoidanceRadius || 100;
+    this.predatorAvoidanceWeight = params.predatorAvoidanceWeight || 3.0;
   }
 
-  update(boids: Boid[]) {
+  update(boids: Boid[], predatorPosition?: THREE.Vector3) {
     // Calculate forces
     const sep = this.separate(boids);
     const ali = this.align(boids);
     const coh = this.cohesion(boids);
+    const flee = predatorPosition ? this.fleePredator(predatorPosition) : new THREE.Vector3(0, 0, 0);
 
     // Weight the forces
     sep.multiplyScalar(this.separationWeight);
     ali.multiplyScalar(this.alignmentWeight);
     coh.multiplyScalar(this.cohesionWeight);
+    flee.multiplyScalar(this.predatorAvoidanceWeight);
 
     // Apply forces
     this.acceleration.add(sep);
     this.acceleration.add(ali);
     this.acceleration.add(coh);
+    this.acceleration.add(flee);
 
     // Update velocity
     this.velocity.add(this.acceleration);
@@ -84,6 +93,30 @@ class Boid {
     this.cohesionWeight = params.cohesionWeight || this.cohesionWeight;
     this.maxSpeed = params.maxSpeed || this.maxSpeed;
     this.maxForce = params.maxForce || this.maxForce;
+    this.predatorAvoidanceRadius = params.predatorAvoidanceRadius || this.predatorAvoidanceRadius;
+    this.predatorAvoidanceWeight = params.predatorAvoidanceWeight || this.predatorAvoidanceWeight;
+  }
+
+  fleePredator(predatorPosition: THREE.Vector3): THREE.Vector3 {
+    const distance = this.position.distanceTo(predatorPosition);
+    
+    if (distance < this.predatorAvoidanceRadius && distance > 0) {
+      // Calculate flee force - opposite direction from predator
+      const desired = new THREE.Vector3().subVectors(this.position, predatorPosition);
+      desired.normalize();
+      
+      // Stronger force when closer to predator
+      const panicFactor = Math.max(0, (this.predatorAvoidanceRadius - distance) / this.predatorAvoidanceRadius);
+      const speedMultiplier = this.maxSpeed * (1 + panicFactor * 2); // Up to 3x speed when panicking
+      
+      desired.multiplyScalar(speedMultiplier);
+      
+      const steer = desired.sub(this.velocity);
+      steer.clampLength(0, this.maxForce * (1 + panicFactor)); // Stronger steering when panicking
+      return steer;
+    }
+    
+    return new THREE.Vector3(0, 0, 0);
   }
 
   separate(boids: Boid[]): THREE.Vector3 {
@@ -96,7 +129,7 @@ class Boid {
         const diff = new THREE.Vector3()
           .subVectors(this.position, boid.position)
           .normalize()
-          .divideScalar(distance); // Weight by distance
+          .divideScalar(distance);
         steer.add(diff);
         count++;
       }
@@ -168,7 +201,7 @@ class Boid {
   }
 
   wrapAround() {
-    const bounds = 200;
+    const bounds = 800;
     if (this.position.x < -bounds) this.position.x = bounds;
     if (this.position.x > bounds) this.position.x = -bounds;
     if (this.position.y < -bounds) this.position.y = bounds;
@@ -182,8 +215,12 @@ const Boids: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const cameraRef = useRef<THREE.Camera | null>(null);
   const boidsRef = useRef<Boid[]>([]);
   const pointsRef = useRef<THREE.Points | null>(null);
+  const raycasterRef = useRef<THREE.Raycaster>(new THREE.Raycaster());
+  const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2());
+  const predatorPositionRef = useRef<THREE.Vector3 | null>(null);
   const [showControls, setShowControls] = useState(false);
   
   const [params, setParams] = useState<BoidParams>({
@@ -195,12 +232,13 @@ const Boids: React.FC = () => {
     cohesionRadius: 50,
     separationWeight: 1.5,
     alignmentWeight: 1.0,
-    cohesionWeight: 1.0
+    cohesionWeight: 1.0,
+    predatorAvoidanceRadius: 100,
+    predatorAvoidanceWeight: 3.0
   });
 
   const updateParams = (newParams: BoidParams) => {
     setParams(newParams);
-    // Update all existing boids
     boidsRef.current.forEach(boid => {
       boid.updateParams(newParams);
     });
@@ -218,6 +256,7 @@ const Boids: React.FC = () => {
 
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 0, 300);
+    cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -229,9 +268,9 @@ const Boids: React.FC = () => {
     const boids: Boid[] = [];
     for (let i = 0; i < boidCount; i++) {
       const boid = new Boid(
-        (Math.random() - 0.5) * 400,
-        (Math.random() - 0.5) * 400,
-        (Math.random() - 0.5) * 400,
+        (Math.random() - 0.5) * 1200,
+        (Math.random() - 0.5) * 1200,
+        (Math.random() - 0.5) * 1200,
         params
       );
       boids.push(boid);
@@ -252,9 +291,9 @@ const Boids: React.FC = () => {
       
       // Color based on velocity
       const speed = boids[i].velocity.length();
-      colors[i3] = speed / 2; // Red
-      colors[i3 + 1] = 0.5; // Green
-      colors[i3 + 2] = 1 - speed / 2; // Blue
+      colors[i3] = speed / 2;
+      colors[i3 + 1] = 0.5;
+      colors[i3 + 2] = 1 - speed / 2;
     }
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -263,7 +302,6 @@ const Boids: React.FC = () => {
     const material = new THREE.PointsMaterial({
       size: 4,
       vertexColors: true,
-    //   sizeAttenuation: true,
       transparent: true,
       opacity: 0.8
     });
@@ -272,11 +310,35 @@ const Boids: React.FC = () => {
     pointsRef.current = points;
     scene.add(points);
 
+    // Mouse tracking for predator position
+    const updateMousePosition = (event: MouseEvent) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouseRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseRef.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      // Convert mouse position to 3D world coordinates
+      raycasterRef.current.setFromCamera(mouseRef.current, camera);
+      
+      // Project mouse position onto a plane at z=0
+      const planeNormal = new THREE.Vector3(0, 0, 1);
+      const planePoint = new THREE.Vector3(0, 0, 0);
+      const plane = new THREE.Plane(planeNormal, 0);
+      const intersection = new THREE.Vector3();
+      
+      if (raycasterRef.current.ray.intersectPlane(plane, intersection)) {
+        predatorPositionRef.current = intersection;
+      }
+    };
+
+    const onMouseLeave = () => {
+      predatorPositionRef.current = null;
+    };
+
     // Animation loop
     const animate = () => {
-      // Update boids
+      // Update boids with predator position
       for (let boid of boidsRef.current) {
-        boid.update(boidsRef.current);
+        boid.update(boidsRef.current, predatorPositionRef.current || undefined);
       }
 
       // Update geometry
@@ -292,11 +354,17 @@ const Boids: React.FC = () => {
           positions[i3 + 1] = boid.position.y;
           positions[i3 + 2] = boid.position.z;
           
-          // Update color based on speed
+          // Update color based on speed and fear
           const speed = boid.velocity.length();
-          colors[i3] = speed / 2;
-          colors[i3 + 1] = 0.5;
-          colors[i3 + 2] = 1 - speed / 2;
+          const predatorDistance = predatorPositionRef.current ? 
+            boid.position.distanceTo(predatorPositionRef.current) : Infinity;
+          const fearFactor = predatorDistance < boid.predatorAvoidanceRadius ? 
+            1 - (predatorDistance / boid.predatorAvoidanceRadius) : 0;
+          
+          // More red when afraid, more blue when calm
+          colors[i3] = Math.min(1, (speed / 2) + fearFactor);
+          colors[i3 + 1] = 0.5 * (1 - fearFactor);
+          colors[i3 + 2] = Math.max(0, (1 - speed / 2) - fearFactor);
         }
 
         pointsRef.current.geometry.attributes.position.needsUpdate = true;
@@ -339,6 +407,9 @@ const Boids: React.FC = () => {
     };
 
     const handleMouseMove = (event: MouseEvent) => {
+      // Always update predator position
+      updateMousePosition(event);
+
       if (!isMouseDown) return;
 
       const deltaX = event.clientX - mouseX;
@@ -363,13 +434,13 @@ const Boids: React.FC = () => {
     const handleWheel = (event: WheelEvent) => {
       const scale = event.deltaY > 0 ? 1.1 : 0.9;
       camera.position.multiplyScalar(scale);
-
       renderer.render(scene, camera);
     };
 
     renderer.domElement.addEventListener('mousedown', handleMouseDown);
     renderer.domElement.addEventListener('mouseup', handleMouseUp);
     renderer.domElement.addEventListener('mousemove', handleMouseMove);
+    renderer.domElement.addEventListener('mouseleave', onMouseLeave);
     renderer.domElement.addEventListener('wheel', handleWheel);
 
     // Cleanup
@@ -393,7 +464,8 @@ const Boids: React.FC = () => {
           width: '100%', 
           height: '100%', 
           overflow: 'hidden',
-          background: '#0a0a0a'
+          background: '#0a0a0a',
+          cursor: 'crosshair'
         }} 
       />
       
@@ -417,6 +489,26 @@ const Boids: React.FC = () => {
         {showControls ? 'Hide Controls' : 'Show Controls'}
       </button>
 
+      {/* Instructions */}
+      <div style={{
+        position: 'absolute',
+        top: '20px',
+        left: '20px',
+        background: 'rgba(0, 0, 0, 0.7)',
+        color: 'white',
+        padding: '15px',
+        borderRadius: '8px',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        backdropFilter: 'blur(10px)',
+        fontSize: '14px',
+        maxWidth: '250px'
+      }}>
+        <h4 style={{ margin: '0 0 10px 0', color: '#ff6b6b' }}>🦅 Predator Mode</h4>
+        <p style={{ margin: '0', lineHeight: '1.4' }}>
+          Move your cursor to act as a predator! Boids will flee in terror, turning red when afraid.
+        </p>
+      </div>
+
       {/* Control Panel */}
       {showControls && (
         <div style={{
@@ -430,10 +522,44 @@ const Boids: React.FC = () => {
           borderRadius: '10px',
           border: '1px solid rgba(255, 255, 255, 0.2)',
           backdropFilter: 'blur(10px)',
-          fontSize: '14px'
+          fontSize: '14px',
+          maxHeight: '70vh',
+          overflowY: 'auto'
         }}>
           <h3 style={{ margin: '0 0 20px 0', color: '#fff' }}>Boids Parameters</h3>
           
+          <div style={{ marginBottom: '15px', padding: '10px', background: 'rgba(255, 107, 107, 0.1)', borderRadius: '5px' }}>
+            <div style={{ marginBottom: '10px' }}>
+              <label style={{ display: 'block', marginBottom: '5px', color: '#ff6b6b' }}>
+                Predator Avoidance Radius: {params.predatorAvoidanceRadius}
+              </label>
+              <input
+                type="range"
+                min="50"
+                max="200"
+                step="10"
+                value={params.predatorAvoidanceRadius}
+                onChange={(e) => updateParams({...params, predatorAvoidanceRadius: parseInt(e.target.value)})}
+                style={{ width: '100%' }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '10px' }}>
+              <label style={{ display: 'block', marginBottom: '5px', color: '#ff6b6b' }}>
+                Predator Avoidance Weight: {params.predatorAvoidanceWeight.toFixed(1)}
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="10"
+                step="0.5"
+                value={params.predatorAvoidanceWeight}
+                onChange={(e) => updateParams({...params, predatorAvoidanceWeight: parseFloat(e.target.value)})}
+                style={{ width: '100%' }}
+              />
+            </div>
+          </div>
+
           <div style={{ marginBottom: '15px' }}>
             <label style={{ display: 'block', marginBottom: '5px' }}>
               Separation Weight: {params.separationWeight.toFixed(2)}
@@ -558,6 +684,7 @@ const Boids: React.FC = () => {
             <p><strong>Separation:</strong> Avoid crowding neighbors</p>
             <p><strong>Alignment:</strong> Steer towards average heading</p>
             <p><strong>Cohesion:</strong> Steer towards group center</p>
+            <p style={{ color: '#ff6b6b' }}><strong>Predator Avoidance:</strong> Flee from threats</p>
           </div>
         </div>
       )}
