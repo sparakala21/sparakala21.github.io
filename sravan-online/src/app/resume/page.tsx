@@ -1,9 +1,8 @@
-// Story component
 "use client";
 
 import * as React from 'react';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar';
-import { Container } from '@mui/material';
+import { Container } from '@mui/joy';
 import PDFPage from '@/components/PDFPage';
 
 export default function Story() {
@@ -11,12 +10,15 @@ export default function Story() {
         <>
             <ResponsiveAppBar />
             <Container
+                maxWidth="xl"
                 sx={{
                     bgcolor: '#f0ead6',
                     minHeight: "calc(100vh - 64px)",
-                    py: 4,
-                    px: { xs: 2, sm: 3, md: 4 },
+                    py: 0, // Remove padding since PDFPage handles its own layout
+                    px: 0, // Remove padding to let PDF use full width
                     position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'column',
                 }}
             >
                 <PDFPage/>
