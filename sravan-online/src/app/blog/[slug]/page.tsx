@@ -6,9 +6,9 @@ import ResponsiveAppBar from '@/components/ResponsiveAppBar';
 import { Container } from '@mui/material';
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // Generate static params for all blog posts
@@ -25,7 +25,8 @@ export async function generateMetadata({
   params,
 }: BlogPostPageProps): Promise<Metadata> {
   try {
-    const post = await getPostData(params.slug);
+    const { slug } = await params;
+    const post = await getPostData(slug);
     
     return {
       title: post.title,
@@ -50,7 +51,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   let postData;
   
   try {
-    postData = await getPostData(params.slug);
+    const { slug } = await params;
+    postData = await getPostData(slug);
   } catch (error) {
     notFound();
   }
