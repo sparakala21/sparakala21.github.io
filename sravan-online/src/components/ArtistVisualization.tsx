@@ -38,23 +38,56 @@ const ArtistVisualization: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showLabels, setShowLabels] = useState(false);
   const [selectedNode, setSelectedNode] = useState<EmbeddingNode | null>(null);
+  const [debugInfo, setDebugInfo] = useState<string>('');
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Generate sample data for testing
+  const generateSampleData = (): EmbeddingsData => {
+    const nodes: EmbeddingNode[] = [];
+    const numNodes = 100;
+    
+    for (let i = 0; i < numNodes; i++) {
+      nodes.push({
+        id: `node_${i}`,
+        name: `Artist ${i}`,
+        x: (Math.random() - 0.5) * 20,
+        y: (Math.random() - 0.5) * 20,
+        z: (Math.random() - 0.5) * 20,
+      });
+    }
+    
+    return {
+      metadata: {
+        method: 'sample',
+        num_nodes: numNodes,
+        dimensions: 3
+      },
+      nodes
+    };
+  };
 
   // Load embeddings data
   const loadData = async (method: string) => {
     setIsLoading(true);
     setError(null);
+    setDebugInfo('Loading data...');
     
     try {
-      // You'll need to place your JSON files in the public directory
-      const response = await fetch(`music_data/3d/embeddings_3d_${method}.json`);
+      // First try to load from file
+      const response = await fetch(`/music_data/3d/embeddings_3d_${method}.json`);
       if (!response.ok) {
-        throw new Error(`Failed to load ${method} embeddings`);
+        throw new Error(`Failed to load ${method} embeddings - using sample data instead`);
       }
       const embeddingsData: EmbeddingsData = await response.json();
       setData(embeddingsData);
+      setDebugInfo(`Loaded ${embeddingsData.nodes.length} nodes from file`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load data');
-      console.error('Error loading embeddings:', err);
+      // Fallback to sample data
+      console.warn('Using sample data:', err);
+      const sampleData = generateSampleData();
+      setData(sampleData);
+      setError('Using sample data - place JSON files in public/music_data/3d/');
+      setDebugInfo(`Generated ${sampleData.nodes.length} sample nodes`);
     } finally {
       setIsLoading(false);
     }
@@ -63,6 +96,8 @@ const ArtistVisualization: React.FC = () => {
   // Initialize Three.js scene
   const initScene = () => {
     if (!mountRef.current) return;
+
+    setDebugInfo('Initializing scene...');
 
     // Scene
     const scene = new THREE.Scene();
@@ -86,7 +121,7 @@ const ArtistVisualization: React.FC = () => {
     mountRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Lights
+    // Lights (not needed for points, but good to have)
     const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
     scene.add(ambientLight);
     
@@ -98,7 +133,6 @@ const ArtistVisualization: React.FC = () => {
     const labelsGroup = new THREE.Group();
     scene.add(labelsGroup);
     labelsRef.current = labelsGroup;
-
     // Mouse controls
     let isMouseDown = false;
     let mouseX = 0;
@@ -142,82 +176,27 @@ const ArtistVisualization: React.FC = () => {
     };
 
     const handleClick = (event: MouseEvent) => {
-      console.log('Click detected'); // Debug log
-      
       if (!rendererRef.current || !cameraRef.current || !sceneRef.current || !pointsRef.current || !data) {
-        console.log('Missing refs or data:', {
-          renderer: !!rendererRef.current,
-          camera: !!cameraRef.current,
-          scene: !!sceneRef.current,
-          points: !!pointsRef.current,
-          data: !!data
-        });
         return;
       }
 
-      // Calculate mouse position in normalized device coordinates (-1 to +1)
       const rect = rendererRef.current.domElement.getBoundingClientRect();
       const mouse = new THREE.Vector2();
       mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-      
-      console.log('Mouse coordinates:', mouse.x, mouse.y); // Debug log
 
-      // Configure raycaster for points - increase threshold significantly
-      raycasterRef.current.params.Points = { threshold: 3.0 }; // Increased threshold
+      raycasterRef.current.params.Points = { threshold: 3.0 };
       raycasterRef.current.setFromCamera(mouse, cameraRef.current);
 
-      // Find intersections with the points
       const intersects = raycasterRef.current.intersectObject(pointsRef.current);
-      console.log('Intersections found:', intersects.length); // Debug log
-      console.log('Points object:', pointsRef.current); // Debug the points object
-      console.log('Data nodes length:', data.nodes.length); // Debug data
-
+      
       if (intersects.length > 0) {
-        // Get the index of the clicked point
         const intersection = intersects[0];
         const index = intersection.index;
         
-        console.log('Intersection details:', intersection); // Debug full intersection
-        console.log('Intersection index:', index); // Debug log
-        
         if (index !== undefined && data.nodes[index]) {
           const clickedNode = data.nodes[index];
-          console.log('Clicked artist:', clickedNode.name);
-          console.log('Full node data:', clickedNode); // Debug full node
-          
-          // Optional: Update selected node state
           setSelectedNode(clickedNode);
-        } else {
-          console.log('Index issue - index:', index, 'nodes length:', data.nodes.length);
-        }
-      } else {
-        console.log('No intersections found - trying alternative approach...');
-        
-        // Alternative: Check if we can find the closest point manually
-        const cameraPosition = cameraRef.current.position;
-        const positions = pointsRef.current.geometry.attributes.position.array;
-        let closestIndex = -1;
-        let closestDistance = Infinity;
-        
-        // Project each 3D point to screen space and find closest to mouse click
-        for (let i = 0; i < positions.length; i += 3) {
-          const point3D = new THREE.Vector3(positions[i], positions[i + 1], positions[i + 2]);
-          const point2D = point3D.clone().project(cameraRef.current);
-          
-          const distance = Math.sqrt(
-            Math.pow(point2D.x - mouse.x, 2) + Math.pow(point2D.y - mouse.y, 2)
-          );
-          
-          if (distance < 0.1 && distance < closestDistance) { // 0.1 is the click tolerance
-            closestDistance = distance;
-            closestIndex = i / 3;
-          }
-        }
-        
-        if (closestIndex >= 0 && data.nodes[closestIndex]) {
-          console.log('Found closest point manually:', data.nodes[closestIndex].name);
-          setSelectedNode(data.nodes[closestIndex]);
         }
       }
     };
@@ -234,16 +213,26 @@ const ArtistVisualization: React.FC = () => {
       renderer.domElement.removeEventListener('mouseup', handleMouseUp);
       renderer.domElement.removeEventListener('mousemove', handleMouseMove);
       renderer.domElement.removeEventListener('wheel', handleWheel);
+      renderer.domElement.removeEventListener('click', handleClick);
     };
   };
 
   // Create visualization from data
   const createVisualization = (embeddingsData: EmbeddingsData) => {
-    if (!sceneRef.current) return;
+    if (!sceneRef.current) {
+      return;
+    }
+
 
     // Clear existing points and labels
     if (pointsRef.current) {
       sceneRef.current.remove(pointsRef.current);
+      pointsRef.current.geometry.dispose();
+      if (Array.isArray(pointsRef.current.material)) {
+        pointsRef.current.material.forEach(material => material.dispose());
+      } else {
+        pointsRef.current.material.dispose();
+      }
     }
     if (labelsRef.current) {
       labelsRef.current.clear();
@@ -251,24 +240,44 @@ const ArtistVisualization: React.FC = () => {
 
     const nodes = embeddingsData.nodes;
     
+    if (nodes.length === 0) {
+      return;
+    }
+
     // Create geometry and materials for points
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(nodes.length * 3);
     const colors = new Float32Array(nodes.length * 3);
 
-    // Normalize positions to fit in view
-    const maxCoord = Math.max(
-      ...nodes.flatMap(node => [Math.abs(node.x), Math.abs(node.y), Math.abs(node.z)])
-    );
-    const scale = 30 / maxCoord;
+    // Find the range of coordinates for normalization
+    let minX = Infinity, maxX = -Infinity;
+    let minY = Infinity, maxY = -Infinity;
+    let minZ = Infinity, maxZ = -Infinity;
+
+    nodes.forEach(node => {
+      minX = Math.min(minX, node.x);
+      maxX = Math.max(maxX, node.x);
+      minY = Math.min(minY, node.y);
+      maxY = Math.max(maxY, node.y);
+      minZ = Math.min(minZ, node.z);
+      maxZ = Math.max(maxZ, node.z);
+    });
+
+    const rangeX = maxX - minX || 1;
+    const rangeY = maxY - minY || 1;
+    const rangeZ = maxZ - minZ || 1;
+    const maxRange = Math.max(rangeX, rangeY, rangeZ);
+    const scale = 30 / maxRange;
+
+    setDebugInfo(`Coordinate ranges: X(${minX.toFixed(2)} to ${maxX.toFixed(2)}), Y(${minY.toFixed(2)} to ${maxY.toFixed(2)}), Z(${minZ.toFixed(2)} to ${maxZ.toFixed(2)}), scale: ${scale.toFixed(2)}`);
 
     nodes.forEach((node, i) => {
       positions[i * 3] = node.x * scale;
       positions[i * 3 + 1] = node.y * scale;
       positions[i * 3 + 2] = node.z * scale;
 
-      // Color based on position 
-      const hue = (node.x * scale + 30) / 60;
+      // Color based on normalized position 
+      const hue = ((node.x - minX) / rangeX);
       const color = new THREE.Color().setHSL(hue, 0.7, 0.6);
       colors[i * 3] = color.r;
       colors[i * 3 + 1] = color.g;
@@ -278,18 +287,20 @@ const ArtistVisualization: React.FC = () => {
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-    // Create points material
+    // Create points material with larger size for visibility
     const material = new THREE.PointsMaterial({
-      size: 2.0,
+      size: 5.0, // Increased from 2.0
       vertexColors: true,
       transparent: true,
-      opacity: 0.8,
+      opacity: 0.9, // Increased opacity
+      sizeAttenuation: false, // Points maintain constant size regardless of distance
     });
 
     // Create points mesh
     const points = new THREE.Points(geometry, material);
     sceneRef.current.add(points);
     pointsRef.current = points;
+
 
     // Create labels if enabled
     if (showLabels && labelsRef.current) {
@@ -305,7 +316,6 @@ const ArtistVisualization: React.FC = () => {
     const sampledNodes = nodes.filter((_, i) => i % Math.max(1, Math.floor(nodes.length / 50)) === 0);
     
     sampledNodes.forEach(node => {
-      // Create text sprite
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
       if (!context) return;
@@ -356,6 +366,12 @@ const ArtistVisualization: React.FC = () => {
 
   // Effects
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+    
     const cleanup = initScene();
     animate();
     
@@ -373,17 +389,28 @@ const ArtistVisualization: React.FC = () => {
         rendererRef.current.dispose();
       }
     };
-  }, []);
+  }, [isMounted]);
 
   useEffect(() => {
+    if (!isMounted) return;
     loadData(selectedMethod);
-  }, [selectedMethod]);
+  }, [selectedMethod, isMounted]);
 
   useEffect(() => {
+    if (!isMounted) return;
     if (data) {
       createVisualization(data);
     }
-  }, [data, showLabels]);
+  }, [data, showLabels, isMounted]);
+
+  // Don't render on server
+  if (!isMounted) {
+    return (
+      <div className="w-full h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-white">Loading 3D visualization...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-screen bg-gray-900 relative">
@@ -434,6 +461,12 @@ const ArtistVisualization: React.FC = () => {
               <div>Name: {selectedNode.name}</div>
               {selectedNode.genre && <div>Genre: {selectedNode.genre}</div>}
             </div>
+          </div>
+        )}
+
+        {debugInfo && (
+          <div className="text-xs text-blue-300 mb-2 bg-gray-700 p-2 rounded">
+            Debug: {debugInfo}
           </div>
         )}
 

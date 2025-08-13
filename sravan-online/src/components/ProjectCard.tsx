@@ -1,8 +1,7 @@
 "use client";
 
 import * as React from 'react';
-import { Container, Typography, Box} from '@mui/material';
-import MuiButton from '@mui/material/Button';
+import { Container, Typography, Box, Button, Card, CardContent } from '@mui/joy';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -26,113 +25,129 @@ export default function ProjectCard({
     imageAlt
 }: ProjectCardProps) {
     return (
-        <Container
+        <Card
+            variant="outlined"
             sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: 2,
-                padding: 2,
                 backgroundColor: '#2C2C2C',
-                borderRadius: 2,
-                boxShadow: 1,
+                borderRadius: 'md',
+                boxShadow: 'sm',
                 mb: 4, // Margin bottom for spacing between cards
+                border: '1px solid',
+                borderColor: 'neutral.700',
             }}
         >
-            <Typography
-                variant="h1"
-                component="h1"
-                gutterBottom
-                sx={{
-                    mt: 2,
-                    mb: 4,
-                    textAlign: 'center',
-                    color: 'white'
-                }}
-            >
-                {title}
-            </Typography>
-            
-            {/* Description and Image Container */}
-            <Box
+            <CardContent
                 sx={{
                     display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: 3,
-                    width: '100%',
-                    flexDirection: { xs: 'column', sm: 'row' }, // Stack on mobile, side-by-side on larger screens
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 2,
+                    p: 3,
                 }}
             >
                 <Typography
-                    variant="h3"
-                    component="h3"
-                    gutterBottom
+                    level="h1"
+                    component="h1"
                     sx={{
-                        mt: 2,
-                        mb: 4,
-                        textAlign: 'left',
-                        color: 'white',
-                        flex: 1, 
+                        mt: 1,
+                        mb: 2,
+                        textAlign: 'center',
+                        color: 'white'
                     }}
                 >
-                    {description}
+                    {title}
                 </Typography>
                 
-                {/* Image beside description */}
-                {imageURL && (
-                    <Image 
-                        src={imageURL}
-                        width={200}
-                        height={150}
-                        alt={imageAlt || title}
-                        style={{ 
-                            borderRadius: '8px',
-                            flexShrink: 0 
-                        }} 
-                    />
-                )}
-            </Box>
-            
-            {isExternal ? (
-                <MuiButton
-                    component="a"
-                    href={buttonLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                {/* Description and Image Container */}
+                <Box
                     sx={{
-                        color: '#f0eadc'
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: 3,
+                        width: '100%',
+                        flexDirection: { xs: 'column', sm: 'row' }, // Stack on mobile, side-by-side on larger screens
                     }}
                 >
                     <Typography
-                        variant="h6"
-                        component="span"
+                        level="body-lg"
+                        component="p"
                         sx={{
+                            textAlign: 'left',
                             color: 'white',
+                            flex: 1,
+                            lineHeight: 1.6,
+                        }}
+                    >
+                        {description}
+                    </Typography>
+                    
+                    {/* Image beside description */}
+                    {imageURL && (
+                        <Box
+                            sx={{
+                                flexShrink: 0,
+                                borderRadius: 'sm',
+                                overflow: 'hidden',
+                            }}
+                        >
+                            <Image 
+                                src={imageURL}
+                                width={200}
+                                height={150}
+                                alt={imageAlt || title}
+                                style={{ 
+                                    borderRadius: '8px',
+                                    objectFit: 'cover'
+                                }} 
+                            />
+                        </Box>
+                    )}
+                </Box>
+                
+                {isExternal ? (
+                    <Button
+                        component="a"
+                        href={buttonLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        variant="soft"
+                        color="neutral"
+                        size="lg"
+                        sx={{
+                            backgroundColor: 'rgba(240, 234, 220, 0.1)',
+                            color: 'white',
+                            '&:hover': {
+                                backgroundColor: 'rgba(240, 234, 220, 0.2)',
+                            },
+                            borderRadius: 'sm',
+                            fontWeight: 600,
                         }}
                     >
                         {buttonText}
-                    </Typography>
-                </MuiButton>
-            ) : (
-                <Link href={buttonLink} passHref style={{ textDecoration: 'none' }}>
-                    <MuiButton
+                    </Button>
+                ) : (
+                    <Button
+                        component={Link}
+                        href={buttonLink}
+                        variant="soft"
+                        color="neutral"
+                        size="lg"
                         sx={{
-                            color: '#f0eadc'
+                            backgroundColor: 'rgba(240, 234, 220, 0.1)',
+                            color: 'white',
+                            '&:hover': {
+                                backgroundColor: 'rgba(240, 234, 220, 0.2)',
+                            },
+                            borderRadius: 'sm',
+                            fontWeight: 600,
+                            textDecoration: 'none',
                         }}
                     >
-                        <Typography
-                            variant="h6"
-                            component="span"
-                            sx={{
-                                color: 'white',
-                            }}
-                        >
-                            {buttonText}
-                        </Typography>
-                    </MuiButton>
-                </Link>
-            )}
-        </Container>
+                        {buttonText}
+                    </Button>
+                )}
+            </CardContent>
+        </Card>
     );
 }

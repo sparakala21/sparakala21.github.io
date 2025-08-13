@@ -1,9 +1,10 @@
 "use client";
 
 import * as React from 'react';
-import {Box, Container, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/joy';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar';
 import SummaryCard from '@/components/SummaryCard';
+
 export default function Home() {
   return (
     <>
@@ -27,24 +28,11 @@ export default function Home() {
             gap: 1, // Space between cards
             padding: 2, // Padding around the container
             backgroundColor: '#ffffff', // Background color
-            borderRadius: 2, // Rounded corners
-            boxShadow: 1, // Shadow for depth
+            borderRadius: 'md', // Joy UI uses named values: xs, sm, md, lg, xl
+            boxShadow: 'sm', // Joy UI uses named values: xs, sm, md, lg, xl
           }}
         >
-{/* 
-        <Box
-            sx={{
-              backgroundImage: 'url(pictures/background.png)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              width: '100%',
-              height: 839,
-            }}
-          /> */}
-        <SummaryCard
-          title="About Me"
-          description="Right now I am working on a better version of my Artist2Vec visualization project that I call artist2vec3d. Add it to the end of the URL to see what I have so far."
-        />
+
         </Container>
       </Container>
     </>

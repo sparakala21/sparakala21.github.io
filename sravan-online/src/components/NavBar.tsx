@@ -4,15 +4,17 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
+import {Typography} from '@mui/joy';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Image from 'next/image';
+import { useTheme } from '@mui/joy/styles';
 // import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const pageRoutes = [
   { name: 'Resume', path: '/resume' },
@@ -23,11 +25,15 @@ const pageRoutes = [
 ];
 
 function ResponsiveAppBar() {
+  const theme = useTheme();
+  const pathname = usePathname();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
+
+  const isActivePage = (path: string) => pathname === path;
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
@@ -99,31 +105,70 @@ function ResponsiveAppBar() {
             >
               LOGO
             </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {pageRoutes.map((page) => (
-                <Link key={page.name} href={page.path} passHref style={{ textDecoration: 'none' }}>
-                  <Button
-                    disableRipple // This removes the ripple effect
-                    onClick={handleCloseNavMenu}
-                    sx={{ 
-                      my: 2, 
-                      color: 'white', 
-                      display: 'block',
-                      transition: 'transform 0.1s, background-color 0.1s',
-                      '&:active': {
-                        transform: 'translateY(2px)', // Small movement on click
-                        backgroundColor: 'rgba(255, 255, 255, 0.1)' // Subtle background change
-                      },
-                      '&:hover': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)' // Very subtle hover state
-                      }
-                    }}
-                  >
-                    {page.name}
-                  </Button>
-                </Link>
-              ))}
-            </Box>
+            <Box 
+          sx={{ 
+            display: { xs: 'none', md: 'flex' }, 
+            gap: 0.5, 
+            flexGrow: 1, 
+            justifyContent: 'flex-end' 
+          }}
+          role="menubar"
+        >
+          {pageRoutes.map((page) => (
+            <Link 
+              key={page.name} 
+              href={page.path} 
+              style={{ textDecoration: 'none' }}
+            >
+              <Typography
+                level="h3"
+                role="menuitem"
+                tabIndex={0}
+                sx={{
+                  py: 1.5,
+                  px: 2,
+                  color: 'white',
+                  fontFamily: theme.fontFamily.display,
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  borderRadius: 'sm',
+                  transition: 'all 0.2s ease-in-out',
+                  cursor: 'pointer',
+                  position: 'relative',
+                  backgroundColor: 'transparent',
+                  
+                  '&:focus-visible': {
+                    outline: `2px solid ${theme.palette.primary[500]}`,
+                    outlineOffset: '2px',
+                  },
+                  '&:focus': {
+                    outline: 'none',
+                  },
+
+                  '&::after': isActivePage(page.path) ? {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: '-2px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: '80%',
+                    height: '3px',
+                    backgroundColor: theme.palette.primary[600],
+                    borderRadius: '2px',
+                  } : {},
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    e.currentTarget.click();
+                  }
+                }}
+              >
+                {page.name}
+              </Typography>
+            </Link>
+          ))}
+        </Box>
           </Toolbar>
         </Container>
       </AppBar>
