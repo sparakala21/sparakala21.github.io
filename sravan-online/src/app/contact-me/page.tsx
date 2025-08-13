@@ -7,10 +7,9 @@ import {
     Typography, 
     Box, 
     Card, 
-    CardContent, 
-    Fade,
+    CardContent,
     useTheme
-} from '@mui/material';
+} from '@mui/joy';
 import { 
     Email as EmailIcon, 
     LinkedIn as LinkedInIcon, 
@@ -47,45 +46,48 @@ export default function Contact() {
     return (
         <>
             <ResponsiveAppBar />
-            <Container
+            <Box
+                sx={{
+                    bgcolor: 'background.surface',
+                    minHeight: "calc(100vh - 64px)",
+                    py: 4,
+                    px: { xs: 2, sm: 3, md: 4 },
+                    position: 'relative',
+                    background: 'linear-gradient(135deg, #f0ead6 0%, #e6d7c3 100%)',
+                }}
+            >
+                <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+                    <Box 
+                        sx={{ 
+                            textAlign: 'center', 
+                            mb: 6,
+                            animation: 'fadeIn 0.8s ease-in-out'
+                        }}
+                    >
+                        <Typography
+                            level="h1"
                             sx={{
-                                bgcolor: '#f0ead6',
-                                minHeight: "calc(100vh - 64px)", // Adjust for AppBar height
-                                py: 4, // Vertical padding (top/bottom)
-                                px: { xs: 2, sm: 3, md: 4 }, // Responsive horizontal padding
-                                position: 'relative',
+                                fontWeight: 'bold',
+                                color: 'text.primary',
+                                mb: 2,
+                                fontSize: { xs: '2rem', md: '3rem' }
                             }}
                         >
-                <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-                    <Fade in timeout={800}>
-                        <Box textAlign="center" mb={6}>
-                            <Typography
-                                variant="h2"
-                                component="h1"
-                                gutterBottom
-                                sx={{
-                                    fontWeight: 'bold',
-                                    color: 'black',
-                                    mb: 2
-                                }}
-                            >
-                                Get In Touch
-                            </Typography>
-                            <Typography
-                                variant="h5"
-                                component="p"
-                                sx={{
-                                    color: 'rgba(0, 0, 0, 0.9)',
-                                    fontWeight: 300,
-                                    maxWidth: 600,
-                                    mx: 'auto'
-                                }}
-                            >
-                                I&apos;d love to hear from you. Whether you have a question, 
-                                collaboration idea, or just want to say hello!
-                            </Typography>
-                        </Box>
-                    </Fade>
+                            Get In Touch
+                        </Typography>
+                        <Typography
+                            level="h4"
+                            sx={{
+                                color: 'text.secondary',
+                                fontWeight: 300,
+                                maxWidth: 600,
+                                mx: 'auto'
+                            }}
+                        >
+                            I'd love to hear from you. Whether you have a question, 
+                            collaboration idea, or just want to say hello!
+                        </Typography>
+                    </Box>
 
                     <Box
                         sx={{
@@ -102,114 +104,128 @@ export default function Contact() {
                                 sx={{
                                     flex: '1 1 300px',
                                     maxWidth: '350px',
-                                    minWidth: '280px'
+                                    minWidth: '280px',
+                                    animation: `fadeInUp 1s ease-in-out ${0.2 + index * 0.2}s both`
                                 }}
                             >
-                                <Fade in timeout={1000 + index * 200}>
-                                    <Card
-                                        sx={{
+                                <Card
+                                    variant="soft"
+                                    sx={{
+                                        height: '100%',
+                                        transition: 'all 0.3s ease-in-out',
+                                        cursor: 'pointer',
+                                        bgcolor: 'rgba(255, 255, 255, 0.95)',
+                                        backdropFilter: 'blur(10px)',
+                                        border: '1px solid',
+                                        borderColor: 'neutral.200',
+                                        '&:hover': {
+                                            transform: 'translateY(-8px)',
+                                            boxShadow: 'lg',
+                                            '& .contact-icon': {
+                                                transform: 'scale(1.1)',
+                                                color: method.color
+                                            }
+                                        }
+                                    }}
+                                    onClick={() => {
+                                        if (method.link.startsWith('mailto:')) {
+                                            window.location.href = method.link;
+                                        } else {
+                                            window.open(method.link, '_blank');
+                                        }
+                                    }}
+                                >
+                                    <CardContent 
+                                        sx={{ 
+                                            textAlign: 'center', 
+                                            py: 4,
                                             height: '100%',
-                                            transition: 'all 0.3s ease-in-out',
-                                            cursor: 'pointer',
-                                            background: 'rgba(255, 255, 255, 0.95)',
-                                            backdropFilter: 'blur(10px)',
-                                            border: '1px solid rgba(255, 255, 255, 0.2)',
-                                            '&:hover': {
-                                                transform: 'translateY(-8px)',
-                                                boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
-                                                '& .contact-icon': {
-                                                    transform: 'scale(1.1)',
-                                                    color: method.color
-                                                }
-                                            }
-                                        }}
-                                        onClick={() => {
-                                            if (method.link.startsWith('mailto:')) {
-                                                window.location.href = method.link;
-                                            } else {
-                                                window.open(method.link, '_blank');
-                                            }
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
                                         }}
                                     >
-                                        <CardContent 
-                                            sx={{ 
-                                                textAlign: 'center', 
-                                                py: 4,
-                                                height: '100%',
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                justifyContent: 'center'
+                                        <Box
+                                            className="contact-icon"
+                                            sx={{
+                                                mb: 2,
+                                                transition: 'all 0.3s ease-in-out',
+                                                color: 'text.secondary'
                                             }}
                                         >
-                                            <Box
-                                                className="contact-icon"
-                                                sx={{
-                                                    mb: 2,
-                                                    transition: 'all 0.3s ease-in-out',
-                                                    color: 'text.secondary'
-                                                }}
-                                            >
-                                                {method.icon}
-                                            </Box>
-                                            <Typography 
-                                                variant="h5" 
-                                                component="h3" 
-                                                gutterBottom
-                                                sx={{ fontWeight: 'bold', color: 'text.primary' }}
-                                            >
-                                                {method.title}
+                                            {method.icon}
+                                        </Box>
+                                        <Typography 
+                                            level="h3"
+                                            sx={{ 
+                                                fontWeight: 'bold', 
+                                                color: 'text.primary',
+                                                mb: 1
+                                            }}
+                                        >
+                                            {method.title}
+                                        </Typography>
+                                        <Typography 
+                                            level="body-md"
+                                            sx={{ 
+                                                color: 'text.secondary',
+                                                mb: 2 
+                                            }}
+                                        >
+                                            {method.description}
+                                        </Typography>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: 1,
+                                                color: method.color,
+                                                fontWeight: 'md'
+                                            }}
+                                        >
+                                            <Typography level="body-sm">
+                                                Connect
                                             </Typography>
-                                            <Typography 
-                                                variant="body1" 
-                                                color="text.secondary"
-                                                sx={{ mb: 2 }}
-                                            >
-                                                {method.description}
-                                            </Typography>
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    gap: 1,
-                                                    color: method.color,
-                                                    fontWeight: 'medium'
-                                                }}
-                                            >
-                                                <Typography variant="body2">
-                                                    Connect
-                                                </Typography>
-                                            </Box>
-                                        </CardContent>
-                                    </Card>
-                                </Fade>
+                                        </Box>
+                                    </CardContent>
+                                </Card>
                             </Box>
                         ))}
                     </Box>
 
-                    <Fade in timeout={1600}>
-                        <Box 
-                            textAlign="center" 
-                            mt={8}
+                    <Box 
+                        sx={{
+                            textAlign: 'center',
+                            mt: 8,
+                            animation: 'fadeIn 1.6s ease-in-out'
+                        }}
+                    >
+                        <Card
+                            variant="soft"
                             sx={{
-                                background: 'rgba(255, 255, 255, 0.1)',
+                                bgcolor: 'rgba(255, 255, 255, 0.1)',
                                 backdropFilter: 'blur(10px)',
-                                borderRadius: 2,
-                                p: 4,
-                                border: '1px solid rgba(255, 255, 255, 0.2)'
+                                border: '1px solid',
+                                borderColor: 'rgba(255, 255, 255, 0.2)',
+                                p: 4
                             }}
                         >
                             <Typography 
-                                variant="h6" 
-                                gutterBottom
-                                sx={{ color: 'black', fontWeight: 'bold' }}
+                                level="h4"
+                                sx={{ 
+                                    color: 'text.primary', 
+                                    fontWeight: 'bold',
+                                    mb: 2
+                                }}
                             >
                                 Let's Build Something Amazing Together
                             </Typography>
                             <Typography 
-                                variant="body1"
+                                level="body-lg"
                                 sx={{ 
-                                    color: 'rgba(255, 255, 255, 0.8)',
+                                    color: 'text.secondary',
                                     maxWidth: 500,
                                     mx: 'auto'
                                 }}
@@ -217,10 +233,33 @@ export default function Contact() {
                                 I'm always excited to discuss new opportunities, 
                                 innovative projects, and creative collaborations.
                             </Typography>
-                        </Box>
-                    </Fade>
+                        </Card>
+                    </Box>
                 </Container>
-            </Container>
+
+                {/* CSS-in-JS animations */}
+                <style jsx global>{`
+                    @keyframes fadeIn {
+                        from {
+                            opacity: 0;
+                        }
+                        to {
+                            opacity: 1;
+                        }
+                    }
+
+                    @keyframes fadeInUp {
+                        from {
+                            opacity: 0;
+                            transform: translateY(30px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                `}</style>
+            </Box>
         </>
     );
 }
