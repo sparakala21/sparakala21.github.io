@@ -1,8 +1,21 @@
 "use client";
 
-import { Typography, Container } from '@mui/material';
+import { 
+  Typography, 
+  Container, 
+  Box, 
+  Select, 
+  Option, 
+  Input, 
+  FormLabel, 
+  FormControl,
+  Card,
+  CircularProgress,
+  Sheet
+} from '@mui/joy';
 import React, { useState, useEffect, useRef } from 'react';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar';
+
 // Type definitions
 interface Node {
   id: string;
@@ -140,8 +153,13 @@ const EmbeddingVisualizer: React.FC = () => {
     setHoveredNode(closestNode);
   };
 
-  const handleMethodChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    setSelectedMethod(e.target.value as VisualizationMethod);
+  const handleMethodChange = (
+    _event: React.SyntheticEvent | null,
+    newValue: VisualizationMethod | null,
+  ): void => {
+    if (newValue) {
+      setSelectedMethod(newValue);
+    }
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -158,99 +176,130 @@ const EmbeddingVisualizer: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-lg">Loading embeddings...</div>
-      </div>
+      <Container
+        sx={{ 
+          bgcolor: 'background.surface',
+          minHeight: "calc(100vh - 64px)",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          py: 4,
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+          <CircularProgress size="lg" />
+          <Typography level="body-lg">Loading embeddings...</Typography>
+        </Box>
+      </Container>
     );
   }
 
   return (
     <Container
-    sx={{ 
-          bgcolor: '#f0ead6',
-          minHeight: "calc(100vh - 64px)", // Adjust for AppBar height
-          py: 4, // Vertical padding (top/bottom)
-          px: { xs: 2, sm: 3, md: 4 }, // Responsive horizontal padding
-          position: 'relative',
-        }}>
+      sx={{ 
+        bgcolor: 'background.body',
+        minHeight: "calc(100vh - 64px)",
+        py: 4,
+        px: { xs: 2, sm: 3, md: 4 },
+        position: 'relative',
+      }}
+    >
+      <ResponsiveAppBar />
+      
+      <Sheet
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 3,
+          p: 3,
+          borderRadius: 'md',
+          boxShadow: 'sm',
+          bgcolor: 'background.surface',
+        }}
+      >
+        <Typography level="h1" textAlign="center">
+          Artist Collaboration Network
+        </Typography>
+        
+        <Typography level="body-lg" textAlign="center" sx={{ maxWidth: '800px' }}>
+          Using the power of Dimensionality Reduction, we can visualize the relationships 
+          between artists based on other similar artists. I&apos;ll have a writeup ready soon.
+        </Typography>
 
-    <ResponsiveAppBar />
-      <Container
-      sx={{
-            display: 'flex',
-            flexDirection: { xs: 'row', sm: 'row' }, // Stack on small screens, row on larger
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            flexWrap: 'wrap', // Allow wrapping
-            gap: 1, // Space between cards
-            padding: 2, // Padding around the container
-            backgroundColor: '#ffffff', // Background color
-            borderRadius: 2, // Rounded corners
-            boxShadow: 1, // Shadow for depth
-          }}>
-        <Typography variant="h1">
-            Artist Collaboration Network
-        </Typography>
-        <Typography variant="h3" >
-          Using the power of Dimensionality Reduction, we can visualize the relationships between artists based on other similar artists. I&apos;ll have a writeup ready soon.
-        </Typography>
-        <div className="flex gap-4 mb-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Visualization Method:</label>
-            <select 
-              value={selectedMethod} 
+        <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <FormControl sx={{ minWidth: 200 }}>
+            <FormLabel>Visualization Method</FormLabel>
+            <Select
+              value={selectedMethod}
               onChange={handleMethodChange}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              variant="outlined"
             >
-              <option value="tsne">t-SNE</option>
-              <option value="pca">PCA</option>
-              <option value="umap">UMAP</option>
-            </select>
-          </div>
+              <Option value="tsne">t-SNE</Option>
+              <Option value="pca">PCA</Option>
+              <Option value="umap">UMAP</Option>
+            </Select>
+          </FormControl>
           
-          <div>
-            <label className="block text-sm font-medium mb-2">Search Artists:</label>
-            <input
-              type="text"
+          <FormControl sx={{ minWidth: 200 }}>
+            <FormLabel>Search Artists</FormLabel>
+            <Input
               value={searchTerm}
               onChange={handleSearchChange}
               placeholder="Type artist name..."
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              variant="outlined"
             />
-          </div>
-        </div>
+          </FormControl>
+        </Box>
 
         {embeddings && (
-          <div className="text-sm text-gray-600 mb-4">
+          <Typography level="body-sm" color="neutral">
             Showing {embeddings.nodes.length} artists using {embeddings.metadata.method} dimensionality reduction
-          </div>
+          </Typography>
         )}
 
+        <Card
+          variant="outlined"
+          sx={{ 
+            overflow: 'hidden',
+            width: '100%',
+            maxWidth: '1000px',
+          }}
+        >
+          <canvas
+            ref={canvasRef}
+            width={1000}
+            height={600}
+            onMouseMove={handleCanvasMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{ 
+              width: '100%', 
+              height: 'auto',
+              cursor: 'crosshair',
+              display: 'block'
+            }}
+          />
+        </Card>
 
-      <div className="border border-gray-300 rounded-lg overflow-hidden">
-        <canvas
-          ref={canvasRef}
-          width={1000}
-          height={600}
-          onMouseMove={handleCanvasMouseMove}
-          onMouseLeave={handleMouseLeave}
-          className="w-full h-full cursor-crosshair"
-          style={{ maxWidth: '100%', height: 'auto' }}
-        />
-      </div>
-
-          </Container>
-
-      {hoveredNode && embeddings && (
-        <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-          <h3 className="font-semibold">
-            {embeddings.nodes.find(n => n.id === hoveredNode)?.name}
-          </h3>
-          <p className="text-sm text-gray-600">
-            ID: {hoveredNode}
-          </p>
-        </div>
-      )}
+        {hoveredNode && embeddings && (
+          <Card
+            variant="soft"
+            sx={{ 
+              p: 2,
+              width: '100%',
+              maxWidth: '400px',
+              bgcolor: 'background.level1'
+            }}
+          >
+            <Typography level="title-md" sx={{ mb: 1 }}>
+              {embeddings.nodes.find(n => n.id === hoveredNode)?.name}
+            </Typography>
+            <Typography level="body-sm" color="neutral">
+              ID: {hoveredNode}
+            </Typography>
+          </Card>
+        )}
+      </Sheet>
     </Container>
   );
 };
