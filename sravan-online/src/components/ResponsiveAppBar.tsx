@@ -49,12 +49,15 @@ function ResponsiveAppBar() {
         >
           {/* Logo */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Image
-              src='/kwan.png'
-              width={196}
-              height={220}
-              alt=""
-            />
+            <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
+              <Image
+                src='/kwan.png'
+                width={196}
+                height={220}
+                alt="Home"
+                style={{ cursor: 'pointer' }}
+              />
+            </Link>
           </Box>
 
           {/* Mobile Menu */}
