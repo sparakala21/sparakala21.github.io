@@ -60,9 +60,9 @@ export async function getPostData(slug: string): Promise<BlogPostWithContent> {
   };
 }
 
-export function getPostBySlug(slug: string): BlogPostWithContent | null {
+export async function getPostBySlug(slug: string): Promise<BlogPostWithContent | null> {
   try {
-    return getPostData(slug);
+    return await getPostData(slug);
   } catch (error) {
     return null;
   }
