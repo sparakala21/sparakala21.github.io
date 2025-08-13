@@ -17,6 +17,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
+    "gray-matter": "^4.0.3",
     "next": "15.3.2",
     "plotly.js": "^3.0.1",
     "react": "^19.0.0",

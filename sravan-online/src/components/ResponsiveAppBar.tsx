@@ -16,7 +16,9 @@ import Link from 'next/link';
 const pageRoutes = [
   { name: 'Resume', path: '/resume' },
   { name: 'Projects', path: '/projects' },
+  // {name: 'Toys', path: '/toys'},
   { name: 'Contact', path: '/contact-me' }
+
 ];
 
 function ResponsiveAppBar() {
