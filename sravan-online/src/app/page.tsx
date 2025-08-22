@@ -1,40 +1,21 @@
 "use client";
-
-import * as React from 'react';
-import { Box, Container, Typography } from '@mui/joy';
-import ResponsiveAppBar from '@/components/ResponsiveAppBar';
-import SummaryCard from '@/components/SummaryCard';
+import Image from "next/image";
+import { Box, Button, Link, Stack, Typography } from "@mui/joy";
+import { useTheme } from '@mui/joy/styles';
 
 export default function Home() {
+  const theme = useTheme();
+  
   return (
-    <>
-      <ResponsiveAppBar />
-      <Container 
-        sx={{ 
-          bgcolor: '#f0ead6',
-          minHeight: "calc(100vh - 64px)", // Adjust for AppBar height
-          py: 4, // Vertical padding (top/bottom)
-          px: { xs: 2, sm: 3, md: 4 }, // Responsive horizontal padding
-          position: 'relative',
-        }}
-      >
-        <Container
-          sx={{
-            display: 'flex',
-            flexDirection: { xs: 'row', sm: 'row' }, // Stack on small screens, row on larger
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            flexWrap: 'wrap', // Allow wrapping
-            gap: 1, // Space between cards
-            padding: 2, // Padding around the container
-            backgroundColor: '#ffffff', // Background color
-            borderRadius: 'md', // Joy UI uses named values: xs, sm, md, lg, xl
-            boxShadow: 'sm', // Joy UI uses named values: xs, sm, md, lg, xl
-          }}
-        >
-
-        </Container>
-      </Container>
-    </>
+    <Box 
+      sx={{ 
+        maxWidth: '960px', 
+        margin: '0 auto', 
+        textAlign: 'center',
+        px: { xs: 2, sm: 3, md: 4 }
+      }}
+    >
+      
+    </Box>
   );
 }
