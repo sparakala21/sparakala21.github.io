@@ -23,7 +23,6 @@ export default async function BlogPage() {
         }}
     >
 
-        <ResponsiveAppBar />
       
       {allPostsData.length === 0 ? (
         <p className="text-gray-600">No blog posts available yet.</p>

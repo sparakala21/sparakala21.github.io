@@ -8,7 +8,6 @@ import { Container } from '@mui/material';
 export default function Story() {
     return (
         <>
-            <ResponsiveAppBar />
             <Container
                 sx={{
                     bgcolor: '#f0ead6',

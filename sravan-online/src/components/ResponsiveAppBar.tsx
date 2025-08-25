@@ -12,7 +12,6 @@ const pageRoutes = [
   { name: 'Resume', path: '/resume' },
   { name: 'Projects', path: '/projects' },
   {name: 'Blog', path: '/blog'},
-  { name: 'Contact', path: '/contact-me' }
 ];
 
 function NavBar() {
@@ -60,17 +59,17 @@ function NavBar() {
         <Link href="/" aria-label="ReMo homepage">
           <Box sx={{ position: 'relative' }}>
             {/* Desktop Logo */}
-            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+            {/* <Box sx={{ display: { xs: 'none', md: 'block' } }}>
               <Image
-                src="/kwan.png"
+                src="/pictures/background.png"
                 width={300}
                 height={110}
-                alt="Kwan"
+                alt="Home"
                 priority
               />
-            </Box>
+            </Box> */}
             {/* Mobile Logo */}
-            <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+            {/* <Box sx={{ display: { xs: 'block', md: 'none' } }}>
               <Image
                 src="/kwan.png"
                 width={200}
@@ -78,7 +77,7 @@ function NavBar() {
                 alt="Kwan"
                 priority
               />
-            </Box>
+            </Box> */}
           </Box>
         </Link>
 

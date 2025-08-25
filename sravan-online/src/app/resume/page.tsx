@@ -8,7 +8,6 @@ import PDFPage from '@/components/PDFPage';
 export default function Story() {
     return (
         <>
-            <ResponsiveAppBar />
             <Container
                 maxWidth="xl"
                 sx={{
