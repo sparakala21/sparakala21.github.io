@@ -204,7 +204,6 @@ const EmbeddingVisualizer: React.FC = () => {
         position: 'relative',
       }}
     >
-      <ResponsiveAppBar />
       
       <Sheet
         sx={{
