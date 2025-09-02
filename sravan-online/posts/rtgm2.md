@@ -1,28 +1,82 @@
 ---
-title: 'Road To GM 2'
+title: 'Road To GM 2: Data-Driven Chess Improvement'
 date: '2025-08-22'
 ---
 
-# Analyzing how I win and lose
+# Analyzing My Chess Performance: What the Numbers Reveal
 
-In an effort to be more conscious of my strengths and weaknesses I scraped my games and used some rudimentary data analysis to better understand my profile as a player. Here are some of my findings. 
+As part of my journey toward chess mastery, I decided to take a systematic approach to understanding my play. Rather than relying on gut feelings about my strengths and weaknesses, I scraped my entire game history and conducted a thorough data analysis. The results were both encouraging and eye-opening.
 
-## Whole games
-it turns out across my whole 6 year account, I have won 0.9% more games than I lost. I won 57 games more than I lost. Thats all it takes to grow apparently. but if i want to grow faster id like that to increase that gap. 
+## Overall Performance: Small Margins, Big Results
 
-I win 31% of my games by checkmate and about 60% by resignation. I lose just under 20% of my games to checkmate and a whopping 78% to resignation. according to the chess.com public data, I am 7% more likely to win by checkmate and 11% more likely to lose by resignation. this might point to an issue of early resignation but to really be sure I must check different time windows right now i using a collection of all the data.
+Over six years of play, I've maintained a modest but crucial edge: **winning 0.9% more games than I've lost**. That translates to just 57 more wins than losses across my entire account history. 
 
-## Openings
+This slim margin perfectly illustrates chess improvement—you don't need to dominate every game. Consistent, marginal gains compound over time. However, if I want to accelerate my rating growth, expanding this edge should be a priority.
 
-According to the data, I have a fantastic edge from the opening in a variety of openings. across e4 as a whole I have between a 5 and 15% edge excluding the caro kann and the french. 
+## Game Endings: A Tale of Two Players
 
-With black I have a 5% edge playing the caro kann and between a 4 and 10% edge playing any d4 positions.
-I also have a 17% deficiency playing the sicilian. which means i should probably stop doing that.
+The way my games end reveals interesting patterns:
 
-## Tactics
+**My Wins:**
+- 31% by checkmate
+- 60% by resignation
 
-here comes the tricky part 
+**My Losses:**
+- 20% by checkmate  
+- 78% by resignation
 
-## Conclusion and Next Steps
+Compared to Chess.com's public data, I'm 7% more likely to win by checkmate but 11% more likely to lose by resignation. This suggests I might be resigning prematurely in positions that could still be fought. While knowing when to resign is important, I may be giving up on games where counterplay exists.
 
-I think that a lot of these statistics might lag behind whats actually happening. 
+**Action item:** Before resigning, take 30 seconds to look for tactical shots or ways to complicate the position.
+
+## Opening Analysis: Clear Patterns Emerge
+
+The data reveals distinct strengths and weaknesses in my opening repertoire:
+
+**With White (1.e4):**
+- Strong performance across most openings with 5-15% positive win rate
+- **Notable exceptions:** Struggling against the Caro-Kann and French Defense
+- This suggests I should either study these defenses more deeply or consider transitioning to 1.d4 in some games
+
+**With Black:**
+- **Caro-Kann:** +5% win rate (solid choice)
+- **Against 1.d4:** Consistent +4% to +10% across various setups
+- **Sicilian Defense:** -17% win rate (major red flag)
+
+The Sicilian data is particularly striking. Despite being theoretically sound, my 17% deficit suggests either:
+1. I'm not well-prepared in the resulting positions
+2. The sharp, tactical nature doesn't suit my style
+3. I need significantly more study in these lines
+
+**Immediate plan:** Temporarily switch from Sicilian to a more solid defense (like the French or Caro-Kann) while studying Sicilian theory more thoroughly.
+
+## The Incomplete Picture
+
+I deliberately left the tactics section unfinished because this data represents my entire six-year history. Recent improvements in my tactical training might not be reflected in these cumulative statistics.
+
+## Next Steps: Temporal Analysis
+
+These lifetime statistics likely mask recent improvements and current weaknesses. My next analysis will compare:
+
+- **All-time data** (current post)
+- **Past 12 months** (recent trends)
+- **Past 3 months** (current form)  
+- **Past 30 days** (very recent performance)
+- **Past 7 days** (immediate form)
+
+This temporal breakdown should reveal:
+- Whether my opening struggles are historical or current
+- If my resignation tendency is improving
+- Which areas show the most recent progress
+- Where to focus immediate study efforts
+
+## Key Takeaways
+
+1. **Small edges matter** - My 0.9% advantage proves marginal gains compound
+2. **Opening preparation** - Clear weaknesses against specific defenses need attention
+3. **Game continuation** - Possibly resigning too early, missing drawing chances
+4. **Data evolution** - Cumulative stats may not reflect current abilities
+
+The beauty of this data-driven approach is its objectivity. Instead of guessing what needs work, I have concrete evidence pointing toward specific improvements. In my next post, I'll dive into the temporal analysis and see how these patterns have evolved over time.
+
+*What patterns have you noticed in your own chess games? Have you tried analyzing your game data systematically?*

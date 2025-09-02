@@ -4,19 +4,32 @@ import * as React from 'react';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar';
 import ProjectCard from '@/components/ProjectCard'; // Import the new component
 import { Container } from '@mui/material';
+import { Box } from '@mui/joy';
+
+import { useTheme } from '@mui/joy'
 
 export default function Story() {
+    const theme = useTheme();
     return (
         <>
-            <Container
-                sx={{
-                    bgcolor: '#f0ead6',
-                    minHeight: "calc(100vh - 64px)", // Adjust for AppBar height
-                    py: 4, // Vertical padding (top/bottom)
-                    px: { xs: 2, sm: 3, md: 4 }, // Responsive horizontal padding
-                    position: 'relative',
-                }}
+            <Box 
+            sx={{ 
+                backgroundColor: theme.palette.success[600], 
+                minHeight: '100vh',
+                display: 'flex',
+                justifyContent: 'center'
+            }}
             >
+                <Box 
+                    sx={{ 
+                    backgroundColor: theme.palette.neutral[100],
+                    width: '960px', // Changed from maxWidth to width for exact 960px
+                    minHeight: '100vh', // Added to match the height of the dark container
+                    px: { xs: 2, sm: 3, md: 4 },
+                    py: 4, 
+                    textAlign: 'center'
+                    }}
+                >
                 <ProjectCard 
                     title="ATChess"
                     description="ATChess is a chess variant that allows players to play chess in Active-Time instead of turn-based. The game has all the same rules as chess, but players make moves based on cooldowns instead of turns. Instead of checkmate, the game ends when one players king is captured. I worked on this project with James Baker, Emmanuel David, Brenden Kiely, and Marcus Moreno."
@@ -60,7 +73,8 @@ export default function Story() {
                     buttonLink="/public-transit-planner"
                     isExternal={false}
                 /> */}
-            </Container>
+            </Box>
+        </Box>
         </>
     )
 }

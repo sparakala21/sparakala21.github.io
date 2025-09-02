@@ -3,7 +3,8 @@ import { getSortedPostsData } from '@/lib/posts';
 import { Metadata } from 'next';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar'
 import { Container, Grid } from '@mui/material';
-import { Typography } from '@mui/joy';
+import { Box, Typography } from '@mui/joy';
+import { useTheme } from '@mui/joy'
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Read our latest blog posts and updates',
@@ -11,17 +12,24 @@ export const metadata: Metadata = {
 
 export default async function BlogPage() {
   const allPostsData = getSortedPostsData();
-
   return (
-    <Container
-        sx={{
-            bgcolor: '#f0ead6',
-            minHeight: "calc(100vh - 64px)",
-            py: 4,
-            px: { xs: 2, sm: 3, md: 4 },
-            position: 'relative'
-        }}
+    <Box 
+    sx={{ 
+        backgroundColor: '#32131c', 
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center'
+    }}
     >
+        <Box 
+            sx={{ 
+            backgroundColor: "#fdfdfd",
+            width: '960px', // Changed from maxWidth to width for exact 960px
+            minHeight: '100vh', // Added to match the height of the dark container
+            px: { xs: 2, sm: 3, md: 4 },
+            py: 4, 
+            }}
+        >
 
       
       {allPostsData.length === 0 ? (
@@ -66,6 +74,7 @@ export default async function BlogPage() {
           ))}
         </Grid>
       )}
-    </Container>
+    </Box>
+    </Box>
   );
 }

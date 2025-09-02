@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Box, Button, Link, List, ListItem, Stack, Typography } from "@mui/joy";
+import { Box, Button, Link, List, ListItem, Stack, Typography, Divider, Chip } from "@mui/joy";
 import { useTheme } from '@mui/joy/styles';
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <Box 
       sx={{ 
-        backgroundColor: theme.palette.success[600], 
+        background: `linear-gradient(135deg, ${theme.palette.success[500]} 0%, ${theme.palette.success[700]} 100%)`,
         minHeight: '100vh',
         display: 'flex',
         justifyContent: 'center'
@@ -17,153 +17,331 @@ export default function Home() {
     >
       <Box 
         sx={{ 
-          backgroundColor: theme.palette.neutral[100],
-          width: '960px', // Changed from maxWidth to width for exact 960px
-          minHeight: '100vh', // Added to match the height of the dark container
-          px: { xs: 2, sm: 3, md: 4 },
-          py: 4, 
-          textAlign: 'center'
+          backgroundColor: theme.palette.neutral[50],
+          width: '960px',
+          minHeight: '100vh',
+          px: { xs: 3, sm: 4, md: 6 },
+          py: 6, 
+          textAlign: 'center',
+          boxShadow: '0 0 40px rgba(0,0,0,0.1)'
         }}
       >
+        {/* Hero Section */}
         <Stack 
-            direction={{ xs: "column", md: "row" }}  
-            alignItems={{ xs: "center", md: "flex-start" }}
-            spacing={3}
-            sx={{ mb: 4 }}
+          direction={{ xs: "column", md: "row" }}  
+          alignItems={{ xs: "center", md: "flex-start" }}
+          spacing={4}
+          sx={{ mb: 8 }}
         >
-            <Box sx={{ 
-                width: '100%', 
-                maxWidth: '460px',
-                flexShrink: 0
-            }}>
-                <Image
-                    src="/profile.jpg"
-                    width={460}
-                    height={460}
-                    alt="Sravan"
-                    style={{ 
-                        maxWidth: '100%',
-                        height: 'auto',
-                        width: 'auto'
-                    }}
-                />
-            </Box>
-            
-            <Stack direction="column" spacing={2} sx={{ flex: 1 }}>
-                <Typography level="h2" sx={{ mt: { xs: 2, md: 12 } }}>
-                    Sravan Parakala
-                </Typography>
-
-                <Typography level="h3">
-                    Full-Stack Developer and hobbyist data scientist
-                </Typography>
-
-                <Typography>
-                    I am a Software Engineer with a bachelors degree from Rensselaer Polytechnic Institute. I am currently pursuing a Masters in Information Technology and Web Science and will graduate in May 2026.
-                </Typography>
-
-                <List sx={{ 
-                    listStyleType: 'disc', 
-                    marginLeft: { xs: 2, sm: 6 },
-                    pl: { xs: 2, sm: 5 }
-                }}>
-                    <ListItem sx={{ display: 'list-item' }}>
-                        <Link href="https://new.rcos.io/">
-                        RCOS
-                        </Link>
-                    </ListItem>
-                    
-                    <ListItem sx={{ display: 'list-item' }}>
-                        <Link href="https://gdg.community.dev/gdg-on-campus-rensselaer-polytechnic-institute-troy-united-states/">
-                        GDGC RPI
-                        </Link>
-                    </ListItem>
-                      
-                    <ListItem sx={{ display: 'list-item' }}>
-                        <Link href="https://marketing.remo.app/">
-                        ReMo
-                        </Link>
-                    </ListItem>
-
-                    <ListItem sx={{ display: 'list-item' }}>
-                        <Link href="https://www.chess.com/club/rensselaer-chess-club">
-                        RPI Chess Club
-                        </Link>
-                    </ListItem>
-                        
-                    <ListItem sx={{ display: 'list-item' }}>
-                        <Link href="/artist2vec">
-                        Artist2Vec
-                        </Link>
-                    </ListItem>
-                </List>
-            </Stack>
-        </Stack>
-
-        <Typography level="h1">A Little About Me</Typography>
-        <Typography level="body-md" sx={{ mb: 4 }}>I grew up mostly on the east coast of the US but I spent 4 years in India. I used to solve Rubiks Cubes Competitively.
-          Over the last 6 years I have been learning and playing chess and am now starting to enter tournaments. 
+          <Box sx={{ 
+            width: '100%', 
+            maxWidth: '400px',
+            flexShrink: 0
+          }}>
+            <Image
+              src="/profile.jpg"
+              width={400}
+              height={400}
+              alt="Sravan Parakala - Full-Stack Developer"
+              priority
+              style={{ 
+                maxWidth: '100%',
+                height: 'auto',
+                borderRadius: '12px',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+              }}
+            />
+          </Box>
           
-        </Typography>
+          <Stack direction="column" spacing={3} sx={{ flex: 1, textAlign: { xs: 'center', md: 'left' } }}>
+            <Typography 
+              level="h1" 
+              sx={{ 
+                mt: { xs: 3, md: 8 },
+                fontWeight: 700,
+                lineHeight: 1.2
+              }}
+            >
+              Sravan Parakala
+            </Typography>
 
+            <Typography 
+              level="h2" 
+              sx={{ 
+                color: theme.palette.text.secondary,
+                fontWeight: 500,
+                lineHeight: 1.3
+              }}
+            >
+              Full-Stack Developer & Data Science Enthusiast
+            </Typography>
 
-        <Stack 
-            direction={{ xs: "column", md: "row" }}  
-            alignItems={{ xs: "center", md: "flex-start" }}
-            spacing={3}
-            sx={{ mb: 4 }}
-        >
-            <Box sx={{ 
-                width: '100%', 
-                maxWidth: '460px',
-                flexShrink: 0
-            }}>
-                <Image
-                    src="/Hiccup/IMG_3073.jpg"
-                    width={460}
-                    height={460}
-                    alt="Michelle"
-                    style={{ 
-                        maxWidth: '100%',
-                        height: 'auto',
-                        width: 'auto'
-                    }}
-                />
+            <Typography 
+              level="body-lg" 
+              sx={{ 
+                lineHeight: 1.6,
+                maxWidth: '500px',
+                mx: { xs: 'auto', md: 0 }
+              }}
+            >
+              Software Engineer with a bachelor's degree from Rensselaer Polytechnic Institute. 
+              Currently pursuing a Master's in Information Technology and Web Science, graduating May 2026.
+            </Typography>
+
+            {/* Skills/Technologies */}
+            <Box sx={{ mt: 2 }}>
+              <Typography level="body-sm" sx={{ mb: 1, fontWeight: 600 }}>
+                Technologies & Interests
+              </Typography>
+              <Stack direction="row" spacing={1} flexWrap="wrap" justifyContent={{ xs: 'center', md: 'flex-start' }}>
+                {['Full-Stack Development', 'Data Science', 'Web Technologies', 'Chess'].map((skill) => (
+                  <Chip key={skill} variant="soft" size="sm" sx={{ mb: 1 }}>
+                    {skill}
+                  </Chip>
+                ))}
+              </Stack>
             </Box>
-            
-            <Stack direction="column" spacing={2} sx={{ flex: 1 }}>
-                <Typography level="h2" sx={{ mt: { xs: 2, md: 12 } }}>
-                    This is Hiccup
-                </Typography>
-
-                <Typography>
-                    He is my chinchilla and he is now almost 4 years old
-                </Typography>
-
-    
-                <List sx={{ 
-                    listStyleType: 'disc', 
-                    marginLeft: { xs: 2, sm: 6 },
-                    pl: { xs: 2, sm: 5 }
-                }}>
-                    <ListItem sx={{ display: 'list-item' }}>
-                        He likes applesticks, louis armstrong and he is more social than most chillas
-                    </ListItem>
-                    
-                    <ListItem sx={{ display: 'list-item' }}>
-                        <Link href="/hiccup">
-                        More on him(WIP)
-                        </Link>
-                    </ListItem>
-                </List>
-            </Stack>
+          </Stack>
         </Stack>
 
-        {/* Contact Me Section */}
-        <Box sx={{ mt: 6, mb: 4 }}>
-          <Typography level="h1" sx={{ mb: 3 }}>Contact Me</Typography>
-          <Typography level="body-md" sx={{ mb: 4 }}>
-            Feel free to reach out if you'd like to collaborate on a project, discuss opportunities, or just say hello!
+        {/* Professional Activities */}
+        <Box sx={{ mb: 8 }}>
+          <Typography level="h2" sx={{ mb: 4, fontWeight: 600 }}>
+            Professional & Community Involvement
+          </Typography>
+          
+          <Stack direction="column" spacing={2} sx={{ maxWidth: '600px', mx: 'auto' }}>
+            <Box sx={{ 
+              p: 3, 
+              borderRadius: '8px', 
+              backgroundColor: theme.palette.background.level1,
+              textAlign: 'left'
+            }}>
+              <Link 
+                href="https://new.rcos.io/"
+                sx={{ 
+                  fontSize: 'lg', 
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  '&:hover': { textDecoration: 'underline' }
+                }}
+              >
+                RCOS (Rensselaer Center for Open Source)
+              </Link>
+              <Typography level="body-sm" sx={{ mt: 1, color: theme.palette.text.secondary }}>
+                Contributing to open source projects and fostering collaborative development
+              </Typography>
+            </Box>
+
+            <Box sx={{ 
+              p: 3, 
+              borderRadius: '8px', 
+              backgroundColor: theme.palette.background.level1,
+              textAlign: 'left'
+            }}>
+              <Link 
+                href="https://gdg.community.dev/gdg-on-campus-rensselaer-polytechnic-institute-troy-united-states/"
+                sx={{ 
+                  fontSize: 'lg', 
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  '&:hover': { textDecoration: 'underline' }
+                }}
+              >
+                GDGC RPI (Google Developer Group on Campus)
+              </Link>
+              <Typography level="body-sm" sx={{ mt: 1, color: theme.palette.text.secondary }}>
+                Growing the developer community at RPI through workshops and events
+              </Typography>
+            </Box>
+
+            <Box sx={{ 
+              p: 3, 
+              borderRadius: '8px', 
+              backgroundColor: theme.palette.background.level1,
+              textAlign: 'left'
+            }}>
+              <Link 
+                href="https://marketing.remo.app/"
+                sx={{ 
+                  fontSize: 'lg', 
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  '&:hover': { textDecoration: 'underline' }
+                }}
+              >
+                ReMo
+              </Link>
+              <Typography level="body-sm" sx={{ mt: 1, color: theme.palette.text.secondary }}>
+                Virtual event platform experience and development
+              </Typography>
+            </Box>
+          </Stack>
+        </Box>
+
+        <Divider sx={{ my: 8 }} />
+
+        {/* About Me Section */}
+        <Box sx={{ mb: 8 }}>
+          <Typography level="h2" sx={{ mb: 4, fontWeight: 600 }}>
+            A Little About Me
+          </Typography>
+          
+          <Stack spacing={3} sx={{ maxWidth: '700px', mx: 'auto', textAlign: 'left' }}>
+            <Typography level="body-lg" sx={{ lineHeight: 1.6 }}>
+              I'm currently pursuing my Master's in Information Technology and Web Science (ITWS) 
+              with a focus on software engineering. I'm passionate about meeting new people and 
+              engaging in meaningful conversations about technology and innovation.
+            </Typography>
+            
+            <Typography level="body-lg" sx={{ lineHeight: 1.6 }}>
+              Data science fascinates me, and I love applying it to personal projects that solve 
+              real-world problems. Check out my Artist2Vec project below to see how I've combined 
+              machine learning with music recommendation systems.
+            </Typography>
+            
+            <Typography level="body-lg" sx={{ lineHeight: 1.6 }}>
+              Community building is something I deeply value. I'm an active member of both the 
+              Phoenixville Chess Club and RPI Chess Club, and I've been instrumental in growing 
+              the developer community at RPI through GDGC@RPI initiatives.
+            </Typography>
+
+            <Box sx={{ 
+              mt: 3,
+              p: 3, 
+              borderRadius: '8px', 
+              backgroundColor: theme.palette.primary[50],
+              border: `1px solid ${theme.palette.primary[200]}`
+            }}>
+              <Link 
+                href="/artist2vec"
+                sx={{ 
+                  fontSize: 'lg', 
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  '&:hover': { textDecoration: 'underline' }
+                }}
+              >
+                🎵 Artist2Vec Project
+              </Link>
+              <Typography level="body-sm" sx={{ mt: 1 }}>
+                Machine learning project for music recommendation using artist embeddings
+              </Typography>
+            </Box>
+
+            <Box sx={{ 
+              p: 3, 
+              borderRadius: '8px', 
+              backgroundColor: theme.palette.warning[50],
+              border: `1px solid ${theme.palette.warning[200]}`
+            }}>
+              <Typography level="body-md" sx={{ fontWeight: 600, mb: 1 }}>
+                ♟️ Chess & Personal Growth
+              </Typography>
+              <Typography level="body-sm">
+                I'm working on becoming a more mindful chess player and person. 
+                Follow my journey on my blog where I share insights about strategic thinking 
+                and personal development.
+              </Typography>
+              <Link 
+                href="https://www.chess.com/club/rensselaer-chess-club"
+                sx={{ 
+                  fontSize: 'sm', 
+                  mt: 1,
+                  display: 'inline-block',
+                  '&:hover': { textDecoration: 'underline' }
+                }}
+              >
+                RPI Chess Club →
+              </Link>
+            </Box>
+          </Stack>
+        </Box>
+
+        <Divider sx={{ my: 8 }} />
+
+        {/* Hiccup Section */}
+        <Stack 
+          direction={{ xs: "column", md: "row" }}  
+          alignItems={{ xs: "center", md: "flex-start" }}
+          spacing={4}
+          sx={{ mb: 8 }}
+        >
+          <Box sx={{ 
+            width: '100%', 
+            maxWidth: '400px',
+            flexShrink: 0
+          }}>
+            <Image
+              src="/Hiccup/IMG_3073.jpg"
+              width={400}
+              height={400}
+              alt="Hiccup the chinchilla"
+              style={{ 
+                maxWidth: '100%',
+                height: 'auto',
+                borderRadius: '12px',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+              }}
+            />
+          </Box>
+          
+          <Stack direction="column" spacing={3} sx={{ flex: 1, textAlign: { xs: 'center', md: 'left' } }}>
+            <Typography 
+              level="h2" 
+              sx={{ 
+                mt: { xs: 3, md: 8 },
+                fontWeight: 600
+              }}
+            >
+              Meet Hiccup 🐭
+            </Typography>
+
+            <Typography level="body-lg" sx={{ lineHeight: 1.6 }}>
+              This is my chinchilla Hiccup, who's now almost 4 years old and has quite the personality!
+            </Typography>
+
+            <Box sx={{ 
+              p: 3, 
+              borderRadius: '8px', 
+              backgroundColor: theme.palette.neutral[100]
+            }}>
+              <Typography level="body-md" sx={{ mb: 2, fontWeight: 600 }}>
+                Fun Facts About Hiccup:
+              </Typography>
+              <List sx={{ textAlign: 'left', pl: 2 }}>
+                <ListItem sx={{ display: 'list-item', listStyleType: 'disc' }}>
+                  <Typography level="body-sm">
+                    Loves apple sticks and has impeccable taste in jazz (Louis Armstrong is his favorite)
+                  </Typography>
+                </ListItem>
+                <ListItem sx={{ display: 'list-item', listStyleType: 'disc' }}>
+                  <Typography level="body-sm">
+                    More social than most chinchillas – he actually enjoys meeting new people
+                  </Typography>
+                </ListItem>
+                <ListItem sx={{ display: 'list-item', listStyleType: 'disc' }}>
+                  <Typography level="body-sm">
+                    <Link href="/hiccup" sx={{ fontSize: 'sm' }}>
+                      Learn more about his adventures (Work in Progress) →
+                    </Link>
+                  </Typography>
+                </ListItem>
+              </List>
+            </Box>
+          </Stack>
+        </Stack>
+
+        <Divider sx={{ my: 8 }} />
+
+        {/* Contact Section */}
+        <Box sx={{ mt: 8, mb: 6 }}>
+          <Typography level="h2" sx={{ mb: 3, fontWeight: 600 }}>
+            Let's Connect
+          </Typography>
+          <Typography level="body-lg" sx={{ mb: 6, lineHeight: 1.6, maxWidth: '600px', mx: 'auto' }}>
+            I'm always open to discussing new opportunities, collaborating on interesting projects, 
+            or simply having a conversation about technology and innovation. Don't hesitate to reach out!
           </Typography>
           
           <Stack 
@@ -171,6 +349,7 @@ export default function Home() {
             spacing={3} 
             justifyContent="center"
             alignItems="center"
+            sx={{ mb: 4 }}
           >
             <Button 
               variant="solid" 
@@ -178,13 +357,19 @@ export default function Home() {
               component="a"
               href="mailto:sravanparakala@gmail.com"
               sx={{ 
-                backgroundColor: theme.palette.primary[500],
+                backgroundColor: theme.palette.primary[600],
+                px: 4,
+                py: 1.5,
+                fontSize: 'md',
+                fontWeight: 600,
                 '&:hover': {
-                  backgroundColor: theme.palette.primary[600]
-                }
+                  backgroundColor: theme.palette.primary[700],
+                  transform: 'translateY(-2px)'
+                },
+                transition: 'all 0.2s ease'
               }}
             >
-              Email Me
+              📧 Email Me
             </Button>
             
             <Button 
@@ -196,14 +381,20 @@ export default function Home() {
               rel="noopener noreferrer"
               sx={{ 
                 borderColor: theme.palette.primary[500],
-                color: theme.palette.primary[500],
+                color: theme.palette.primary[600],
+                px: 4,
+                py: 1.5,
+                fontSize: 'md',
+                fontWeight: 600,
                 '&:hover': {
                   backgroundColor: theme.palette.primary[50],
-                  borderColor: theme.palette.primary[600]
-                }
+                  borderColor: theme.palette.primary[600],
+                  transform: 'translateY(-2px)'
+                },
+                transition: 'all 0.2s ease'
               }}
             >
-              LinkedIn
+              💼 LinkedIn
             </Button>
             
             <Button 
@@ -214,25 +405,29 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
               sx={{ 
-                borderColor: theme.palette.primary[500],
-                color: theme.palette.primary[500],
+                borderColor: theme.palette.neutral[400],
+                color: theme.palette.neutral[700],
+                px: 4,
+                py: 1.5,
+                fontSize: 'md',
+                fontWeight: 600,
                 '&:hover': {
-                  backgroundColor: theme.palette.primary[50],
-                  borderColor: theme.palette.primary[600]
-                }
+                  backgroundColor: theme.palette.neutral[50],
+                  borderColor: theme.palette.neutral[600],
+                  transform: 'translateY(-2px)'
+                },
+                transition: 'all 0.2s ease'
               }}
             >
-              GitHub
+              🚀 GitHub
             </Button>
           </Stack>
           
-          <Typography level="body-sm" sx={{ mt: 3, color: theme.palette.text.tertiary }}>
-            Currently based in Troy, NY
+          <Typography level="body-sm" sx={{ color: theme.palette.text.tertiary, fontStyle: 'italic' }}>
+            📍 Currently based in Troy, NY
           </Typography>
         </Box>
-        
       </Box>
-
     </Box>
   );
 }

@@ -36,13 +36,13 @@ function NavBar() {
       aria-label="Main navigation"
       sx={{
         position: 'static',
-        backgroundColor: theme.palette.neutral[50], // magnolia white
+        backgroundColor: theme.palette.primary[500], // magnolia white
         padding: 2,
         height: '128px',
         display: 'flex',
         alignItems: 'center',
         borderBottom: '1px solid',
-        borderColor: theme.palette.neutral[300], // light magnolia border
+        borderColor: theme.palette.primary[500], // light magnolia border
       }}
     >
       <Box

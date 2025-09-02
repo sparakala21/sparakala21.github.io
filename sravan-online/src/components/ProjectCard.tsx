@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Container, Typography, Box, Button, Card, CardContent } from '@mui/joy';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useTheme } from '@mui/joy'
 
 interface ProjectCardProps {
     title: string;
@@ -24,11 +25,12 @@ export default function ProjectCard({
     imageURL,
     imageAlt
 }: ProjectCardProps) {
+    const theme = useTheme();
     return (
         <Card
             variant="outlined"
             sx={{
-                backgroundColor: '#2C2C2C',
+                backgroundColor: theme.palette.success[600],
                 borderRadius: 'md',
                 boxShadow: 'sm',
                 mb: 4, // Margin bottom for spacing between cards

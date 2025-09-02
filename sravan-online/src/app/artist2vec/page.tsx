@@ -2,29 +2,28 @@
 import { Container, Typography, Box, Sheet, Button } from '@mui/joy';
 import * as React from 'react';
 import Link from 'next/link';
-import ResponsiveAppBar from '@/components/ResponsiveAppBar';
+import { useTheme } from '@mui/joy';
 
 export default function Writeup() {
+    const theme = useTheme();
     return (
         <>
-            <ResponsiveAppBar/>
-            <Container
-                sx={{
-                    bgcolor: '#f0ead6',
-                    minHeight: "calc(100vh - 64px)",
-                    py: 4,
-                    px: { xs: 2, sm: 3, md: 4 },
-                    position: 'relative'
-                }}
+             <Box 
+            sx={{ 
+                backgroundColor: theme.palette.success[600], 
+                minHeight: '100vh',
+                display: 'flex',
+                justifyContent: 'center'
+            }}
             >
-                <Sheet
-                    sx={{
-                        padding: { xs: 3, sm: 4, md: 5 },
-                        backgroundColor: '#ffffff',
-                        borderRadius: 'md',
-                        boxShadow: 'lg',
-                        maxWidth: '900px',
-                        margin: '0 auto'
+                <Box 
+                    sx={{ 
+                    backgroundColor: theme.palette.neutral[100],
+                    width: '960px', // Changed from maxWidth to width for exact 960px
+                    minHeight: '100vh', // Added to match the height of the dark container
+                    px: { xs: 2, sm: 3, md: 4 },
+                    py: 4, 
+                    textAlign: 'center'
                     }}
                 >
                     <Typography
@@ -218,8 +217,9 @@ export default function Writeup() {
                             </Link>
                         </Box>
                     </Box>
-                </Sheet>
-            </Container>
+                
+            </Box>
+            </Box>
         </>
     );
 }
