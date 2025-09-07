@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
   },
-  transpilePackages: ['next-mdx-remote'],
+  transpilePackages: ['next-mdx-remote/rsc'],
 };
 
 export default nextConfig;

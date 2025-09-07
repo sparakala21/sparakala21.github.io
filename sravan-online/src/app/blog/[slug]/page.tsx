@@ -5,7 +5,7 @@ import { getPostData, getAllPostSlugs } from '../../../lib/posts';
 import { Metadata } from 'next';
 import { Box, Typography } from '@mui/joy';
 import FormattedDate from '../../../components/FormattedDate';
-import { MDXRemote } from 'next-mdx-remote'
+import { MDXRemote } from 'next-mdx-remote/rsc';
 // Use absolute import instead of relative
 import { mdxComponents, ChessBoard } from '@/components/mdx';
 
