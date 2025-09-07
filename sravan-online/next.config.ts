@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true
   },
+  "compilerOptions": {
+    "moduleResolution": "bundler", // or "node"
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  },
   transpilePackages: ['next-mdx-remote'],
 };
 
