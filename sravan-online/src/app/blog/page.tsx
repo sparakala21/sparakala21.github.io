@@ -1,3 +1,4 @@
+//src/app/blog/page.tsx
 import Link from 'next/link';
 import { getSortedPostsData } from '@/lib/posts';
 import { Metadata } from 'next';

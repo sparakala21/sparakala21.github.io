@@ -1,3 +1,4 @@
+//src/types/blog.ts (or posts.ts)
 export interface BlogPost {
   slug: string;
   title: string;
@@ -8,5 +9,5 @@ export interface BlogPost {
 }
 
 export interface BlogPostWithContent extends BlogPost {
-  contentHtml: string;
+  content: string;
 }
