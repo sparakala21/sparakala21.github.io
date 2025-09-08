@@ -122,7 +122,7 @@ export default async function ResourcePostPage({ params }: ResourcePostPageProps
     ),
     
     // Explicitly add ChessBoard first
-    ChessBoard: ChessBoard,
+    // ChessBoard: ChessBoard,
     
     // Then spread in other custom components
     ...mdxComponents,
