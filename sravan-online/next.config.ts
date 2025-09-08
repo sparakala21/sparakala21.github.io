@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true
   },
-  "compilerOptions": {
+  compilerOptions: {
     "moduleResolution": "bundler", // or "node"
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
