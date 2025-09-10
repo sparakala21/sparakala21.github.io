@@ -1,14 +1,14 @@
-// src/app/blog/[slug]/page.tsx - FIXED VERSION
+// src/app/blog/[slug]/page.tsx - CLIENT-SIDE MDX VERSION
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getPostData, getAllPostSlugs } from '../../../lib/posts';
 import { Metadata } from 'next';
 import { Box, Typography } from '@mui/joy';
 import FormattedDate from '../../../components/FormattedDate';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-// Use absolute import instead of relative
+import { serialize } from 'next-mdx-remote/serialize';
+import { MDXRemote } from 'next-mdx-remote';
 import { mdxComponents, ChessBoard } from '@/components/mdx';
-
+import MDXContent from '../../../components/MDXContent';
 interface ResourcePostPageProps {
   params: Promise<{
     slug: string;
@@ -51,10 +51,23 @@ export async function generateMetadata({
 
 export default async function ResourcePostPage({ params }: ResourcePostPageProps) {
   let postData;
+  let mdxSource;
  
   try {
     const { slug } = await params;
     postData = await getPostData(slug);
+    
+    // Serialize the MDX content at build time
+    mdxSource = await serialize(postData.content, {
+      // Optional: Add any MDX options here
+      mdxOptions: {
+        remarkPlugins: [],
+        rehypePlugins: [],
+        development: process.env.NODE_ENV === 'development',
+      },
+      // Optional: Add any frontmatter parsing options
+      parseFrontmatter: false, // Since you're already parsing frontmatter elsewhere
+    });
   } catch (error) {
     notFound();
   }
@@ -165,16 +178,7 @@ export default async function ResourcePostPage({ params }: ResourcePostPageProps
               </div>
             )}
           </header>
-          <Box
-            sx={{
-              fontSize: 'lg',
-              lineHeight: 1.7,
-              color: 'text.primary',
-              maxWidth: 'none',
-            }}
-          >
-            <MDXRemote source={postData.content} components={components} />
-          </Box>
+          <MDXContent mdxSource={mdxSource} />
         </article>
       </Box>
       <div className="pb-16"></div>
