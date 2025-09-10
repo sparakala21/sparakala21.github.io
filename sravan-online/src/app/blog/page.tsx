@@ -5,10 +5,10 @@ import { Metadata } from 'next';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar'
 import { Container, Grid } from '@mui/material';
 import { Box, Typography } from '@mui/joy';
-export const metadata: Metadata = {
-  title: 'Blog',
-  description: 'Read our latest blog posts and updates',
-};
+// export const metadata: Metadata = {
+//   title: 'Blog',
+//   description: 'Read our latest blog posts and updates',
+// };
 
 export default async function BlogPage() {
   const allPostsData = getSortedPostsData();
