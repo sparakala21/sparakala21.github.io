@@ -24,8 +24,8 @@ export default async function BlogPage() {
       <Box
         sx={{
           backgroundColor: "#fdfdfd",
-          width: '960px', // Changed from maxWidth to width for exact 960px
-          minHeight: '100vh', // Added to match the height of the dark container
+          width: '960px',
+          minHeight: '100vh', 
           px: { xs: 2, sm: 3, md: 4 },
           py: 4,
         }}

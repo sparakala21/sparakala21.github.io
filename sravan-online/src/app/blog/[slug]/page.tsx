@@ -6,7 +6,6 @@ import { Metadata } from 'next';
 import { Box, Typography } from '@mui/joy';
 import FormattedDate from '../../../components/FormattedDate';
 import { serialize } from 'next-mdx-remote/serialize';
-import { MDXRemote } from 'next-mdx-remote';
 import { mdxComponents, ChessBoard } from '@/components/mdx';
 import MDXContent from '../../../components/MDXContent';
 interface ResourcePostPageProps {
