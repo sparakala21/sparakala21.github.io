@@ -26,11 +26,12 @@ jobs:
           static_site_generator: next
       - name: Build with Next.js 🏗️
         working-directory: ./sravan-online
-        run: npx next build
+        run: pnpm run build
       - name: Upload artifact 📡
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./sravan-online/out
+          path: ./out
+          
   deploy:
     environment:
       name: github-pages
