@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
   // Configure page extensions to include MDX
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   // Add basePath if deploying to GitHub Pages user site
-  // basePath: process.env.NODE_ENV === 'production' ? '/sparakala21.github.io' : '',
+  basePath: process.env.NODE_ENV === 'production' ? '/sparakala21.github.io' : '',
   // assetPrefix: process.env.NODE_ENV === 'production' ? '/sparakala21.github.io' : '',
 };
 
