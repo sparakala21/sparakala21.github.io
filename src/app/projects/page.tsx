@@ -1,9 +1,7 @@
 "use client";
 
 import * as React from 'react';
-import ResponsiveAppBar from '@/components/ResponsiveAppBar';
 import ProjectCard from '@/components/ProjectCard'; // Import the new component
-import { Container } from '@mui/material';
 import { Box } from '@mui/joy';
 
 import { useTheme } from '@mui/joy'

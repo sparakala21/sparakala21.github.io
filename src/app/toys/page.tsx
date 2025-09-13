@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar';
-import ProjectCard from '@/components/ProjectCard'; // Import the new component
+import ProjectCard from '../components/ProjectCard'; // Import the new component
 import { Container } from '@mui/material';
 
 export default function Toys() {
