@@ -18,31 +18,36 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
+        
       - name: Setup pnpm ⚙️
         uses: pnpm/action-setup@v4
         with:
           version: 8  # pnpm version
-
+          
       - name: Setup Node.js ⚙️
         uses: actions/setup-node@v4
         with:
           node-version: "18"
           cache: pnpm  # Change from 'npm' to 'pnpm'
+          
       - name: Install dependencies 🔧
         working-directory: ./sravan-online
         run: pnpm install --frozen-lockfile
+        
       - name: Setup Pages ⚙️
         uses: actions/configure-pages@v4
         with:
           static_site_generator: next
+          
       - name: Build with Next.js 🏗️
         working-directory: ./sravan-online
         run: pnpm run build
+        
       - name: Upload artifact 📡
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out
-          
+          path: ./sravan-online/out
+         
   deploy:
     environment:
       name: github-pages
