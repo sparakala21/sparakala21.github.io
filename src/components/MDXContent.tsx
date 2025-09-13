@@ -1,40 +1,48 @@
 // src/components/MDXContent.tsx
 'use client';
-
 import { Box, Typography } from '@mui/joy';
 import { MDXRemote } from 'next-mdx-remote';
-import { mdxComponents, ChessBoard } from '@/components/mdx';
+import { mdxComponents, ChessBoard } from './mdx/index';
 import { MDXRemoteSerializeResult } from 'next-mdx-remote';
+import { useState, useEffect } from 'react';
 
 interface MDXContentProps {
   mdxSource: MDXRemoteSerializeResult;
 }
 
 export default function MDXContent({ mdxSource }: MDXContentProps) {
-  // DEBUG: Log available components
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Don't render anything on the server
+  if (!isClient) {
+    return <Box>Loading...</Box>;
+  }
+
   console.log('Available mdxComponents:', Object.keys(mdxComponents));
 
-  // Combine default styling components with custom components
   const components = {
-    // Default HTML element styling
     h1: (props: any) => <Typography level="h1" sx={{ mb: 3, mt: 4, fontWeight: 'bold' }} {...props} />,
     h2: (props: any) => <Typography level="h2" sx={{ mb: 3, mt: 4, fontWeight: 'bold' }} {...props} />,
     h3: (props: any) => <Typography level="h3" sx={{ mb: 3, mt: 4, fontWeight: 'bold' }} {...props} />,
     h4: (props: any) => <Typography level="h4" sx={{ mb: 3, mt: 4, fontWeight: 'bold' }} {...props} />,
     p: (props: any) => <Typography level="body-lg" sx={{ mb: 3, lineHeight: 1.7 }} {...props} />,
     a: (props: any) => (
-      <Typography 
-        component="a" 
-        sx={{ 
-          color: 'primary.500', 
+      <Typography
+        component="a"
+        sx={{
+          color: 'primary.500',
           textDecoration: 'underline',
           '&:hover': { color: 'primary.700' }
-        }} 
-        {...props} 
+        }}
+        {...props}
       />
     ),
     blockquote: (props: any) => (
-      <Box 
+      <Box
         component="blockquote"
         sx={{
           mb: 3,
@@ -72,11 +80,7 @@ export default function MDXContent({ mdxSource }: MDXContentProps) {
         {...props}
       />
     ),
-    
-    // Explicitly add ChessBoard first
     Chessboard: ChessBoard,
-    
-    // Then spread in other custom components
     ...mdxComponents,
   };
 
