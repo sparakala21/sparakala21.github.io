@@ -1,9 +1,9 @@
 //src/app/blog/page.tsx
 import Link from 'next/link';
-import { getSortedPostsData } from '@/lib/posts';
+import { getSortedPostsData } from '../../lib/posts';
 import { Metadata } from 'next';
-import ResponsiveAppBar from '@/components/ResponsiveAppBar'
 import { Box, Typography, Stack, Chip } from '@mui/joy';
+import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from 'react';
 
 export const metadata: Metadata = {
   title: 'Blog',
@@ -71,7 +71,7 @@ export default async function BlogPage() {
                 {tags && tags.length > 0 && (
                   <Box sx={{ mb: 2 }}>
                     <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
-                      {tags.map((tag) => (
+                      {tags.map((tag: boolean | Key | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined) => (
                         <Chip
                           key={tag}
                           variant="soft"
