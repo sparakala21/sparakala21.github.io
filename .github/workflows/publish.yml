@@ -19,36 +19,64 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
         
-      - name: Setup pnpm ⚙️
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8  # pnpm version
-          
-      - name: Setup Node.js ⚙️
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          cache: pnpm
-          cache-dependency-path: './pnpm-lock.yaml'
-          
-      - name: Install dependencies 🔧
-        run: pnpm install
+      - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Install dependencies 🔧
+        uses: ./.github/workflows/setup-node
         
       - name: Setup Pages ⚙️
         uses: actions/configure-pages@v4
         with:
           static_site_generator: next
           
-      - name: Build with Next.js 🏗️
-        run: pnpm run build
-          echo "Build completed, checking output:"
+      - name: Debug environment 🔍
+        run: |
+          echo "=== Environment Debug ==="
+          echo "Current directory: $(pwd)"
+          echo "Contents of current directory:"
           ls -la
-          ls -la out/ || echo "No out directory found"
+          echo "Node version: $(node --version)"
+          echo "NPM version: $(npm --version)"
+          echo "PNPM version: $(pnpm --version)"
+          echo "Checking for package.json:"
+          cat package.json | head -10
+          echo "Checking for next.config.ts:"
+          ls -la next.config.*
+          cat next.config.ts
+          
+      - name: Build with Next.js 🏗️
+        run: |
+          echo "=== Starting Build Process ==="
+          echo "Pre-build directory contents:"
+          ls -la
+          echo "Running: npx next build"
+          npx next build
+          echo "=== Post-build Analysis ==="
+          echo "Root directory after build:"
+          ls -la
+          echo "Checking for out directory:"
+          if [ -d "out" ]; then
+            echo "✅ out directory EXISTS"
+            echo "Contents of out directory:"
+            ls -la out/
+            echo "File count in out: $(find out -type f | wc -l)"
+          else
+            echo "❌ out directory MISSING"
+            echo "Checking for .next directory:"
+            if [ -d ".next" ]; then
+              echo "Found .next directory instead:"
+              ls -la .next/
+            else
+              echo "Neither out nor .next directory found!"
+            fi
+            echo "=== DEBUGGING: All directories in current path ==="
+            find . -maxdepth 2 -type d
+            exit 1
+          fi
+          
       - name: Upload artifact 📡
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
-              
+             
   deploy:
     environment:
       name: github-pages
