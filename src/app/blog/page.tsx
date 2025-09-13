@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { getSortedPostsData } from '@/lib/posts';
 import { Metadata } from 'next';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar'
-import { Container, Grid } from '@mui/material';
-import { Box, Typography } from '@mui/joy';
+import { Box, Typography, Stack, Chip } from '@mui/joy';
+
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Read our latest blog posts and updates',
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 
 export default async function BlogPage() {
   const allPostsData = getSortedPostsData();
+  
   return (
     <Box
       sx={{
@@ -25,52 +26,94 @@ export default async function BlogPage() {
         sx={{
           backgroundColor: "#fdfdfd",
           width: '960px',
-          minHeight: '100vh', 
+          minHeight: '100vh',
           px: { xs: 2, sm: 3, md: 4 },
           py: 4,
         }}
       >
         {allPostsData.length === 0 ? (
-          <p className="text-gray-600">No blog posts available yet.</p>
+          <Typography level="body-md" sx={{ color: 'text.tertiary' }}>
+            No blog posts available yet.
+          </Typography>
         ) : (
-          <Grid container direction="column" spacing={2}>
+          <Stack spacing={3}>
             {allPostsData.map(({ slug, date, title, excerpt, author, tags }) => (
-              <article key={slug} className="border-b border-gray-200 pb-6">
-                <Link href={`/blog/${slug}`} className="group">
-                  <h2 className="text-2xl font-semibold mb-2 group-hover:text-blue-600 transition-colors">
+              <Box 
+                key={slug} 
+                component="article" 
+                sx={{ 
+                  borderBottom: '1px solid',
+                  borderColor: 'divider',
+                  pb: 3
+                }}
+              >
+                <Link href={`/blog/${slug}`} style={{ textDecoration: 'none' }}>
+                  <Typography 
+                    level="h2" 
+                    sx={{ 
+                      mb: 1,
+                      '&:hover': { color: 'primary.500' },
+                      transition: 'color 0.2s ease',
+                      cursor: 'pointer'
+                    }}
+                  >
                     {title}
-                  </h2>
+                  </Typography>
                 </Link>
                
-                <div className="text-gray-600 mb-3 text-sm">
-                  <time dateTime={date}>{new Date(date).toLocaleDateString()}</time>
-                  {author && <span> • By {author}</span>}
-                </div>
+                <Box sx={{ mb: 2 }}>
+                  <Typography level="body-sm" sx={{ color: 'text.tertiary' }}>
+                    <time dateTime={date}>{new Date(date).toLocaleDateString()}</time>
+                    {author && <span> • By {author}</span>}
+                  </Typography>
+                </Box>
                
                 {tags && tags.length > 0 && (
-                  <div className="mb-3">
-                    {tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="inline-block bg-gray-100 rounded-full px-3 py-1 text-xs font-medium text-gray-700 mr-2 mb-1"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
+                  <Box sx={{ mb: 2 }}>
+                    <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
+                      {tags.map((tag) => (
+                        <Chip
+                          key={tag}
+                          variant="soft"
+                          size="sm"
+                          sx={{ fontSize: '0.75rem' }}
+                        >
+                          #{tag}
+                        </Chip>
+                      ))}
+                    </Stack>
+                  </Box>
                 )}
                
-                <p className="text-gray-800 mb-3">{excerpt}</p>
+                <Typography level="body-md" sx={{ mb: 2, color: 'text.primary' }}>
+                  {excerpt}
+                </Typography>
                
                 <Link
                   href={`/blog/${slug}`}
-                  className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'var(--joy-palette-primary-500)',
+                    fontWeight: 500,
+                  }}
                 >
-                  Read more →
+                  <Typography 
+                    level="body-md" 
+                    sx={{ 
+                      color: 'primary.500',
+                      fontWeight: 'md',
+                      '&:hover': { 
+                        color: 'primary.700',
+                        textDecoration: 'underline' 
+                      }
+                    }}
+                  >
+                    Read more →
+                  </Typography>
                 </Link>
-              </article>
+              </Box>
             ))}
-          </Grid>
+          </Stack>
         )}
       </Box>
     </Box>
