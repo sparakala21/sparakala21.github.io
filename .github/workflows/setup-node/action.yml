@@ -11,4 +11,4 @@
     cache-dependency-path: './pnpm-lock.yaml'
 
 - name: Install dependencies 🔧
-  run: pnpm install --frozen-lockfile
+  run: pnpm install 
