@@ -73,7 +73,7 @@ export default async function BlogPage() {
                     <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
                       {tags.map((tag: boolean | Key | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined) => (
                         <Chip
-                          key={tag}
+                          key={String(tag)}
                           variant="soft"
                           size="sm"
                           sx={{ fontSize: '0.75rem' }}
