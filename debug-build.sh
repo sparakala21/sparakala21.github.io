@@ -18,9 +18,9 @@ echo "Current directory: $(pwd)"
 echo "📁 Step 3: Directory contents..."
 ls -la
 
-# Step 4: Install dependencies with npm ci (not npm install)
-echo "📦 Step 4: Installing dependencies with npm ci..."
-npm ci
+# Step 4: Install dependencies with npm install (not npm install)
+echo "📦 Step 4: Installing dependencies with npm install..."
+npm install
 echo "✅ Dependencies installed"
 
 # Step 5: Debug Next.js configuration
