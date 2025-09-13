@@ -44,8 +44,8 @@ jobs:
           echo "Build completed, checking output:"
           ls -la
           ls -la out/ || echo "No out directory found"
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Upload artifact 📡
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./out
               
