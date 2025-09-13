@@ -28,7 +28,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "18"
-          cache: pnpm  # Change from 'npm' to 'pnpm'
+          cache: pnpm
+          cache-dependency-path: './sravan-online/pnpm-lock.yaml'
           
       - name: Install dependencies 🔧
         working-directory: ./sravan-online
