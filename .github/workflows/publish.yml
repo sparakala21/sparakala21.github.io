@@ -19,20 +19,8 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
         
-      - name: Setup pnpm ⚙️
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8  # pnpm version
-          
-      - name: Setup Node.js ⚙️
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          cache: pnpm
-          cache-dependency-path: './pnpm-lock.yaml'
-          
-      - name: Install dependencies 🔧
-        run: pnpm install
+      - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Install dependencies 🔧
+        uses: ./.github/workflows/setup-node
         
       - name: Setup Pages ⚙️
         uses: actions/configure-pages@v4
@@ -40,15 +28,29 @@ jobs:
           static_site_generator: next
           
       - name: Build with Next.js 🏗️
-        run: pnpm run build
-          echo "Build completed, checking output:"
+        run: |
+          echo "Checking next.config.ts:"
+          cat next.config.ts
+          echo "Starting Next.js build..."
+          npx next build
+          echo "Build completed. Checking output directories:"
           ls -la
-          ls -la out/ || echo "No out directory found"
+          if [ -d "out" ]; then
+            echo "✅ SUCCESS: out directory created"
+            ls -la out/
+          else
+            echo "❌ ERROR: out directory not found"
+            echo "This means static export is not working"
+            echo "Contents of .next directory:"
+            ls -la .next/ || echo "No .next directory either"
+            exit 1
+          fi
+          
       - name: Upload artifact 📡
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
-              
+             
   deploy:
     environment:
       name: github-pages
