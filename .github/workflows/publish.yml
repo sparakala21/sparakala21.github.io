@@ -26,7 +26,7 @@ jobs:
           cache: npm
           
       - name: Install dependencies 🔧
-        run: npm install
+        run: npm ci
        
       - name: Setup Pages ⚙️
         uses: actions/configure-pages@v4
@@ -52,7 +52,14 @@ jobs:
           echo "=== Starting Build Process ==="
           echo "Pre-build directory contents:"
           ls -la
-          echo "Running: npm run build"
+          echo "=== Verifying Next.js config before build ==="
+          if [ -f "next.config.js" ]; then
+            echo "❌ next.config.js found - removing to ensure next.config.ts is used"
+            rm next.config.js
+          fi
+          echo "✅ Using next.config.ts:"
+          cat next.config.ts
+          echo "=== Running Build ==="
           npm run build
           echo "=== Post-build Analysis ==="
           echo "Root directory after build:"
@@ -65,15 +72,20 @@ jobs:
             echo "File count in out: $(find out -type f | wc -l)"
           else
             echo "❌ out directory MISSING"
-            echo "Checking for .next directory:"
+            echo "Checking what was generated instead:"
             if [ -d ".next" ]; then
-              echo "Found .next directory instead:"
+              echo "Found .next directory (server build instead of static export):"
               ls -la .next/
-            else
-              echo "Neither out nor .next directory found!"
+              echo "=== Checking if export-marker.json exists ==="
+              if [ -f ".next/export-marker.json" ]; then
+                echo "Export marker found, but no out directory - this is unusual"
+                cat .next/export-marker.json
+              else
+                echo "No export marker - static export was not configured properly"
+              fi
             fi
-            echo "=== DEBUGGING: All directories in current path ==="
-            find . -maxdepth 2 -type d
+            echo "=== All directories ==="
+            find . -maxdepth 2 -type d | grep -E "out|\.next|dist|build"
             exit 1
           fi
          
