@@ -3,12 +3,13 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   basePath: "/sravan-online",
-  output: "export",  // <=== enables static exports
+  output: "export",
   reactStrictMode: true,
   trailingSlash: true,
   images: {
     unoptimized: true
   },
+  distDir: "out"
 };
 
 export default nextConfig;
