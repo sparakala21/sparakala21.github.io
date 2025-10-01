@@ -21,8 +21,8 @@ export default function Story() {
                 <Box 
                     sx={{ 
                     backgroundColor: theme.palette.neutral[100],
-                    width: '960px', // Changed from maxWidth to width for exact 960px
-                    minHeight: '100vh', // Added to match the height of the dark container
+                    width: '960px', 
+                    minHeight: '100vh',
                     px: { xs: 2, sm: 3, md: 4 },
                     py: 4, 
                     textAlign: 'center'

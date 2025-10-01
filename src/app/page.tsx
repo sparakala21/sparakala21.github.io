@@ -173,7 +173,7 @@ export default function Home() {
                 ReMo
               </Link>
               <Typography level="body-sm" sx={{ mt: 1, color: theme.palette.text.secondary }}>
-                Virtual event platform experience and development
+                Equiping teachers to cultivate the joy of reading in tomorrows students.
               </Typography>
             </Box>
           </Stack>

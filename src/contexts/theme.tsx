@@ -111,7 +111,6 @@ const remoThemeConfig: CssVarsThemeOptions = {
           "800": "#280e15",
           "900": "#1e090e",
         },
-        // engineering orange (danger)
         danger: {
           "50": "#fdeaea",
           "100": "#facaca",
@@ -124,7 +123,6 @@ const remoThemeConfig: CssVarsThemeOptions = {
           "800": "#8c0000",
           "900": "#660000",
         },
-        // lighter orange for warning (derived from engineering orange)
         warning: {
           "50": "#fff5f0",
           "100": "#ffe4d9",
