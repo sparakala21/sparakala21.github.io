@@ -141,17 +141,6 @@ export default function Writeup() {
                         >
                             Testing & Results
                         </Typography>
-                        <Typography 
-                            level="body-md" 
-                            sx={{ 
-                                lineHeight: 1.7, 
-                                color: '#2c3e50' 
-                            }}
-                        >
-                            I back-tested the model against 7 years of data I have meticulously collected since I was 15. 
-                            In my testing, I found some interesting results. Obviously the artists I am familiar with have grown over time, 
-                            but as time passes, this model fits closer and closer to my taste.
-                        </Typography>
                     </Box>
 
                     <Box sx={{ mb: 4 }}>

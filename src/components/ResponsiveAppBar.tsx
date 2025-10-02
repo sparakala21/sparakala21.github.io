@@ -10,7 +10,7 @@ import { usePathname } from 'next/navigation';
 
 const pageRoutes = [
   { name: 'Resume', path: '/resume' },
-  { name: 'Projects', path: '/projects' },
+  // { name: 'Projects', path: '/projects' },
   {name: 'Blog', path: '/blog'},
 ];
 
