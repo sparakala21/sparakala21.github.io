@@ -9,7 +9,7 @@ import Image from "next/image";
 import { usePathname } from 'next/navigation';
 
 const pageRoutes = [
-  { name: 'Resume', path: '/resume' },
+  // { name: 'Resume', path: '/resume' },
   // { name: 'Projects', path: '/projects' },
   {name: 'Blog', path: '/blog'},
 ];
