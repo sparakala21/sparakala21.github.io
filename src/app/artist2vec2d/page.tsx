@@ -51,7 +51,7 @@ const EmbeddingVisualizer: React.FC = () => {
   const loadEmbeddings = async (method: VisualizationMethod): Promise<void> => {
     setLoading(true);
     try {
-      const response = await fetch(`/music_data/embeddings_2d_${method}.json`);
+      const response = await fetch(`/music_data/${method}-embeddings.json`);
       const data: EmbeddingData = await response.json();
       setEmbeddings(data);
     } catch (error) {

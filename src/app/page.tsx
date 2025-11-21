@@ -42,7 +42,7 @@ export default function Home() {
               src="/profile.jpg"
               width={400}
               height={400}
-              alt="Sravan Parakala - Full-Stack Developer"
+              alt="Sravan Parakala"
               priority
               style={{ 
                 maxWidth: '100%',
@@ -64,8 +64,87 @@ export default function Home() {
             >
               Sravan Parakala
             </Typography>
+
+            <Typography level="body-lg" sx={{ lineHeight: 1.6 }}>
+              I'm currently pursuing my Master's in Information Technology and Web Science (ITWS) 
+              with a focus on software engineering. I'm passionate about meeting new people and 
+              engaging in meaningful conversations about technology and innovation.
+            </Typography>
+            
+            <Typography level="body-lg" sx={{ lineHeight: 1.6 }}>
+              Data science fascinates me, and I love applying it to personal projects that solve 
+              real-world problems. Check out my Artist2Vec project below to see how I've combined 
+              machine learning with music recommendation systems.
+            </Typography>
+            
+            <Typography level="body-lg" sx={{ lineHeight: 1.6 }}>
+              More than anything, I want to live a happy and healthy life surrounded by the people I love the most. 
+            </Typography>
           </Stack>
         </Stack>
+
+        <Divider sx={{ my: 8 }} />
+
+        {/* Family Section */}
+        <Box sx={{ mb: 8 }}>
+          <Typography level="h2" sx={{ mb: 4, fontWeight: 600 }}>
+            My Family
+          </Typography>
+          
+          <Stack spacing={3} sx={{ maxWidth: '700px', mx: 'auto', textAlign: 'left' }}>
+            
+
+            <Box sx={{ 
+              mt: 3,
+              p: 3, 
+              borderRadius: '8px', 
+              backgroundColor: theme.palette.primary[50],
+              border: `1px solid ${theme.palette.primary[200]}`
+            }}>
+              <Link 
+                href="/artist2vec"
+                sx={{ 
+                  fontSize: 'lg', 
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  '&:hover': { textDecoration: 'underline' }
+                }}
+              >
+                Artist2Vec Project
+              </Link>
+              <Typography level="body-sm" sx={{ mt: 1 }}>
+                Machine learning project for music recommendation using artist embeddings
+              </Typography>
+            </Box>
+
+            <Box sx={{ 
+              p: 3, 
+              borderRadius: '8px', 
+              backgroundColor: theme.palette.warning[50],
+              border: `1px solid ${theme.palette.warning[200]}`
+            }}>
+              <Typography level="body-md" sx={{ fontWeight: 600, mb: 1 }}>
+                ♟️ Chess & Personal Growth
+              </Typography>
+              <Typography level="body-sm">
+                I'm working on becoming a more mindful chess player and person. 
+                Follow my journey on my blog where I share insights about strategic thinking 
+                and personal development.
+              </Typography>
+              <Link 
+                href="https://www.chess.com/club/rensselaer-chess-club"
+                sx={{ 
+                  fontSize: 'sm', 
+                  mt: 1,
+                  display: 'inline-block',
+                  '&:hover': { textDecoration: 'underline' }
+                }}
+              >
+                RPI Chess Club →
+              </Link>
+            </Box>
+          </Stack>
+        </Box>
 
         <Divider sx={{ my: 8 }} />
 
@@ -110,7 +189,7 @@ export default function Home() {
                   '&:hover': { textDecoration: 'underline' }
                 }}
               >
-                🎵 Artist2Vec Project
+                Artist2Vec Project
               </Link>
               <Typography level="body-sm" sx={{ mt: 1 }}>
                 Machine learning project for music recommendation using artist embeddings
