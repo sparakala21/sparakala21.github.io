@@ -6,6 +6,7 @@ import {
   Box, 
   Select, 
   Option, 
+  Input, 
   FormLabel, 
   FormControl,
   Card,
@@ -13,6 +14,7 @@ import {
   Sheet
 } from '@mui/joy';
 import React, { useState, useEffect, useRef } from 'react';
+import ResponsiveAppBar from '@/components/ResponsiveAppBar';
 
 // Type definitions
 interface Node {
@@ -38,6 +40,8 @@ const EmbeddingVisualizer: React.FC = () => {
   const [embeddings, setEmbeddings] = useState<EmbeddingData | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<VisualizationMethod>('tsne');
   const [loading, setLoading] = useState<boolean>(true);
+  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -47,7 +51,7 @@ const EmbeddingVisualizer: React.FC = () => {
   const loadEmbeddings = async (method: VisualizationMethod): Promise<void> => {
     setLoading(true);
     try {
-      const response = await fetch(`/music_data/${method}-embeddings.json`);
+      const response = await fetch(`/music_data/embeddings_2d_${method}_large.json`);
       const data: EmbeddingData = await response.json();
       setEmbeddings(data);
     } catch (error) {
@@ -83,8 +87,13 @@ const EmbeddingVisualizer: React.FC = () => {
     const xRange = xMax - xMin;
     const yRange = yMax - yMin;
 
+    // Filter nodes based on search
+    const filteredNodes = nodes.filter(node => 
+      node.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     // Draw nodes
-    nodes.forEach(node => {
+    filteredNodes.forEach(node => {
       // Scale coordinates to canvas
       const x = ((node.x - xMin) / xRange) * (width - 2 * padding) + padding;
       const y = ((node.y - yMin) / yRange) * (height - 2 * padding) + padding;
@@ -92,9 +101,56 @@ const EmbeddingVisualizer: React.FC = () => {
       // Draw point
       ctx.beginPath();
       ctx.arc(x, y, 2, 0, 2 * Math.PI);
-      ctx.fillStyle = '#4ecdc4';
+      ctx.fillStyle = hoveredNode === node.id ? '#ff6b6b' : '#4ecdc4';
       ctx.fill();
+
+      // Draw label if hovered or if search matches
+      if (hoveredNode === node.id || (searchTerm && node.name.toLowerCase().includes(searchTerm.toLowerCase()))) {
+        ctx.fillStyle = '#333';
+        ctx.font = '12px Arial';
+        ctx.fillText(node.name, x + 6, y - 6);
+      }
     });
+  };
+
+  const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>): void => {
+    if (!embeddings) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const nodes = embeddings.nodes;
+    const xValues = nodes.map(n => n.x);
+    const yValues = nodes.map(n => n.y);
+    const xMin = Math.min(...xValues);
+    const xMax = Math.max(...xValues);
+    const yMin = Math.min(...yValues);
+    const yMax = Math.max(...yValues);
+
+    const padding = 50;
+    const xRange = xMax - xMin;
+    const yRange = yMax - yMin;
+
+    // Find closest node
+    let closestNode: string | null = null;
+    let minDistance = Infinity;
+
+    nodes.forEach(node => {
+      const x = ((node.x - xMin) / xRange) * (canvas.width - 2 * padding) + padding;
+      const y = ((node.y - yMin) / yRange) * (canvas.height - 2 * padding) + padding;
+      
+      const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
+      if (distance < minDistance && distance < 20) {
+        minDistance = distance;
+        closestNode = node.id;
+      }
+    });
+
+    setHoveredNode(closestNode);
   };
 
   const handleMethodChange = (
@@ -106,9 +162,17 @@ const EmbeddingVisualizer: React.FC = () => {
     }
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleMouseLeave = (): void => {
+    setHoveredNode(null);
+  };
+
   useEffect(() => {
     drawVisualization();
-  }, [embeddings]);
+  }, [embeddings, hoveredNode, searchTerm]);
 
   if (loading) {
     return (
@@ -175,10 +239,20 @@ const EmbeddingVisualizer: React.FC = () => {
               <Option value="umap">UMAP</Option>
             </Select>
           </FormControl>
+          
+          <FormControl sx={{ minWidth: 200 }}>
+            <FormLabel>Search Artists</FormLabel>
+            <Input
+              value={searchTerm}
+              onChange={handleSearchChange}
+              placeholder="Type artist name..."
+              variant="outlined"
+            />
+          </FormControl>
         </Box>
 
         {embeddings && (
-          <Typography level="body-sm" color="neutral">
+          <Typography level="body-sm" color="#000000">
             Showing {embeddings.nodes.length} artists using {embeddings.metadata.method} dimensionality reduction
           </Typography>
         )}
@@ -195,13 +269,35 @@ const EmbeddingVisualizer: React.FC = () => {
             ref={canvasRef}
             width={1000}
             height={600}
+            onMouseMove={handleCanvasMouseMove}
+            onMouseLeave={handleMouseLeave}
             style={{ 
               width: '100%', 
               height: 'auto',
+              cursor: 'crosshair',
               display: 'block'
             }}
           />
         </Card>
+
+        {hoveredNode && embeddings && (
+          <Card
+            variant="soft"
+            sx={{ 
+              p: 2,
+              width: '100%',
+              maxWidth: '400px',
+              bgcolor: 'background.level1'
+            }}
+          >
+            <Typography level="title-md" sx={{ mb: 1 }}>
+              {embeddings.nodes.find(n => n.id === hoveredNode)?.name}
+            </Typography>
+            <Typography level="body-sm" color="neutral">
+              ID: {hoveredNode}
+            </Typography>
+          </Card>
+        )}
       </Sheet>
     </Container>
   );
