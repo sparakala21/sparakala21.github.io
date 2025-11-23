@@ -252,7 +252,7 @@ const EmbeddingVisualizer: React.FC = () => {
         </Box>
 
         {embeddings && (
-          <Typography level="body-sm" color="#000000">
+          <Typography level="body-sm" color="#neutral">
             Showing {embeddings.nodes.length} artists using {embeddings.metadata.method} dimensionality reduction
           </Typography>
         )}
