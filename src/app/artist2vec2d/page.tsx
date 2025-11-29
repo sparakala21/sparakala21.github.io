@@ -100,7 +100,7 @@ const EmbeddingVisualizer: React.FC = () => {
 
       // Draw point
       ctx.beginPath();
-      ctx.arc(x, y, 2, 0, 2 * Math.PI);
+      ctx.arc(x, y, 4, 0, 2 * Math.PI);
       ctx.fillStyle = hoveredNode === node.id ? '#ff6b6b' : '#4ecdc4';
       ctx.fill();
 
@@ -252,7 +252,7 @@ const EmbeddingVisualizer: React.FC = () => {
         </Box>
 
         {embeddings && (
-          <Typography level="body-sm" color="#neutral">
+          <Typography level="body-sm" color="neutral">
             Showing {embeddings.nodes.length} artists using {embeddings.metadata.method} dimensionality reduction
           </Typography>
         )}
