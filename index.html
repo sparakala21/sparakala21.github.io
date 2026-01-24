@@ -184,7 +184,6 @@
         }
 
         function loadPointCloud(data) {
-            // Remove existing points
             if (points) {
                 scene.remove(points);
             }
@@ -194,7 +193,6 @@
             const positions = [];
             const colors = [];
 
-            // Find min and max scores for color mapping
             const scores = data.map(p => p.score);
             const minScore = Math.min(...scores);
             const maxScore = Math.max(...scores);
@@ -202,7 +200,6 @@
             data.forEach(point => {
                 positions.push(point.x, point.y, point.z);
                 
-                // Color based on score (blue = low, red = high)
                 const normalized = (point.score - minScore) / (maxScore - minScore);
                 const color = new THREE.Color();
                 color.setHSL(0.6 - normalized * 0.6, 1, 0.5);
@@ -220,7 +217,6 @@
             points = new THREE.Points(geometry, material);
             scene.add(points);
 
-            // Center camera on point cloud
             geometry.computeBoundingSphere();
             const center = geometry.boundingSphere.center;
             const radius = geometry.boundingSphere.radius;
@@ -265,14 +261,11 @@
             renderer.render(scene, camera);
         }
 
-        // Initialize the scene
         init();
 
-        // Load data from predetermined file based on method
         async function loadDataFromFile(method) {
             const statusDiv = document.getElementById('status');
-            const filename = `${method}.json`;
-            
+            const filename = `/${method}.json`;
             try {
                 statusDiv.textContent = `Loading ${method.toUpperCase()} data...`;
                 const response = await fetch(filename);
