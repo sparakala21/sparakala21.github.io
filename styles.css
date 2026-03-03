@@ -116,7 +116,6 @@ section { margin-bottom: 56px; }
 
 .entry-body { color: var(--ink); font-size: 13px; }
 
-/* Links & Buttons */
 .more-link {
     display: inline-flex;
     align-items: center;

@@ -19,14 +19,14 @@
   <article class="prose">
     <span class="meta-note">Reading Time: 6 Minutes</span>
 
-    <!-- FIX 1 (flow): biology foundation moved here, before the problem statement -->
     <p>Understanding how organisms develop, function, and behave fundamentally begins with the genome. 
         The genome encodes the biological instructions that govern everything from embryonic development to physiological function and, in some cases, susceptibility to disease. 
         It reflects both our evolutionary history and the genetic material we pass on to future generations. 
         As such, the genome represents the most information-dense blueprint of biological identity.
     </p>
 
-    <img src="dogma.png" width="1000" height="400">
+    
+    <img src="dogma.png" alt="Central Dogma of Molecular Biology">
 
     <p>At a molecular level, genetic information is stored in DNA, a double-stranded helical structure composed of nucleotide base pairs. 
         During gene expression, DNA is transcribed into a single-stranded molecule known as RNA. 
@@ -64,7 +64,7 @@
         how do we surface meaningful gene relationships from hundreds of thousands of pairwise expression signals? 
         That question motivates the network construction approach described below.</p>
 
-    <h2>Methodology</h2>
+    <h2>Representing The Graph</h2>
 
     <p>
         To create a co-expression network, we must begin by gaining an understanding of how genes co-express. 
@@ -82,6 +82,52 @@
     <p>While PMFG serves as an effective tool, the enforcement of connectivity and edge creation based on correlation criteria will still lead to false positives. To deal with this, the authors created an analysis framework named Multiscale Embedded Gene Co-expression Network Analysis (MEGENA).</p>
 
     <p>Fast Planar Filtered Network construction (FPFNC): Rather than the traditional PMFG algorithm, the authors introduce parallelization, early termination and prior quality control to effectively generate a PMFG over all tissue types.</p>
+
+    <h2>Network Layout</h2>
+
+    <p>The Fruchterman-Reingold algorithm produces aesthetically pleasing, two-dimensional visualizations of graphs by performing simplified simulations of physical systems. It presents a modification of the spring-embedder model originally proposed by Eades, designed for drawing undirected graphs with straight edges, and develops its heuristic in analogy to forces in natural systems.  
+
+The physical intuition is as follows: vertices are treated as steel rings and edges as springs connecting them, forming a mechanical system. The vertices are placed in some initial layout and then released, so that the spring forces move the system toward a minimal energy configuration. Crucially, the algorithm makes only neighboring vertices attract each other, while all vertices repel each other regardless of connectivity. This asymmetry ensures that connected nodes cluster together while unconnected nodes spread apart, producing layouts that intuitively reflect the community structure of the graph. 
+
+Each iteration of the algorithm proceeds in three steps: computing attractive forces between adjacent nodes, computing repulsive forces between all pairs of nodes, and then limiting total displacement by a global temperature parameter. This temperature controls the step width of node movements. When the temperature is high, nodes move faster and over larger distances; the temperature then cools at each iteration until the nodes stop moving and the system reaches its equilibrium state. This simulated annealing-like schedule allows the layout to settle into a stable configuration without becoming trapped in poor local minima early in the optimization. Vertices are typically initialized at random positions within a bounding frame, and the algorithm iterates until convergence. The result is a layout in which edge lengths tend toward uniformity and nodes are distributed with roughly equal spacing (all aesthetic properties that make the graph easier to interpret visually). 
+
+ 
+
+While Fruchterman-Reingold produces layouts by simulating physical forces, an alternative family of approaches derives node positions from learned low-dimensional embeddings of graph structure. The most influential of these is node2vec, introduced by Grover and Leskovec in 2016. node2vec is an algorithmic framework for learning continuous feature representations for nodes in networks. It learns a mapping of nodes to a low-dimensional space of features that maximizes the likelihood of preserving network neighborhoods of nodes, defines a flexible notion of a node's network neighborhood, and designs a biased random walk procedure that efficiently explores diverse neighborhoods.  
+
+The key innovation of node2vec over prior work lies in this flexibility of neighborhood definition. The algorithm accommodates various definitions of network neighborhoods by simulating biased random walks, and specifically provides a way of balancing the exploration-exploitation tradeoff that leads to representations obeying a spectrum of equivalences from homophily to structural equivalence.</p>
+
+    <div class="technical-card">
+        <h4>The Search Bias Parameters</h4>
+        <p><strong>Return parameter (p):</strong> Controls the likelihood of immediately revisiting a node in the walk. High values ensure already-visited nodes are less likely to be sampled again, forcing the walk to explore further.</p>
+        <p><strong>In-out parameter (q):</strong> Governs the "Search Strategy." High values encourage a Breadth-First Search (BFS) to capture local community homophily, while low values encourage a Depth-First Search (DFS) to capture structural equivalence across the graph.</p>
+    </div>
+
+    <p>By tuning these two parameters, node2vec can interpolate between capturing nodes that belong to the same community and nodes that occupy analogous structural positions in different parts of the graph. 
+
+Once random walks are generated for each node, node2vec optimizes a custom graph-based objective function using stochastic gradient descent, motivated by prior work in natural language processing, treating sequences of nodes in random walks analogously to sequences of words in sentences. The result is a vector embedding for each node in the graph, where nodes with similar neighborhoods occupy nearby positions in the embedding space. 
+</p>
+
+  <h2> Graph Coarsening</h2>
+
+  <p>
+    Now that we have our graph layout, we need to address the high degree in the order of 10^4 unique nodes. One way to do this and make a meaningful visual is by finding highly connected subgraphs and rendering them as one node with an average x and y of the members of the community. Our visual will dynamically coarsen and resolve based on the zoom level of the user so we will need a highly parameterized graph community detection algorithm  
+
+The objective function the algorithm seeks to maximize is modularity, a scalar quantity that measures the quality of a given partition.</p>
+
+    <div class="technical-card">
+        <h4>Modularity ($Q$)</h4>
+        <p>A value between −1 and 1 that measures the relative density of edges inside communities with respect to edges outside communities. High modularity indicates dense internal connections and sparse external connections, suggesting a "natural" community structure.</p>
+    </div>
+
+    
+    
+    <p>The algorithm proceeds in two alternating phases that are repeated iteratively. In the first phase, the method looks for small communities by optimizing modularity in a local way. In the second phase, it aggregates nodes of the same community and builds a new network whose nodes are the communities. These steps are repeated iteratively until a maximum of modularity is attained, producing several partitions as output. More concretely, in Phase 1 every node begins as its own singleton community. The algorithm then cycles through all nodes and, for each one, evaluates the modularity gain that would result from moving it into each of its neighboring communities. The node is assigned to the neighboring community that yields the greatest positive modularity gain; if no positive gain is achievable, the node remains in its original community. This phase continues until no individual move can improve the modularity. In Phase 2, all nodes belonging to the same community are collapsed into a single supernode. The edge weights between supernodes are set to the sum of all edge weights between the member nodes of the corresponding communities, and the algorithm then re-enters Phase 1 on this reduced graph. The partition found after the first iteration typically consists of many communities of small sizes, while at subsequent steps larger and larger communities emerge due to the aggregation mechanism, naturally leading to a hierarchical decomposition of the network.  
+
+This hierarchical, multi-resolution character is precisely what makes the Louvain method well-suited to our dynamic visualization. The method seems to run in time O(n log n), with most of the computational effort concentrated in the optimization at the first level. For our purposes, each level of the hierarchy corresponds to a different zoom resolution: at low zoom, the graph is rendered in its most coarsened form, with large supernodes representing entire gene modules; as the user zooms in, the algorithm's intermediate partitions are progressively resolved, eventually revealing individual gene nodes at full zoom. The key parameter governing this behavior is the resolution parameter γ, which appears in the modularity gain formula. When the resolution is set to less than 1, the algorithm favors larger communities, while values greater than 1 favor smaller communities, giving us fine-grained control over the granularity of coarsening at each zoom level. By precomputing the full hierarchy of Louvain partitions across a sweep of resolution values and storing the community assignments alongside their centroid coordinates, the visualization can transition fluidly between coarse and fine-grained representations entirely client-side. 
+
+It is worth noting one known limitation of the method: the resolution limit of modularity can cause multiple small communities to be grouped together into a larger one, causing the smaller communities to be hidden and making it no longer possible to differentiate those nodes from nodes already present in the absorbing community. For the purposes of a first-pass visualization of gene coexpression structure, this tradeoff between resolution and computational tractability is acceptable, though downstream analyses requiring more precise community boundaries may benefit from the Leiden algorithm, a refined successor that guarantees well-connected communities at each level of the hierarchy. 
+  </p>
 
   </article>
 
