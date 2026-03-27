@@ -1,4 +1,4 @@
-const API = 'https://api-production-597d.up.railway.app';
+const API = 'https://api-production-f255.up.railway.app';
 
 let cy;
 let expanding = false;
@@ -317,14 +317,39 @@ async function loadTop() {
 function renderDetail(node) {
   const n = node.data();
   const detail = document.getElementById('detail-content');
-  const formatExpr = (val) => (val !== null && val !== undefined) ? Number(val).toFixed(2) : '—';
+  
+  const formatExprArray = (arr) => {
+    if (!arr || !Array.isArray(arr)) return '—';
+    
+    const validValues = arr.filter(v => v !== null && v !== undefined);
+    if (validValues.length === 0) return '—';
+    
+    const avg = validValues.reduce((a, b) => a + b, 0) / validValues.length;
+    const min = Math.min(...validValues);
+    const max = Math.max(...validValues);
+    
+    return `avg: ${avg.toFixed(2)} | min: ${min.toFixed(2)} | max: ${max.toFixed(2)}`;
+  };
+  
+  const formatExprDetail = (arr) => {
+    if (!arr || !Array.isArray(arr)) return 'no data';
+    
+    return arr.map((v, i) => {
+      const val = (v !== null && v !== undefined) ? Number(v).toFixed(2) : 'null';
+      return `<div style="font-size:11px; padding:2px 0;">tissue ${i}: <strong>${val}</strong></div>`;
+    }).join('');
+  };
 
   if (n.is_clique) {
     detail.innerHTML = `
       <div class="clique-badge">${n.clique_type || 'CLIQUE'}</div>
-      <div class="row"><span>id</span><span class="val">${n.id.slice(0, 18)}</span></div>
+      <div class="row"><span>id</span><span class="val" style="font-size:11px;">${n.id.slice(0, 18)}</span></div>
       <div class="row"><span>members</span><span class="val">${n.member_count ?? '—'}</span></div>
-      <div class="row"><span>avg expr</span><span class="val">${formatExpr(n.expression)}</span></div>
+      <div class="row"><span>avg expr</span><span class="val" style="font-size:11px;">${formatExprArray(n.expression)}</span></div>
+      <div style="margin-top:6px; padding:8px; background:var(--surface); border-radius:4px; border-left:2px solid var(--accent);">
+        <div style="font-size:10px; color:var(--text-secondary); margin-bottom:4px;">Expression by tissue:</div>
+        ${formatExprDetail(n.expression)}
+      </div>
       <div class="row"><span>x</span><span class="val">${Number(n.x).toFixed(4)}</span></div>
       <div class="row"><span>y</span><span class="val">${Number(n.y).toFixed(4)}</span></div>
       <div class="row"><span>degree</span><span class="val">${node.degree()}</span></div>
@@ -334,14 +359,22 @@ function renderDetail(node) {
     `;
   } else {
     detail.innerHTML = `
-      <div class="row"><span>id</span><span class="val">${n.id.slice(0, 18)}</span></div>
+      <div class="row"><span>id</span><span class="val" style="font-size:11px;">${n.id.slice(0, 18)}</span></div>
       <div class="row"><span>label</span><span class="val">${(n.label || '—').slice(0, 16)}</span></div>
-      <div class="row"><span>expression</span><span class="val">${formatExpr(n.expression)}</span></div>
+      <div class="row"><span>avg expr</span><span class="val" style="font-size:11px;">${formatExprArray(n.expression)}</span></div>
+      <div style="margin-top:6px; padding:8px; background:var(--surface); border-radius:4px; border-left:2px solid var(--accent);">
+        <div style="font-size:10px; color:var(--text-secondary); margin-bottom:4px;">Expression by tissue:</div>
+        ${formatExprDetail(n.expression)}
+      </div>
       <div class="row"><span>x</span><span class="val">${Number(n.x).toFixed(4)}</span></div>
       <div class="row"><span>y</span><span class="val">${Number(n.y).toFixed(4)}</span></div>
       <div class="row"><span>degree</span><span class="val">${node.degree()}</span></div>
     `;
   }
+}
+
+function clearNeighborHighlights() {
+  cy.elements().removeClass('neighbor-focus neighbor-hit neighbor-edge neighbor-dim');
 }
 
 function initCytoscape(elements) {
@@ -451,6 +484,39 @@ function initCytoscape(elements) {
           'opacity': 0.12,
         }
       },
+      {
+        selector: 'node.neighbor-focus',
+        style: {
+          'border-width': 2.5,
+          'border-color': '#ffffff',
+          'background-color': '#ffffff',
+          'z-index': 999,
+        }
+      },
+      {
+        selector: 'node.neighbor-hit',
+        style: {
+          'background-color': '#4aff91',
+          'border-width': 1.5,
+          'border-color': '#00ff6a',
+          'z-index': 998,
+        }
+      },
+      {
+        selector: 'edge.neighbor-edge',
+        style: {
+          'line-color': '#4aff91',
+          'opacity': 0.9,
+          'width': 1.5,
+          'z-index': 997,
+        }
+      },
+      {
+        selector: 'node.neighbor-dim, edge.neighbor-dim',
+        style: {
+          'opacity': 0.08,
+        }
+      },
     ],
 
     wheelSensitivity: 0.3,
@@ -461,7 +527,20 @@ function initCytoscape(elements) {
   updateStats();
 
   cy.on('tap', 'node', function(evt) {
-    renderDetail(evt.target);
+    const node = evt.target;
+    clearSearchHighlights();
+    clearNeighborHighlights();
+
+    const neighbors = node.neighborhood();
+    const neighborNodes = neighbors.nodes();
+    const neighborEdges = neighbors.edges();
+
+    cy.elements().addClass('neighbor-dim');
+    node.removeClass('neighbor-dim').addClass('neighbor-focus');
+    neighborNodes.removeClass('neighbor-dim').addClass('neighbor-hit');
+    neighborEdges.removeClass('neighbor-dim').addClass('neighbor-edge');
+
+    renderDetail(node);
   });
 
   cy.on('cxttap', 'node', function(evt) {
@@ -480,6 +559,7 @@ function initCytoscape(elements) {
     if (evt.target === cy) {
       document.getElementById('detail-content').textContent = 'click a node';
       clearSearchHighlights();
+      clearNeighborHighlights();
       document.getElementById('search-status').textContent = '';
     }
   });
