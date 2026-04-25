@@ -1,4 +1,4 @@
-const API = 'http://localhost:8000';
+const API = 'https://api-production-f255.up.railway.app/';
 
 const TISSUES = [
   'adipose tissue', 'adrenal gland', 'amygdala', 'appendix', 'basal ganglia',
