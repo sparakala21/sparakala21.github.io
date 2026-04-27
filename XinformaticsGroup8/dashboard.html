@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>The Agent Ledger — S&P 500 Portfolio Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root{
+    --paper:#f5ecdc; --paper-2:#efe3cd; --paper-3:#e6d8be;
+    --ink:#16100a; --ink-2:#3a2a1c; --mute:#7a6a55;
+    --rule:#cdb898; --rule-2:#b8a079;
+    --oxblood:#7a1f17; --gold:#9a6b1c; --forest:#2f4a2e;
+    --pos:#2f4a2e; --neg:#7a1f17;
+    --trend:#9a6b1c; --contra:#2f4a2e; --macro:#7a1f17;
+    --card-bg:rgba(255,250,238,.45);
+    --tt-bg:#16100a; --tt-text:#f5ecdc;
+  }
+  body.dark{
+    --paper:#0f0c08; --paper-2:#1a140d; --paper-3:#241a10;
+    --ink:#f5ecdc; --ink-2:#cdb898; --mute:#8a7a64;
+    --rule:#3a2a1c; --rule-2:#4a3220;
+    --oxblood:#d97962; --gold:#e0a857; --forest:#7ab089;
+    --pos:#7ab089; --neg:#d97962;
+    --trend:#e0a857; --contra:#7ab089; --macro:#d97962;
+    --card-bg:rgba(36,26,16,.45);
+    --tt-bg:#241a10; --tt-text:#f5ecdc;
+  }
+  *{box-sizing:border-box;-webkit-font-smoothing:antialiased}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Lexend',sans-serif;color:var(--ink);background:var(--paper);
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.09  0 0 0 0 0.06  0 0 0 0 0.03  0 0 0 0.06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-attachment:fixed;min-height:100vh;line-height:1.5;
+    transition:background .3s,color .3s;
+  }
+  .num{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
+  .smallcaps{text-transform:uppercase;letter-spacing:.18em;font-size:11px;font-weight:600;color:var(--mute)}
+
+  /* ============ TICKER TAPE ============ */
+  .ticker-tape{
+    background:var(--tt-bg);color:var(--tt-text);overflow:hidden;
+    border-bottom:1px solid var(--ink);position:relative;
+  }
+  .ticker-tape .track{
+    display:flex;gap:48px;padding:10px 0;
+    animation:tape 70s linear infinite;
+    white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:12px;
+  }
+  .ticker-tape:hover .track{animation-play-state:paused}
+  .ticker-tape .item{display:inline-flex;gap:10px;align-items:center}
+  .ticker-tape .tk{color:var(--gold);font-weight:600;letter-spacing:.05em}
+  .ticker-tape .pos{color:#7ab089}
+  .ticker-tape .neg{color:#d97962}
+  @keyframes tape{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* ============ MASTHEAD ============ */
+  .masthead{padding:24px 56px 18px;border-bottom:1px solid var(--ink);position:relative}
+  .edition{display:flex;justify-content:space-between;align-items:center;
+    font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-2);font-weight:500;
+    padding-bottom:14px;border-bottom:1px solid var(--rule);}
+  .edition .left,.edition .right{display:flex;gap:18px;align-items:center}
+  .edition .dot{width:4px;height:4px;background:var(--oxblood);border-radius:50%}
+  .theme-toggle{
+    background:none;border:1px solid var(--ink);color:var(--ink);
+    font-family:'Lexend',sans-serif;font-size:10px;letter-spacing:.16em;
+    text-transform:uppercase;font-weight:600;padding:5px 10px;
+    cursor:pointer;transition:all .2s;
+  }
+  .theme-toggle:hover{background:var(--ink);color:var(--paper)}
+  .title{font-weight:700;font-size:72px;line-height:1;letter-spacing:-0.045em;margin:18px 0 8px;white-space:nowrap}
+  .title em{font-style:italic;font-weight:400;color:var(--oxblood)}
+  .standfirst{font-style:italic;font-weight:300;font-size:19px;color:var(--ink-2);max-width:780px;line-height:1.45;margin:6px 0 14px}
+  .byline{font-size:12px;color:var(--mute);letter-spacing:.05em}
+  .byline strong{color:var(--ink);font-weight:600}
+  .keyhint{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+  .byline-row{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+  .keyhint kbd{background:var(--paper-3);border:1px solid var(--rule);padding:2px 6px;border-radius:3px;margin:0 2px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink)}
+
+  /* ============ LAYOUT ============ */
+  main{padding:36px 56px 80px;max-width:1480px;margin:0 auto}
+  section + section{margin-top:48px}
+  .grid{display:grid;gap:32px}
+  .grid-3{grid-template-columns:repeat(3,1fr)}
+  .grid-2-1{grid-template-columns:1.55fr 1fr}
+  .col-divider > * + *{border-left:1px solid var(--rule);padding-left:32px}
+  .col-divider > *:not(:last-child){padding-right:32px}
+
+  /* ============ STATS ============ */
+  .stat-block .agent{font-size:22px;font-weight:600;letter-spacing:-0.01em;margin-bottom:4px;display:flex;align-items:center;gap:10px}
+  .stat-block .agent .marker{width:8px;height:8px;border-radius:50%}
+  .marker.trend{background:var(--gold)} .marker.contra{background:var(--forest)} .marker.macro{background:var(--oxblood)}
+  .stat-block .desc{font-size:13px;color:var(--mute);font-style:italic;margin-bottom:18px}
+  .stat-figure{font-weight:600;font-size:54px;letter-spacing:-0.04em;line-height:1;margin-bottom:6px;font-variant-numeric:tabular-nums;font-family:'JetBrains Mono',monospace}
+  .stat-figure .currency{font-size:24px;color:var(--mute);margin-right:4px;font-weight:400;position:relative;top:6px}
+  .stat-row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-top:1px solid var(--rule);font-size:13px}
+  .stat-row .label{color:var(--mute);text-transform:uppercase;letter-spacing:.12em;font-size:10.5px;font-weight:600}
+  .stat-row .value{font-family:'JetBrains Mono',monospace;font-weight:500;font-variant-numeric:tabular-nums}
+  .delta-pos{color:var(--pos)} .delta-neg{color:var(--neg)}
+  .arrow{display:inline-block;font-style:normal;margin-right:2px}
+
+  /* ============ SECTIONS ============ */
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;
+    margin-bottom:22px;padding-bottom:10px;border-bottom:1px solid var(--ink);gap:24px}
+  .section-head .kicker{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--oxblood);font-weight:600;margin-bottom:6px}
+  .section-head h2{font-weight:600;font-size:32px;margin:0;letter-spacing:-0.025em;line-height:1.05}
+  .section-head .meta{font-size:12px;color:var(--mute);font-style:italic;text-align:right}
+
+  /* ============ CARDS ============ */
+  .card{background:var(--card-bg);border:1px solid var(--rule);padding:24px 26px;position:relative}
+  .card::before{content:"";position:absolute;top:-1px;left:-1px;right:-1px;height:3px;background:var(--ink)}
+  .card.no-rule::before{display:none}
+  .card h3{font-weight:600;font-size:19px;margin:0 0 4px;letter-spacing:-0.015em}
+  .card .sub{font-size:12px;color:var(--mute);font-style:italic;margin-bottom:18px}
+  .chart-wrap{position:relative;height:340px}
+
+  /* ============ CONTROLS ============ */
+  .controls{display:flex;gap:8px;margin-left:auto;align-items:center;flex-wrap:wrap}
+  .ctrl{padding:6px 12px;border:1px solid var(--rule);background:transparent;color:var(--mute);
+    font-family:'Lexend',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    font-weight:600;cursor:pointer;transition:all .15s}
+  .ctrl:hover{color:var(--ink);border-color:var(--ink)}
+  .ctrl.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+  /* ============ TABLES ============ */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead th{text-align:left;padding:8px 12px 8px 0;font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink);font-weight:600;border-bottom:1px solid var(--ink);cursor:pointer;user-select:none;position:relative}
+  thead th:hover{color:var(--oxblood)}
+  thead th.sorted::after{content:"▾";margin-left:4px;color:var(--oxblood)}
+  thead th.sorted.asc::after{content:"▴"}
+  thead th.num,tbody td.num{text-align:right;padding-right:0;padding-left:12px}
+  tbody td{padding:11px 12px 11px 0;border-bottom:1px solid var(--rule);font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;font-size:12.5px}
+  tbody td:first-child{font-family:'Lexend',sans-serif;font-weight:500;color:var(--mute)}
+  tbody td.tk{font-weight:700;font-size:14px;letter-spacing:.04em;color:var(--ink)}
+  tbody tr:last-child td{border-bottom:none}
+  .gain{color:var(--pos)} .loss{color:var(--neg)}
+  tbody tr.holding{cursor:pointer;transition:background .15s}
+  tbody tr.holding:hover{background:rgba(154,107,28,.1)}
+  tbody tr.holding td:first-child::before{content:"› ";color:var(--oxblood);font-weight:700}
+
+  .winners-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .winners-grid > div{padding:0 22px}
+  .winners-grid > div:first-child{padding-left:0;border-right:1px solid var(--rule)}
+  .winners-grid > div:last-child{padding-right:0}
+  .winners-grid h4{margin:0 0 12px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--mute);font-weight:600}
+
+  /* ============ TABS ============ */
+  .tabs{display:flex;gap:0;border-bottom:1px solid var(--ink);margin-bottom:24px}
+  .tab{padding:14px 22px 12px;cursor:pointer;font-size:16px;font-weight:600;letter-spacing:-0.01em;
+    color:var(--mute);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s;
+    display:flex;align-items:center;gap:10px;background:none;border-top:none;border-left:none;border-right:none;font-family:'Lexend',sans-serif}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--ink);border-bottom-color:var(--oxblood)}
+  .tab .num-tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--oxblood);font-weight:500}
+  .tab .key{font-family:'JetBrains Mono',monospace;font-size:9px;background:var(--paper-3);padding:2px 5px;border-radius:2px;color:var(--mute);border:1px solid var(--rule)}
+
+  /* ============ ESSAYS ============ */
+  .essay{border-top:3px solid var(--ink);padding-top:20px;position:relative}
+  .essay .pretitle{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);font-weight:600;margin-bottom:8px}
+  .essay .pretitle .marker{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:middle}
+  .essay h3{font-weight:600;font-size:23px;margin:0 0 14px;letter-spacing:-0.025em;line-height:1.15}
+  .essay h3 em{font-style:italic;color:var(--oxblood)}
+  .essay p{font-size:14px;line-height:1.6;color:var(--ink-2);margin:0 0 12px}
+  .essay .picks{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:600;margin-top:14px;padding-top:12px;border-top:1px solid var(--rule)}
+  .essay .picks span{font-family:'JetBrains Mono',monospace;color:var(--ink);font-weight:600;letter-spacing:.04em;margin-right:10px}
+
+  /* ============ OVERLAP ============ */
+  .overlap-grid{display:grid;grid-template-columns:140px repeat(3,1fr);gap:0;border:1px solid var(--rule)}
+  .overlap-grid .cell{padding:14px 16px;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);font-size:13px;display:flex;align-items:center;gap:10px}
+  .overlap-grid .cell:nth-child(4n){border-right:none}
+  .overlap-grid .head{background:var(--paper-3);font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:10px;color:var(--ink)}
+  .overlap-grid .tk{font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.05em;font-size:14px}
+  .overlap-grid .check{width:14px;height:14px;border-radius:50%;display:inline-block}
+  .overlap-grid .empty{color:var(--mute);opacity:.4;font-family:'JetBrains Mono',monospace;font-size:11px}
+  .overlap-grid .pct{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-2);font-weight:500}
+
+  /* ============ MODAL ============ */
+  .modal-bg{position:fixed;inset:0;background:rgba(20,12,4,.7);display:none;align-items:center;justify-content:center;z-index:100;padding:24px;backdrop-filter:blur(6px)}
+  .modal-bg.show{display:flex}
+  .modal{background:var(--paper);border:1px solid var(--ink);max-width:640px;width:100%;padding:36px 40px;position:relative;max-height:88vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.4)}
+  .modal::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--oxblood)}
+  .modal .close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--mute);font-family:'Lexend';font-weight:300}
+  .modal .close:hover{color:var(--ink)}
+  .modal .kicker{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--oxblood);font-weight:600;margin-bottom:8px}
+  .modal h3{font-weight:700;font-size:38px;letter-spacing:-0.03em;margin:0 0 4px}
+  .modal .agent-line{font-size:13px;color:var(--mute);font-style:italic;margin-bottom:24px;display:flex;align-items:center;gap:8px}
+  .modal .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);margin-bottom:22px}
+  .modal .stats > div{padding:14px 16px;border-right:1px solid var(--rule)}
+  .modal .stats > div:last-child{border-right:none}
+  .modal .stats .lbl{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);font-weight:600;margin-bottom:6px}
+  .modal .stats .val{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;letter-spacing:-0.02em}
+  .modal .rationale{font-size:15px;line-height:1.65;color:var(--ink-2);font-style:italic;border-left:3px solid var(--oxblood);padding:4px 0 4px 18px}
+  .modal .rationale-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--oxblood);font-weight:600;margin-bottom:10px;font-style:normal}
+  .modal-wide{max-width:880px;padding:0}
+  .about-head{padding:36px 44px 0;border-bottom:1px solid var(--ink)}
+  .about-head .kicker{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--oxblood);font-weight:600;margin-bottom:8px}
+  .about-head h3{font-weight:700;font-size:38px;letter-spacing:-0.03em;margin:0 0 6px}
+  .about-head p{font-size:14px;color:var(--ink-2);font-style:italic;margin:0 0 24px;max-width:640px;line-height:1.5}
+  .about-tabs{display:flex;gap:0;margin-bottom:-1px}
+  .about-tab{padding:14px 22px 12px;cursor:pointer;font-size:14px;font-weight:600;letter-spacing:-0.005em;
+    color:var(--mute);border:none;background:none;border-bottom:2px solid transparent;font-family:'Lexend';
+    display:flex;align-items:center;gap:8px;transition:color .15s}
+  .about-tab:hover{color:var(--ink)}
+  .about-tab.active{color:var(--ink);border-bottom-color:var(--oxblood)}
+  .about-tab .marker{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .about-body{padding:32px 44px 40px;max-height:60vh;overflow-y:auto}
+  .about-pane{display:none}
+  .about-pane.show{display:block;animation:fadeIn .25s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .about-pane h4{font-weight:700;font-size:22px;margin:0 0 6px;letter-spacing:-0.02em}
+  .about-pane h4 em{font-style:italic;color:var(--oxblood);font-weight:400}
+  .about-pane .lede{font-size:15px;color:var(--ink-2);font-style:italic;line-height:1.55;margin:0 0 24px;border-left:3px solid var(--oxblood);padding-left:16px}
+  .about-pane .meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--rule);margin-bottom:24px}
+  .about-pane .meta-grid > div{padding:12px 14px;border-right:1px solid var(--rule)}
+  .about-pane .meta-grid > div:last-child{border-right:none}
+  .about-pane .meta-grid .lbl{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);font-weight:600;margin-bottom:4px}
+  .about-pane .meta-grid .val{font-family:'JetBrains Mono';font-size:13px;font-weight:600;color:var(--ink)}
+  .about-pane h5{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--oxblood);font-weight:600;margin:24px 0 10px}
+  .about-pane p{font-size:14px;line-height:1.65;color:var(--ink-2);margin:0 0 12px}
+  .about-pane ul{font-size:14px;line-height:1.7;color:var(--ink-2);padding-left:18px;margin:0 0 12px}
+  .about-pane ul li{margin-bottom:6px}
+  .about-pane ul li::marker{color:var(--oxblood)}
+  .about-pane .picks-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .about-pane .picks-row span{font-family:'JetBrains Mono';font-size:11px;font-weight:600;letter-spacing:.05em;
+    padding:5px 10px;border:1px solid var(--rule);background:var(--paper-3);color:var(--ink)}
+
+  /* ============ FOOTER ============ */
+  footer{margin-top:80px;padding:32px 56px;border-top:3px double var(--ink);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);display:flex;justify-content:space-between}
+  footer .ornament{color:var(--oxblood);letter-spacing:0;font-style:italic;text-transform:none;font-size:13px}
+
+  @media (max-width:1100px){
+    .grid-3,.grid-2-1{grid-template-columns:1fr}
+    .col-divider > *+*{border-left:none;padding-left:0;border-top:1px solid var(--rule);padding-top:32px;margin-top:32px}
+    .title{font-size:50px} .keyhint{display:none}
+    .masthead,main,footer{padding-left:24px;padding-right:24px}
+    .overlap-grid{grid-template-columns:90px repeat(3,1fr)}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ TICKER TAPE ============ -->
+<div class="ticker-tape">
+  <div class="track" id="tickerTrack"></div>
+</div>
+
+<!-- ============ MASTHEAD ============ -->
+<header class="masthead">
+  <div class="edition">
+    <div class="left">
+      <span>Vol. I &nbsp;·&nbsp; No. 1</span>
+      <span class="dot"></span>
+      <span>The Agent Ledger</span>
+    </div>
+    <div class="right">
+      <span>Final Review · April 2026</span>
+      <span class="dot"></span>
+      <button class="theme-toggle" id="aboutBtn">✦ About the Agents</button>
+      <button class="theme-toggle" id="themeBtn">◐ Dark</button>
+    </div>
+  </div>
+  <h1 class="title">Three Agents, <em>One Market.</em></h1>
+  <p class="standfirst">A four-year experiment in algorithmic conviction — three Claude-driven reasoning agents, $20,000 apiece, deployed against the S&amp;P 500 from April 2022 through April 2026.</p>
+  <div class="byline-row">
+    <div class="byline">By <strong>Group&nbsp;8</strong> &nbsp;·&nbsp; Xinfo Final Project &nbsp;·&nbsp; Holding window <strong>2022.04.18 — 2026.04.14</strong></div>
+    <div class="keyhint">Press <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> switch agents · <kbd>D</kbd> dark mode</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ STATS ============ -->
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="kicker">Performance · At a Glance</div>
+        <h2>The Verdict in Three Numbers</h2>
+      </div>
+      <div class="meta">Starting capital · $60,000<br/>Final book value · <span class="num">$130,737.60</span></div>
+    </div>
+
+    <div class="grid grid-3 col-divider">
+      <div class="stat-block">
+        <div class="agent"><span class="marker trend"></span>Trend Follower</div>
+        <div class="desc">Low-volatility momentum, Sharpe-screened.</div>
+        <div class="stat-figure"><span class="currency">$</span><span class="counter" data-target="24276.72" data-decimals="2">0</span></div>
+        <div class="stat-row"><span class="label">Total Return</span><span class="value delta-pos"><span class="arrow">▲</span>+21.38%</span></div>
+        <div class="stat-row"><span class="label">P&amp;L</span><span class="value delta-pos">+$4,276.72</span></div>
+        <div class="stat-row" style="border-bottom:1px solid var(--rule)"><span class="label">Holdings</span><span class="value">10 names</span></div>
+      </div>
+      <div class="stat-block">
+        <div class="agent"><span class="marker contra"></span>Contrarian</div>
+        <div class="desc">Mean-reversion, deep-discount conviction.</div>
+        <div class="stat-figure"><span class="currency">$</span><span class="counter" data-target="78386.05" data-decimals="2">0</span></div>
+        <div class="stat-row"><span class="label">Total Return</span><span class="value delta-pos"><span class="arrow">▲</span>+291.93%</span></div>
+        <div class="stat-row"><span class="label">P&amp;L</span><span class="value delta-pos">+$58,386.05</span></div>
+        <div class="stat-row" style="border-bottom:1px solid var(--rule)"><span class="label">Holdings</span><span class="value">10 names</span></div>
+      </div>
+      <div class="stat-block">
+        <div class="agent"><span class="marker macro"></span>Macro Sentiment</div>
+        <div class="desc">Top-down themes, analyst-validated.</div>
+        <div class="stat-figure"><span class="currency">$</span><span class="counter" data-target="28074.83" data-decimals="2">0</span></div>
+        <div class="stat-row"><span class="label">Total Return</span><span class="value delta-pos"><span class="arrow">▲</span>+40.37%</span></div>
+        <div class="stat-row"><span class="label">P&amp;L</span><span class="value delta-pos">+$8,074.83</span></div>
+        <div class="stat-row" style="border-bottom:1px solid var(--rule)"><span class="label">Holdings</span><span class="value">10 names</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RACE CHART ============ -->
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="kicker">The Race · 2022 → 2026</div>
+        <h2>Portfolio Value, Tracked Monthly</h2>
+      </div>
+      <div class="controls" id="raceControls">
+        <button class="ctrl active" data-mode="dollar">$ Value</button>
+        <button class="ctrl" data-mode="pct">% Return</button>
+      </div>
+    </div>
+    <div class="card no-rule">
+      <div class="chart-wrap" style="height:420px"><canvas id="raceChart"></canvas></div>
+    </div>
+  </section>
+
+  <!-- ============ COMPARISON ============ -->
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="kicker">Capital · Then &amp; Now</div>
+        <h2>From Twenty Thousand to Whatever the Market Allowed</h2>
+      </div>
+      <div class="meta">Bars in cream · starting capital<br/>Bars in colour · final value</div>
+    </div>
+    <div class="grid grid-2-1">
+      <div class="card">
+        <h3>Final Portfolio Value</h3>
+        <div class="sub">In U.S. dollars, post-execution, fractional shares assumed.</div>
+        <div class="chart-wrap"><canvas id="returnsChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Standout Trades</h3>
+        <div class="sub">The single best and worst position held by each agent.</div>
+        <div class="winners-grid" style="margin-top:8px">
+          <div>
+            <h4>Top performer</h4>
+            <table>
+              <tbody>
+                <tr><td class="tk">VRT</td><td>Contrarian</td><td class="num gain">+2,485%</td></tr>
+                <tr><td class="tk">XOM</td><td>Macro</td><td class="num gain">+93.4%</td></tr>
+                <tr><td class="tk">CTAS</td><td>Trend</td><td class="num gain">+76.9%</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h4>Worst drawdown</h4>
+            <table>
+              <tbody>
+                <tr><td class="tk">EPAM</td><td>Contrarian</td><td class="num loss">−54.7%</td></tr>
+                <tr><td class="tk">POOL</td><td>Trend</td><td class="num loss">−43.9%</td></tr>
+                <tr><td class="tk">UNH</td><td>Macro</td><td class="num loss">−36.8%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOLDINGS ============ -->
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="kicker">Position-Level · Detail</div>
+        <h2>Inside Each Portfolio</h2>
+      </div>
+      <div class="meta"><span style="color:var(--oxblood);font-style:normal;letter-spacing:.16em;text-transform:uppercase;font-size:10px;font-weight:600">Click any row for the agent's rationale</span><br/>Click column headers to sort</div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-agent="trend_follower"><span class="key">1</span><span class="marker trend" style="width:8px;height:8px;border-radius:50%;background:var(--gold);display:inline-block"></span>Trend Follower <span class="num-tag">+21.38%</span></button>
+      <button class="tab" data-agent="contrarian"><span class="key">2</span><span class="marker contra" style="width:8px;height:8px;border-radius:50%;background:var(--forest);display:inline-block"></span>Contrarian <span class="num-tag">+291.93%</span></button>
+      <button class="tab" data-agent="macro_sentiment"><span class="key">3</span><span class="marker macro" style="width:8px;height:8px;border-radius:50%;background:var(--oxblood);display:inline-block"></span>Macro Sentiment <span class="num-tag">+40.37%</span></button>
+      <div class="controls" style="margin-left:auto;align-self:center;padding-bottom:6px">
+        <button class="ctrl active" data-filter="all">All</button>
+        <button class="ctrl" data-filter="gain">Gainers</button>
+        <button class="ctrl" data-filter="loss">Losers</button>
+      </div>
+    </div>
+
+    <div class="grid grid-2-1">
+      <div class="card no-rule">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <h3>Returns by position</h3>
+            <div class="sub">Held end-to-end. Positive bars in agent colour, losses in oxblood.</div>
+          </div>
+          <div class="controls" id="holdingsModeCtrl">
+            <button class="ctrl active" data-hmode="pct">%</button>
+            <button class="ctrl" data-hmode="pnl">$</button>
+          </div>
+        </div>
+        <div class="chart-wrap" style="height:420px"><canvas id="holdingsChart"></canvas></div>
+      </div>
+      <div>
+        <table id="holdingsTable">
+          <thead>
+            <tr>
+              <th data-sort="rank">#</th>
+              <th data-sort="ticker">Ticker</th>
+              <th class="num" data-sort="alloc">Alloc</th>
+              <th class="num" data-sort="buy">Buy</th>
+              <th class="num" data-sort="sell">Sell</th>
+              <th class="num sorted" data-sort="ret">Return</th>
+              <th class="num" data-sort="pnl">P&amp;L</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ OVERLAP ============ -->
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="kicker">Conviction Overlap · Who Agreed With Whom</div>
+        <h2>Stocks Picked by More Than One Agent</h2>
+      </div>
+      <div class="meta">Cells show the allocation each<br/>agent gave that ticker (% of book)</div>
+    </div>
+    <div class="overlap-grid" id="overlapGrid"></div>
+  </section>
+
+</main>
+
+<footer>
+  <span>The Agent Ledger &nbsp;·&nbsp; Group 8 &nbsp;·&nbsp; Xinfo 2026</span>
+  <span class="ornament">— fin —</span>
+  <span>Powered by Claude reasoning agents</span>
+</footer>
+
+<!-- ============ ABOUT MODAL ============ -->
+<div class="modal-bg" id="aboutBg">
+  <div class="modal modal-wide">
+    <button class="close" id="aboutClose">×</button>
+    <div class="about-head">
+      <div class="kicker">Reasoning · The Three Mandates</div>
+      <h3>How Each Agent Thought</h3>
+      <p>Three Claude-driven reasoning agents were spawned in parallel as a LangGraph orchestration. Each was given the S&amp;P 500 history through April 2022 and instructed to produce a confidence-weighted ten-stock portfolio.</p>
+      <div class="about-tabs">
+        <button class="about-tab active" data-pane="trend"><span class="marker" style="background:var(--gold)"></span>Trend Follower</button>
+        <button class="about-tab" data-pane="contra"><span class="marker" style="background:var(--forest)"></span>Contrarian</button>
+        <button class="about-tab" data-pane="macro"><span class="marker" style="background:var(--oxblood)"></span>Macro Sentiment</button>
+        <button class="about-tab" data-pane="exec"><span class="marker" style="background:var(--ink)"></span>Executor</button>
+      </div>
+    </div>
+
+    <div class="about-body">
+      <!-- TREND -->
+      <div class="about-pane show" data-pane="trend">
+        <h4>Mandate № I — The patient <em>compounder.</em></h4>
+        <p class="lede">Identify S&amp;P 500 names with sustained upward momentum and consistent linear growth. Reward the stocks that climb without theatrics.</p>
+        <div class="meta-grid">
+          <div><div class="lbl">Strategy</div><div class="val">Low-vol momentum</div></div>
+          <div><div class="lbl">Final Return</div><div class="val" style="color:var(--pos)">+21.38%</div></div>
+          <div><div class="lbl">Final Value</div><div class="val">$24,276.72</div></div>
+        </div>
+        <h5>Methodology</h5>
+        <ul>
+          <li>Compute per-ticker daily returns, standard deviation, and a Sharpe-like ratio (mean ÷ std)</li>
+          <li>Fit a linear slope to the closing price across the 11-year window</li>
+          <li>Compare current close to historical mean (close-vs-mean %); a value above 100% confirms the trend is intact and not reverting</li>
+          <li>Filter out high-volatility candidates (std &gt; 0.018); rank survivors by Sharpe-like ratio + slope</li>
+          <li>Allocate top 10 by confidence weight, summing to exactly 100%</li>
+        </ul>
+        <h5>Selected names</h5>
+        <div class="picks-row"><span>COST 11.5%</span><span>CTAS 9.0%</span><span>ODFL 10.0%</span><span>MSFT 10.0%</span><span>AAPL 4.0%</span><span>SPGI 11.0%</span><span>DPZ 10.5%</span><span>TMO 10.5%</span><span>WST 12.0%</span><span>POOL 11.5%</span></div>
+        <h5>Verdict</h5>
+        <p>The book compounded steadily but two of the highest-conviction picks — POOL and WST — broke down on housing-cycle and biotech-capex weakness, dragging the strategy below the index. Discipline without surprise.</p>
+      </div>
+
+      <!-- CONTRA -->
+      <div class="about-pane" data-pane="contra">
+        <h4>Mandate № II — Buy what the market <em>just abandoned.</em></h4>
+        <p class="lede">Identify quality names trading well below their historical mean with a credible mean-reversion thesis. The agent looks for dislocation, not decay.</p>
+        <div class="meta-grid">
+          <div><div class="lbl">Strategy</div><div class="val">Mean reversion</div></div>
+          <div><div class="lbl">Final Return</div><div class="val" style="color:var(--pos)">+291.93%</div></div>
+          <div><div class="lbl">Final Value</div><div class="val">$78,386.05</div></div>
+        </div>
+        <h5>Methodology</h5>
+        <ul>
+          <li>Compute close-vs-historical-mean discount; require ≥15% below long-run average</li>
+          <li>Filter for positive long-run total return — the company must have compounded historically, even if currently dislocated</li>
+          <li>Cross-check positive mean daily return — recent dip is a deviation, not a structural break</li>
+          <li>Tag dislocation cause: macro/rate-driven, COVID-driven, or geopolitical (Russia-Ukraine), and prefer macro-resolvable causes</li>
+          <li>Allocate by conviction; concentrate top picks more aggressively</li>
+        </ul>
+        <h5>Selected names</h5>
+        <div class="picks-row"><span>VRT 6.0%</span><span>PLTR 10.0%</span><span>NFLX 14.0%</span><span>LVS 10.0%</span><span>CCL 11.0%</span><span>WYNN 10.0%</span><span>MO 5.0%</span><span>NCLH 12.0%</span><span>BIIB 9.0%</span><span>EPAM 13.0%</span></div>
+        <h5>Verdict</h5>
+        <p>The clear winner — and by a wide margin. VRT (+2,485%) and PLTR (+1,017%) more than paid for the EPAM bet that never recovered from Russia-Ukraine exposure. Mean reversion compounded the most when the market's "abandonment" turned out to be a rate-cycle blip.</p>
+      </div>
+
+      <!-- MACRO -->
+      <div class="about-pane" data-pane="macro">
+        <h4>Mandate № III — Read the room, then <em>buy the room.</em></h4>
+        <p class="lede">A sentiment + fundamentals hybrid. Cross-reference price data with analyst ratings, earnings sentiment, sector news, and macro events. Validate or challenge what Agents I and II picked.</p>
+        <div class="meta-grid">
+          <div><div class="lbl">Strategy</div><div class="val">News + sector rotation</div></div>
+          <div><div class="lbl">Final Return</div><div class="val" style="color:var(--pos)">+40.37%</div></div>
+          <div><div class="lbl">Final Value</div><div class="val">$28,074.83</div></div>
+        </div>
+        <h5>Methodology</h5>
+        <ul>
+          <li>Receives Trend and Contrarian portfolios as starting context</li>
+          <li>Uses DuckDuckGo web search (capped at 20 calls) scoped with <code>before:2022-04-15</code> to avoid lookahead leakage</li>
+          <li>Searches for analyst consensus ratings, earnings surprises, sector tailwinds, and any controversies / SEC actions / leadership changes</li>
+          <li>Validates picks where bullish consensus aligns with strong price data; challenges picks with significant negative press</li>
+          <li>Adds new names that fit the 2022 macro regime (energy on Russia-Ukraine, defensives on rate hikes)</li>
+        </ul>
+        <h5>Selected names</h5>
+        <div class="picks-row"><span>XOM 13.0%</span><span>COST 10.0%</span><span>MSFT 14.0%</span><span>CTAS 8.0%</span><span>MO 8.0%</span><span>ODFL 6.0%</span><span>CVX 11.0%</span><span>SPGI 9.0%</span><span>TMO 10.0%</span><span>UNH 11.0%</span></div>
+        <h5>Verdict</h5>
+        <p>Beat the index modestly. XOM (+93%) was a clean read on the 2022 oil shock; UNH (−37%) was an analyst-consensus call that didn't hold. The agent's macro framing was sound, but reading the room paid less than buying what the room was selling.</p>
+      </div>
+
+      <!-- EXECUTOR -->
+      <div class="about-pane" data-pane="exec">
+        <h4>The Executor — <em>simulating live capital.</em></h4>
+        <p class="lede">A separate agent that translates the three reasoning portfolios into a live-money simulation against the actual S&amp;P 500 price record from 2022 through 2026.</p>
+        <div class="meta-grid">
+          <div><div class="lbl">Capital each</div><div class="val">$20,000</div></div>
+          <div><div class="lbl">Buy date</div><div class="val">2022-04-18</div></div>
+          <div><div class="lbl">Sell date</div><div class="val">2026-04-14</div></div>
+        </div>
+        <h5>Execution rules</h5>
+        <ul>
+          <li>Each agent receives exactly $20,000 in capital on the first market open on or after 2022-04-15</li>
+          <li>Dollars per pick = $20,000 × (allocation_pct / 100); fractional shares allowed</li>
+          <li>All positions held without rebalancing until the final market day on or before 2026-04-14</li>
+          <li>Tickers missing price data on either endpoint are skipped</li>
+          <li>P&amp;L = (sell_price − buy_price) × shares_bought; return % computed per position and per portfolio</li>
+        </ul>
+        <h5>Final leaderboard</h5>
+        <div class="picks-row" style="font-size:13px"><span style="background:var(--forest);color:#f5ecdc;border-color:var(--forest)">1. Contrarian +291.93%</span><span style="background:var(--oxblood);color:#f5ecdc;border-color:var(--oxblood)">2. Macro +40.37%</span><span style="background:var(--gold);color:#f5ecdc;border-color:var(--gold)">3. Trend +21.38%</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ POSITION MODAL ============ -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modal">
+    <button class="close" id="modalClose">×</button>
+    <div class="kicker" id="modalKicker">Position Detail</div>
+    <h3 id="modalTicker">—</h3>
+    <div class="agent-line" id="modalAgent"></div>
+    <div class="stats">
+      <div><div class="lbl">Allocation</div><div class="val" id="modalAlloc">—</div></div>
+      <div><div class="lbl">Return</div><div class="val" id="modalRet">—</div></div>
+      <div><div class="lbl">P&amp;L</div><div class="val" id="modalPnl">—</div></div>
+    </div>
+    <div class="rationale-label">Agent's rationale</div>
+    <div class="rationale" id="modalRationale">—</div>
+  </div>
+</div>
+
+<script>
+const HOLDINGS = {
+  trend_follower:[
+    ["COST",11.5,555.07,974.80,75.62,1739.18],
+    ["CTAS",9.0,99.58,176.14,76.88,1383.88],
+    ["ODFL",10.0,129.89,210.41,62.00,1239.93],
+    ["MSFT",10.0,271.37,393.11,44.86,897.24],
+    ["AAPL",4.0,161.73,258.83,60.04,480.28],
+    ["SPGI",11.0,377.44,425.24,12.66,278.60],
+    ["DPZ",10.5,358.38,369.17,3.01,63.20],
+    ["TMO",10.5,565.56,527.22,-6.78,-142.35],
+    ["WST",12.0,368.41,267.93,-27.27,-654.59],
+    ["POOL",11.5,388.24,217.98,-43.85,-1008.65]
+  ],
+  contrarian:[
+    ["VRT",6.0,12.01,310.51,2485.49,29825.84],
+    ["PLTR",10.0,12.15,135.70,1016.87,20337.45],
+    ["NFLX",14.0,33.79,106.28,214.57,6007.91],
+    ["LVS",10.0,34.81,55.52,59.48,1189.64],
+    ["CCL",11.0,18.95,28.69,51.38,1130.34],
+    ["WYNN",10.0,71.25,105.59,48.20,964.06],
+    ["MO",5.0,39.75,65.62,65.07,650.74],
+    ["NCLH",12.0,21.21,21.09,-0.57,-13.58],
+    ["BIIB",9.0,212.54,178.96,-15.80,-284.39],
+    ["EPAM",13.0,281.20,127.41,-54.69,-1421.96]
+  ],
+  macro_sentiment:[
+    ["XOM",13.0,77.16,149.24,93.42,2428.79],
+    ["COST",10.0,555.07,974.80,75.62,1512.33],
+    ["MSFT",14.0,271.37,393.11,44.86,1256.14],
+    ["CTAS",8.0,99.58,176.14,76.88,1230.11],
+    ["MO",8.0,39.75,65.62,65.07,1041.19],
+    ["ODFL",6.0,129.89,210.41,62.00,743.96],
+    ["CVX",11.0,148.07,187.02,26.30,578.64],
+    ["SPGI",9.0,377.44,425.24,12.66,227.95],
+    ["TMO",10.0,565.56,527.22,-6.78,-135.57],
+    ["UNH",11.0,496.82,314.19,-36.76,-808.71]
+  ]
+};
+const RATIONALES = {
+  trend_follower:{
+    "COST":"Best-in-class low volatility (std=0.0131) with solid Sharpe-like ratio (0.0687). Linear slope of 0.0949 is strong relative to price level, and close-vs-mean of 135.4% shows the trend remains intact without being overextended.",
+    "CTAS":"Very low volatility (std=0.0145) with a reliable Sharpe-like ratio (0.0621) and strong linear slope of 0.0786. Close-vs-mean of 134.3% confirms an intact trend; the defensive uniform-services business model supports low-volatility compounding.",
+    "ODFL":"Sharpe-like ratio of 0.0659 with low volatility and standout close-vs-mean of 210.7%, indicating deeply sustained trend momentum. Total return of 1654.3% across the window underscores persistent compounding.",
+    "MSFT":"Solid Sharpe-like ratio (0.0675) with low volatility and strong linear slope of 0.0647. Close-vs-mean of 171.8% shows the stock trading substantially above its long-run average; high liquidity adds execution reliability.",
+    "AAPL":"Highest close-vs-mean among FAANG-type names (247.9%), indicating the stock is still far above its long-run average with trend intact. Total return of 1550.6% affirms durable momentum.",
+    "SPGI":"Strong Sharpe-like ratio (0.0699) with very low volatility (std=0.0143). Linear slope of 0.0823 is robust; close-vs-mean of 147.0% indicates continued uptrend without extreme overextension.",
+    "DPZ":"Top Sharpe-like ratio (0.0710) with low volatility. Exceptional linear slope of 0.1586 — among the highest in the cohort — reflecting relentless steady appreciation. Close-vs-mean of 109.7% signals continuation without frothy overextension.",
+    "TMO":"Excellent low-volatility profile (std=0.0136) with strong Sharpe-like ratio (0.0662) and impressive linear slope of 0.1289. Total return of 867.8% demonstrates durable trend strength.",
+    "WST":"Highest Sharpe-like ratio among low-volatility candidates (0.0745) with the lowest std_daily_return in the top tier. Close-vs-mean of 232.4% shows sustained trend well above historical average.",
+    "POOL":"Exceptional Sharpe-like ratio (0.0694) with very low volatility. Close-vs-mean of 189.4% demonstrates sustained momentum; strong linear slope of 0.1378 confirms consistent upward trajectory."
+  },
+  contrarian:{
+    "VRT":"Final close of $28.99 is 20.0% below its historical mean of $36.24, with total return of +24.0%. The decline appears macro/rate-driven rather than fundamental — data center infrastructure demand underpins long-term fundamentals.",
+    "PLTR":"Final close of $11.17 is 41.1% below its historical mean of $18.97, yet total return is +30.7% and mean daily return of 0.0018 is the highest in the dataset. Dip is macro-driven, not fundamental — government and commercial contracts remain intact.",
+    "NFLX":"Final close of $348.61 is 19.0% below its historical mean, yet total return is +1187.5% — one of the strongest long-run compounders in the dataset. The dip appears valuation-driven rather than fundamental. High-conviction mean-reversion play.",
+    "LVS":"Final close of $48.67 is 21.0% below its historical mean of $61.61, with total return of +25.6% confirming long-run value creation. Macau/Singapore exposure suppressed by COVID; structural recovery as restrictions ease.",
+    "CCL":"Final close of $20.29 is 47.1% below its historical mean — the deepest discount among cruise names. COVID-driven dislocation in a dominant industry player; recovery in travel bookings supports mean reversion over a multi-year horizon.",
+    "WYNN":"Final close of $80.01 is 33.0% below its historical mean of $119.43. Dip driven by Macau COVID restrictions and broader macro pressures. Premium gaming brand with strong asset base; recovery thesis tied to Asia reopening.",
+    "MO":"Final close of $55.94 is 14.5% below its historical mean of $65.44. Defensive consumer staples with a strong dividend yield. Low volatility (std 0.0135) provides downside protection in a risk-off environment.",
+    "NCLH":"Final close of $20.70 is 46.9% below its historical mean — a deep COVID-driven dip. Total return of −12.7% is a relatively shallow loss given the pandemic. Cruise recovery thesis intact as travel demand rebounds.",
+    "BIIB":"Final close of $197.54 is 18.8% below its historical mean of $243.22, yet total return is +156.2%. Dip tied to Aduhelm controversy and pipeline uncertainty. Biotech with a deep pipeline; positive clinical/regulatory news is a strong catalyst.",
+    "EPAM":"Final close of $352.55 is 18.1% below its historical mean, but total return is +1971.9% — the highest in the dataset. Dip is likely Russia-Ukraine conflict related (operational disruption), not a structural collapse in business fundamentals."
+  },
+  macro_sentiment:{
+    "XOM":"Goldman Sachs flagged energy majors on conviction Buy lists in early 2022, citing oil price surge post Russia-Ukraine invasion (WTI above $100/bbl). Energy was the #1 performing S&P 500 sector in Q1 2022. Inflation hedge with strong free cash flow and dividend growth.",
+    "COST":"Membership renewal rates above 90% and bulk-buying pricing power make Costco an inflation-resilient retailer. Membership fee model provides recurring revenue independent of consumer spending cycles. Strong Buy consensus across 19+ analysts.",
+    "MSFT":"Azure grew 50% YoY in fiscal Q1 2022 with Intelligent Cloud revenue up 31% to $16.96B, beating consensus. Strong Buy consensus across major banks. Rising-rate headwind partially offset by durable subscription revenue and pricing power.",
+    "CTAS":"B2B uniform/services company with sticky recurring revenues from small and mid-size businesses, making it resilient during inflationary periods as it can pass through cost increases via contract renewals. Tight 2022 labor markets are a tailwind.",
+    "MO":"Tobacco's defensive qualities held up in Q1 2022 — despite declining cigarette volumes, smokeable segment operating income grew 7.9% YoY through margin expansion and pricing. ~6.5% dividend yield provides attractive income as bond yields rose.",
+    "ODFL":"Premier LTL operator with best-in-class operating ratios. In early 2022, strong freight demand from industrial restocking and supply-chain disruptions supported elevated pricing. Smaller allocation reflects cyclical-peak risk.",
+    "CVX":"Moderate Buy consensus and Zacks Rank #1 (Strong Buy) in early 2022. Increased dividend for 39+ consecutive years. With Brent crude above $100, integrated energy majors with disciplined capex are printing large free cash flow.",
+    "SPGI":"Completed its $140B IHS Markit merger Feb 2022, creating a dominant data and financial-intelligence platform. Q1 2022 post-merger results showed 7%+ pro forma revenue growth and 16% adjusted operating profit growth from synergies.",
+    "TMO":"Q1 2022 revenue of $11.82B, up 19% YoY, supported by COVID testing/vaccine manufacturing and core life science tools demand. Life sciences infrastructure spending viewed as durable due to multi-year R&D contracts.",
+    "UNH":"Cited as a defensive healthcare play for rising rates and inflation — managed care organisations face fewer inflationary pressures given that contracts are frequently renegotiated. TipRanks consensus Strong Buy with 14 Buys and 3 Holds."
+  }
+};
+const TIMESERIES = {
+  dates:["2022-04-18","2022-05-02","2022-06-01","2022-07-01","2022-08-01","2022-09-01","2022-10-03","2022-11-01","2022-12-01","2023-01-03","2023-02-01","2023-03-01","2023-04-03","2023-05-01","2023-06-01","2023-07-03","2023-08-01","2023-09-01","2023-10-02","2023-11-01","2023-12-01","2024-01-02","2024-02-01","2024-03-01","2024-04-01","2024-05-01","2024-06-03","2024-07-01","2024-08-01","2024-09-03","2024-10-01","2024-11-01","2024-12-02","2025-01-02","2025-02-03","2025-03-03","2025-04-01","2025-05-01","2025-06-02","2025-07-01","2025-08-01","2025-09-02","2025-10-01","2025-11-03","2025-12-01","2026-01-02","2026-02-02","2026-03-02","2026-04-01","2026-04-14"],
+  trend_follower:[20000,19039.36,18236.62,18219.43,19763.93,18495.1,17005.54,17038.73,18606.74,17280.36,19632.37,18450.29,19510.14,19588.64,19493.21,21101.77,22082.19,22258.5,21120.38,20270.31,22400.33,23227.35,24182.79,24886.28,25467.63,24247.87,24636.27,24990.15,25563.22,25640.79,26184.6,25862.49,27663.19,25287.15,26603.08,25923.1,24809.6,24638.62,25496.86,25801.56,25854.74,25727.58,25492.57,25010.88,24966.99,24945.11,25417.96,24993.76,23564.53,24276.72],
+  contrarian:[20000,18319.72,16699.71,15018.63,16897.41,16799.56,16793.48,18595.4,20085.11,18366.41,21659.78,20688.24,20601.25,21036.3,22282.11,24911.53,25465.53,25125.81,23397.51,22531.08,25545.81,26491.97,28361.59,31490.54,32256.25,30492.14,31827.21,32024.89,29819.01,30991.6,36148.8,39144.26,47933.95,47067.37,49014.74,44882.59,42095.3,49931.11,56347.52,59822.7,65223.41,65852.94,73431.35,79343.33,72008.67,70802.44,67826.9,74303.28,73680.37,78386.05],
+  macro_sentiment:[20000,19287.19,19223.95,18283.58,19866.23,19169.89,18202.77,19569.72,20502.66,19549.87,20783.27,19722.59,20796.74,20916.71,20650.16,21417.34,21948.48,22118.24,21785.03,21160.43,22533.79,23081.99,23661.13,24313.79,25032.35,24261.45,24888.55,25602.89,26566.69,26989.89,27277.35,26857.82,28582.89,25850.15,27081.74,26766.73,27033.96,25834.92,26412.46,27034.33,27035.74,27577.88,27398.52,26859.8,26831.05,27054.37,28102.61,28819.72,27986.43,28074.82]
+};
+const COLORS = {trend_follower:"#9a6b1c", contrarian:"#2f4a2e", macro_sentiment:"#7a1f17"};
+const AGENT_NAMES = {trend_follower:"Trend Follower", contrarian:"Contrarian", macro_sentiment:"Macro Sentiment"};
+const NEG = "#7a1f17";
+const cssVar = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+Chart.defaults.font.family = "'Lexend', sans-serif";
+Chart.defaults.font.size = 11.5;
+
+/* ============ TICKER TAPE ============ */
+function buildTickerTape(){
+  const all = [];
+  Object.entries(HOLDINGS).forEach(([agent,rows])=>{
+    rows.forEach(r=>all.push({agent,t:r[0],ret:r[4]}));
+  });
+  const html = all.map(x=>{
+    const cls = x.ret >= 0 ? "pos" : "neg";
+    const sym = x.ret >= 0 ? "▲" : "▼";
+    return `<span class="item"><span class="tk">${x.t}</span><span class="${cls}">${sym} ${x.ret>=0?"+":""}${x.ret.toFixed(2)}%</span></span>`;
+  }).join("");
+  document.getElementById("tickerTrack").innerHTML = html + html;
+}
+buildTickerTape();
+
+/* ============ ANIMATED COUNTERS ============ */
+function animateCounters(){
+  document.querySelectorAll(".counter").forEach(el=>{
+    const target = parseFloat(el.dataset.target);
+    const dec = parseInt(el.dataset.decimals||"0");
+    const dur = 1600;
+    const start = performance.now();
+    function step(now){
+      const t = Math.min((now-start)/dur,1);
+      const e = 1 - Math.pow(1-t, 3);
+      const val = target * e;
+      el.textContent = val.toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec});
+      if(t<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+setTimeout(animateCounters, 200);
+
+/* ============ THEME TOGGLE ============ */
+const themeBtn = document.getElementById("themeBtn");
+function setTheme(dark){
+  document.body.classList.toggle("dark",dark);
+  themeBtn.textContent = dark ? "◑ Light" : "◐ Dark";
+  localStorage.setItem("ledger-dark", dark?"1":"0");
+  rebuildAllCharts();
+}
+themeBtn.addEventListener("click",()=>setTheme(!document.body.classList.contains("dark")));
+if(localStorage.getItem("ledger-dark")==="1") setTheme(true);
+
+/* ============ RACE CHART ============ */
+let raceChart, raceMode = "dollar";
+function buildRaceChart(){
+  const ink = cssVar("--ink"), mute = cssVar("--mute"), rule = cssVar("--rule");
+  const transform = v => raceMode === "dollar" ? v : ((v-20000)/20000)*100;
+  const datasets = ["trend_follower","contrarian","macro_sentiment"].map(a=>({
+    label: AGENT_NAMES[a],
+    data: TIMESERIES[a].map(transform),
+    borderColor: cssVar("--"+(a==="trend_follower"?"gold":a==="contrarian"?"forest":"oxblood")),
+    backgroundColor: "transparent",
+    borderWidth: 2.4, tension:.25, pointRadius:0, pointHoverRadius:5,
+  }));
+  if(raceChart) raceChart.destroy();
+  raceChart = new Chart(document.getElementById("raceChart"),{
+    type:"line",
+    data:{labels:TIMESERIES.dates, datasets},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:"index",intersect:false},
+      plugins:{
+        legend:{align:"end",labels:{boxWidth:10,boxHeight:10,padding:14,font:{size:12,weight:"500"},color:ink}},
+        tooltip:{
+          backgroundColor:ink, titleColor:cssVar("--paper"), bodyColor:cssVar("--paper"),
+          titleFont:{size:12,weight:"600"}, bodyFont:{family:"'JetBrains Mono'",size:11},
+          padding:12, borderColor:cssVar("--oxblood"),borderWidth:1,
+          callbacks:{label:c=>` ${c.dataset.label}: ${raceMode==="dollar"?"$"+c.parsed.y.toLocaleString(undefined,{maximumFractionDigits:0}):c.parsed.y.toFixed(1)+"%"}`}
+        }
+      },
+      scales:{
+        x:{grid:{display:false},border:{color:ink},ticks:{color:mute,maxTicksLimit:8,font:{family:"'JetBrains Mono'",size:10}}},
+        y:{grid:{color:rule,drawTicks:false},border:{display:false},
+          ticks:{color:mute,font:{family:"'JetBrains Mono'",size:10},
+            callback:v=>raceMode==="dollar"?"$"+(v/1000).toFixed(0)+"k":v.toFixed(0)+"%"}}
+      }
+    }
+  });
+}
+document.querySelectorAll("#raceControls .ctrl").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("#raceControls .ctrl").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    raceMode = b.dataset.mode;
+    buildRaceChart();
+  });
+});
+
+/* ============ RETURNS BAR CHART ============ */
+let returnsChart;
+function buildReturnsChart(){
+  const ink = cssVar("--ink"), mute = cssVar("--mute"), rule = cssVar("--rule");
+  if(returnsChart) returnsChart.destroy();
+  returnsChart = new Chart(document.getElementById("returnsChart"),{
+    type:"bar",
+    data:{labels:["Trend Follower","Contrarian","Macro Sentiment"],
+      datasets:[
+        {label:"Starting capital",data:[20000,20000,20000],
+          backgroundColor:cssVar("--paper-3"),borderColor:rule,borderWidth:1,borderRadius:0,barPercentage:.7},
+        {label:"Final value",data:[24276.72,78386.05,28074.83],
+          backgroundColor:[cssVar("--gold"),cssVar("--forest"),cssVar("--oxblood")],borderRadius:0,barPercentage:.7}
+      ]},
+    options:{plugins:{
+      legend:{align:"end",labels:{boxWidth:10,padding:14,color:ink,font:{size:11}}},
+      tooltip:{backgroundColor:ink,titleColor:cssVar("--paper"),bodyColor:cssVar("--paper"),padding:10,
+        callbacks:{label:c=>` ${c.dataset.label}: $${c.parsed.y.toLocaleString()}`}}},
+    scales:{
+      y:{ticks:{callback:v=>"$"+(v/1000)+"k",color:mute,font:{family:"'JetBrains Mono'",size:10}},grid:{color:rule},border:{display:false}},
+      x:{grid:{display:false},border:{color:ink},ticks:{color:ink,font:{size:12,weight:"600"}}}
+    }}
+  });
+}
+
+/* ============ HOLDINGS CHART + TABLE ============ */
+let holdingsChart, currentAgent="trend_follower", currentSort={key:"ret",asc:false}, currentFilter="all", hMode="pct";
+function fmtMoney(n){return (n>=0?"+":"−")+"$"+Math.abs(n).toLocaleString(undefined,{maximumFractionDigits:0})}
+function fmtPct(n){return (n>=0?"+":"−")+Math.abs(n).toFixed(2)+"%"}
+
+function getRows(){
+  let rows = HOLDINGS[currentAgent].map((r,i)=>({rank:i+1,ticker:r[0],alloc:r[1],buy:r[2],sell:r[3],ret:r[4],pnl:r[5]}));
+  if(currentFilter==="gain") rows = rows.filter(r=>r.ret>=0);
+  if(currentFilter==="loss") rows = rows.filter(r=>r.ret<0);
+  rows.sort((a,b)=>{
+    const k=currentSort.key, dir=currentSort.asc?1:-1;
+    const av=a[k]??0, bv=b[k]??0;
+    if(typeof av==="string") return av.localeCompare(bv)*dir;
+    return (av-bv)*dir;
+  });
+  return rows;
+}
+
+function renderTable(){
+  const rows = getRows();
+  const tbody = document.querySelector("#holdingsTable tbody");
+  tbody.innerHTML = rows.map(r=>{
+    const cls = r.ret>=0?"gain":"loss";
+    return `<tr class="holding" data-ticker="${r.ticker}">
+      <td>${String(r.rank).padStart(2,"0")}</td>
+      <td class="tk">${r.ticker}</td>
+      <td class="num">${r.alloc.toFixed(1)}%</td>
+      <td class="num">${r.buy?"$"+r.buy.toFixed(2):"—"}</td>
+      <td class="num">${r.sell?"$"+r.sell.toFixed(2):"—"}</td>
+      <td class="num ${cls}">${fmtPct(r.ret)}</td>
+      <td class="num ${cls}">${fmtMoney(r.pnl)}</td>
+    </tr>`;
+  }).join("");
+  document.querySelectorAll("#holdingsTable th").forEach(th=>{
+    th.classList.remove("sorted","asc");
+    if(th.dataset.sort===currentSort.key){
+      th.classList.add("sorted");
+      if(currentSort.asc) th.classList.add("asc");
+    }
+  });
+  tbody.querySelectorAll("tr.holding").forEach(row=>{
+    row.addEventListener("click",()=>openModal(row.dataset.ticker));
+  });
+}
+
+function renderHoldingsChart(){
+  const rows = getRows();
+  const ink = cssVar("--ink"), mute = cssVar("--mute"), rule = cssVar("--rule");
+  const labels = rows.map(r=>r.ticker);
+  const values = rows.map(r=>hMode==="pct"?r.ret:r.pnl);
+  const colors = values.map(v=>v>=0?cssVar("--"+(currentAgent==="trend_follower"?"gold":currentAgent==="contrarian"?"forest":"oxblood")):cssVar("--neg"));
+  if(holdingsChart) holdingsChart.destroy();
+  holdingsChart = new Chart(document.getElementById("holdingsChart"),{
+    type:"bar",
+    data:{labels,datasets:[{data:values,backgroundColor:colors,borderRadius:0,barPercentage:.72}]},
+    options:{indexAxis:"y",
+      plugins:{legend:{display:false},
+        tooltip:{backgroundColor:ink,titleColor:cssVar("--paper"),bodyColor:cssVar("--paper"),padding:10,
+          callbacks:{label:c=>" "+(hMode==="pct"?c.parsed.x.toFixed(2)+"%":"$"+c.parsed.x.toLocaleString(undefined,{maximumFractionDigits:0}))}}},
+      scales:{
+        x:{ticks:{color:mute,font:{family:"'JetBrains Mono'",size:10},
+          callback:v=>hMode==="pct"?v+"%":"$"+(v/1000).toFixed(1)+"k"},grid:{color:rule},border:{display:false}},
+        y:{grid:{display:false},border:{color:ink},ticks:{color:ink,font:{size:12,weight:"700"}}}
+      }
+    }
+  });
+}
+
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    currentAgent = t.dataset.agent;
+    renderTable();renderHoldingsChart();
+  });
+});
+document.querySelectorAll("#holdingsTable th").forEach(th=>{
+  th.addEventListener("click",()=>{
+    const k = th.dataset.sort;
+    if(currentSort.key===k) currentSort.asc=!currentSort.asc;
+    else {currentSort={key:k,asc:k==="rank"||k==="ticker"};}
+    renderTable();
+  });
+});
+document.querySelectorAll(".tabs .ctrl").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll(".tabs .ctrl").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    currentFilter = b.dataset.filter;
+    renderTable();renderHoldingsChart();
+  });
+});
+document.querySelectorAll("#holdingsModeCtrl .ctrl").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("#holdingsModeCtrl .ctrl").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    hMode = b.dataset.hmode;
+    renderHoldingsChart();
+  });
+});
+
+/* ============ OVERLAP MATRIX ============ */
+function buildOverlap(){
+  const tickerSet = {};
+  Object.entries(HOLDINGS).forEach(([agent,rows])=>{
+    rows.forEach(r=>{
+      if(!tickerSet[r[0]]) tickerSet[r[0]]={};
+      tickerSet[r[0]][agent]=r[1];
+    });
+  });
+  const overlapping = Object.entries(tickerSet).filter(([t,m])=>Object.keys(m).length>=2);
+  overlapping.sort((a,b)=>Object.keys(b[1]).length-Object.keys(a[1]).length);
+  const grid = document.getElementById("overlapGrid");
+  let html = '<div class="cell head">Ticker</div><div class="cell head">Trend Follower</div><div class="cell head">Contrarian</div><div class="cell head">Macro Sentiment</div>';
+  overlapping.forEach(([t,m])=>{
+    html += `<div class="cell"><span class="tk">${t}</span></div>`;
+    ["trend_follower","contrarian","macro_sentiment"].forEach(a=>{
+      if(m[a]!==undefined){
+        const color = a==="trend_follower"?"var(--gold)":a==="contrarian"?"var(--forest)":"var(--oxblood)";
+        html += `<div class="cell"><span class="check" style="background:${color}"></span><span class="pct">${m[a].toFixed(1)}%</span></div>`;
+      } else {
+        html += `<div class="cell"><span class="empty">—</span></div>`;
+      }
+    });
+  });
+  grid.innerHTML = html;
+}
+buildOverlap();
+
+/* ============ MODAL ============ */
+function findHolding(ticker){
+  for(const a of Object.keys(HOLDINGS)){
+    const h = HOLDINGS[a].find(r=>r[0]===ticker);
+    if(h && a===currentAgent) return {agent:a,h};
+  }
+  return null;
+}
+function openModal(ticker){
+  const found = findHolding(ticker);
+  if(!found) return;
+  const {agent,h} = found;
+  const [t,a,b,s,ret,pnl] = h;
+  document.getElementById("modalTicker").textContent = t;
+  document.getElementById("modalKicker").textContent = AGENT_NAMES[agent].toUpperCase()+" · POSITION DETAIL";
+  const color = agent==="trend_follower"?"var(--gold)":agent==="contrarian"?"var(--forest)":"var(--oxblood)";
+  document.getElementById("modalAgent").innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color}"></span> Held by ${AGENT_NAMES[agent]} · ${a.toFixed(1)}% allocation`;
+  document.getElementById("modalAlloc").textContent = a.toFixed(1)+"%";
+  const retEl = document.getElementById("modalRet");
+  retEl.textContent = fmtPct(ret);
+  retEl.style.color = ret>=0?"var(--pos)":"var(--neg)";
+  const pnlEl = document.getElementById("modalPnl");
+  pnlEl.textContent = fmtMoney(pnl);
+  pnlEl.style.color = pnl>=0?"var(--pos)":"var(--neg)";
+  document.getElementById("modalRationale").textContent = (RATIONALES[agent]||{})[t] || "No rationale recorded.";
+  document.getElementById("modalBg").classList.add("show");
+}
+document.getElementById("modalClose").addEventListener("click",()=>document.getElementById("modalBg").classList.remove("show"));
+document.getElementById("modalBg").addEventListener("click",e=>{if(e.target.id==="modalBg") e.target.classList.remove("show")});
+
+/* ABOUT MODAL */
+document.getElementById("aboutBtn").addEventListener("click",()=>document.getElementById("aboutBg").classList.add("show"));
+document.getElementById("aboutClose").addEventListener("click",()=>document.getElementById("aboutBg").classList.remove("show"));
+document.getElementById("aboutBg").addEventListener("click",e=>{if(e.target.id==="aboutBg") e.target.classList.remove("show")});
+document.querySelectorAll(".about-tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    document.querySelectorAll(".about-tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    const p = t.dataset.pane;
+    document.querySelectorAll(".about-pane").forEach(x=>x.classList.toggle("show",x.dataset.pane===p));
+  });
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){document.getElementById("modalBg").classList.remove("show");document.getElementById("aboutBg").classList.remove("show");}
+  if(document.activeElement.tagName==="INPUT") return;
+  if(e.key==="1"||e.key==="2"||e.key==="3"){
+    const map=["trend_follower","contrarian","macro_sentiment"];
+    const target = map[parseInt(e.key)-1];
+    document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.agent===target));
+    currentAgent = target; renderTable(); renderHoldingsChart();
+  }
+  if(e.key==="d"||e.key==="D") setTheme(!document.body.classList.contains("dark"));
+});
+
+/* ============ INIT + REBUILD ============ */
+function rebuildAllCharts(){
+  buildRaceChart(); buildReturnsChart(); renderHoldingsChart();
+  Chart.defaults.color = cssVar("--mute");
+}
+Chart.defaults.color = cssVar("--mute");
+buildRaceChart();
+buildReturnsChart();
+renderTable();
+renderHoldingsChart();
+</script>
+</body>
+</html>
