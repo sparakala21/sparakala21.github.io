@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <style>
   :root{
     --paper:#f5ecdc; --paper-2:#efe3cd; --paper-3:#e6d8be;
@@ -39,48 +39,32 @@
   .num{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
   .smallcaps{text-transform:uppercase;letter-spacing:.18em;font-size:11px;font-weight:600;color:var(--mute)}
 
-  /* ============ TICKER TAPE ============ */
-  .ticker-tape{
-    background:var(--tt-bg);color:var(--tt-text);overflow:hidden;
-    border-bottom:1px solid var(--ink);position:relative;
-  }
-  .ticker-tape .track{
-    display:flex;gap:48px;padding:10px 0;
-    animation:tape 70s linear infinite;
-    white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:12px;
-  }
+  /* TICKER TAPE */
+  .ticker-tape{background:var(--tt-bg);color:var(--tt-text);overflow:hidden;border-bottom:1px solid var(--ink);position:relative;}
+  .ticker-tape .track{display:flex;gap:48px;padding:10px 0;animation:tape 70s linear infinite;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:12px;}
   .ticker-tape:hover .track{animation-play-state:paused}
   .ticker-tape .item{display:inline-flex;gap:10px;align-items:center}
   .ticker-tape .tk{color:var(--gold);font-weight:600;letter-spacing:.05em}
-  .ticker-tape .pos{color:#7ab089}
-  .ticker-tape .neg{color:#d97962}
+  .ticker-tape .pos{color:#7ab089} .ticker-tape .neg{color:#d97962}
   @keyframes tape{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-  /* ============ MASTHEAD ============ */
-  .masthead{padding:24px 56px 18px;border-bottom:1px solid var(--ink);position:relative}
-  .edition{display:flex;justify-content:space-between;align-items:center;
-    font-size:11px;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--ink-2);font-weight:500;
-    padding-bottom:14px;border-bottom:1px solid var(--rule);}
+  /* MASTHEAD */
+  .masthead{padding:20px 56px 14px;border-bottom:1px solid var(--ink);position:relative}
+  .edition{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);font-weight:500;padding-bottom:14px;border-bottom:1px solid var(--rule);}
   .edition .left,.edition .right{display:flex;gap:18px;align-items:center}
   .edition .dot{width:4px;height:4px;background:var(--oxblood);border-radius:50%}
-  .theme-toggle{
-    background:none;border:1px solid var(--ink);color:var(--ink);
-    font-family:'Lexend',sans-serif;font-size:10px;letter-spacing:.16em;
-    text-transform:uppercase;font-weight:600;padding:5px 10px;
-    cursor:pointer;transition:all .2s;
-  }
+  .theme-toggle{background:none;border:1px solid var(--ink);color:var(--ink);font-family:'Lexend',sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;padding:5px 10px;cursor:pointer;transition:all .2s;}
   .theme-toggle:hover{background:var(--ink);color:var(--paper)}
-  .title{font-weight:700;font-size:72px;line-height:1;letter-spacing:-0.045em;margin:18px 0 8px;white-space:nowrap}
+  .title{font-weight:700;font-size:72px;line-height:1;letter-spacing:-0.045em;margin:0;white-space:nowrap}
   .title em{font-style:italic;font-weight:400;color:var(--oxblood)}
-  .standfirst{font-style:italic;font-weight:300;font-size:19px;color:var(--ink-2);max-width:780px;line-height:1.45;margin:6px 0 14px}
+  .standfirst{font-style:italic;font-weight:300;font-size:19px;color:var(--ink-2);max-width:980px;line-height:1.45;margin:6px 0 14px}
   .byline{font-size:12px;color:var(--mute);letter-spacing:.05em}
   .byline strong{color:var(--ink);font-weight:600}
   .keyhint{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
   .byline-row{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
   .keyhint kbd{background:var(--paper-3);border:1px solid var(--rule);padding:2px 6px;border-radius:3px;margin:0 2px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink)}
 
-  /* ============ LAYOUT ============ */
+  /* LAYOUT */
   main{padding:36px 56px 80px;max-width:1480px;margin:0 auto}
   section + section{margin-top:48px}
   .grid{display:grid;gap:32px}
@@ -89,7 +73,7 @@
   .col-divider > * + *{border-left:1px solid var(--rule);padding-left:32px}
   .col-divider > *:not(:last-child){padding-right:32px}
 
-  /* ============ STATS ============ */
+  /* STATS */
   .stat-block .agent{font-size:22px;font-weight:600;letter-spacing:-0.01em;margin-bottom:4px;display:flex;align-items:center;gap:10px}
   .stat-block .agent .marker{width:8px;height:8px;border-radius:50%}
   .marker.trend{background:var(--gold)} .marker.contra{background:var(--forest)} .marker.macro{background:var(--oxblood)}
@@ -102,33 +86,40 @@
   .delta-pos{color:var(--pos)} .delta-neg{color:var(--neg)}
   .arrow{display:inline-block;font-style:normal;margin-right:2px}
 
-  /* ============ SECTIONS ============ */
-  .section-head{display:flex;justify-content:space-between;align-items:flex-end;
-    margin-bottom:22px;padding-bottom:10px;border-bottom:1px solid var(--ink);gap:24px}
+  /* SECTIONS */
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:22px;padding-bottom:10px;border-bottom:1px solid var(--ink);gap:24px}
   .section-head .kicker{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--oxblood);font-weight:600;margin-bottom:6px}
   .section-head h2{font-weight:600;font-size:32px;margin:0;letter-spacing:-0.025em;line-height:1.05}
   .section-head .meta{font-size:12px;color:var(--mute);font-style:italic;text-align:right}
 
-  /* ============ CARDS ============ */
+  /* CARDS */
   .card{background:var(--card-bg);border:1px solid var(--rule);padding:24px 26px;position:relative}
   .card::before{content:"";position:absolute;top:-1px;left:-1px;right:-1px;height:3px;background:var(--ink)}
   .card.no-rule::before{display:none}
   .card h3{font-weight:600;font-size:19px;margin:0 0 4px;letter-spacing:-0.015em}
   .card .sub{font-size:12px;color:var(--mute);font-style:italic;margin-bottom:18px}
-  .chart-wrap{position:relative;height:340px}
+  .chart-wrap{position:relative}
 
-  /* ============ CONTROLS ============ */
+  /* D3 chart containers */
+  .d3-wrap{width:100%;overflow:visible}
+  .d3-wrap svg{display:block;width:100%}
+  .d3-tooltip{
+    position:fixed;background:var(--tt-bg);color:var(--tt-text);
+    padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;
+    pointer-events:none;display:none;z-index:200;
+    border:1px solid var(--oxblood);line-height:1.6;
+  }
+  .d3-tooltip strong{font-weight:600;letter-spacing:.04em;display:block;margin-bottom:4px;font-family:'Lexend',sans-serif;font-size:11px;}
+
+  /* CONTROLS */
   .controls{display:flex;gap:8px;margin-left:auto;align-items:center;flex-wrap:wrap}
-  .ctrl{padding:6px 12px;border:1px solid var(--rule);background:transparent;color:var(--mute);
-    font-family:'Lexend',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-    font-weight:600;cursor:pointer;transition:all .15s}
+  .ctrl{padding:6px 12px;border:1px solid var(--rule);background:transparent;color:var(--mute);font-family:'Lexend',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:all .15s}
   .ctrl:hover{color:var(--ink);border-color:var(--ink)}
   .ctrl.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 
-  /* ============ TABLES ============ */
+  /* TABLES */
   table{width:100%;border-collapse:collapse;font-size:13px}
-  thead th{text-align:left;padding:8px 12px 8px 0;font-size:10px;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--ink);font-weight:600;border-bottom:1px solid var(--ink);cursor:pointer;user-select:none;position:relative}
+  thead th{text-align:left;padding:8px 12px 8px 0;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);font-weight:600;border-bottom:1px solid var(--ink);cursor:pointer;user-select:none;position:relative}
   thead th:hover{color:var(--oxblood)}
   thead th.sorted::after{content:"▾";margin-left:4px;color:var(--oxblood)}
   thead th.sorted.asc::after{content:"▴"}
@@ -148,17 +139,20 @@
   .winners-grid > div:last-child{padding-right:0}
   .winners-grid h4{margin:0 0 12px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--mute);font-weight:600}
 
-  /* ============ TABS ============ */
+  /* TABS */
   .tabs{display:flex;gap:0;border-bottom:1px solid var(--ink);margin-bottom:24px}
-  .tab{padding:14px 22px 12px;cursor:pointer;font-size:16px;font-weight:600;letter-spacing:-0.01em;
-    color:var(--mute);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s;
-    display:flex;align-items:center;gap:10px;background:none;border-top:none;border-left:none;border-right:none;font-family:'Lexend',sans-serif}
+  .tab{padding:14px 22px 12px;cursor:pointer;font-size:16px;font-weight:600;letter-spacing:-0.01em;color:var(--mute);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s;display:flex;align-items:center;gap:10px;background:none;border-top:none;border-left:none;border-right:none;font-family:'Lexend',sans-serif}
   .tab:hover{color:var(--ink)}
   .tab.active{color:var(--ink);border-bottom-color:var(--oxblood)}
   .tab .num-tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--oxblood);font-weight:500}
   .tab .key{font-family:'JetBrains Mono',monospace;font-size:9px;background:var(--paper-3);padding:2px 5px;border-radius:2px;color:var(--mute);border:1px solid var(--rule)}
 
-  /* ============ ESSAYS ============ */
+  /* LEGEND */
+  .d3-legend{display:flex;gap:20px;justify-content:flex-end;margin-bottom:8px;flex-wrap:wrap}
+  .d3-legend-item{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:500;color:var(--ink-2)}
+  .d3-legend-item span{display:inline-block;width:24px;height:3px;border-radius:1px}
+
+  /* ESSAYS / OVERLAP / MODAL same as original */
   .essay{border-top:3px solid var(--ink);padding-top:20px;position:relative}
   .essay .pretitle{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);font-weight:600;margin-bottom:8px}
   .essay .pretitle .marker{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:middle}
@@ -168,7 +162,6 @@
   .essay .picks{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:600;margin-top:14px;padding-top:12px;border-top:1px solid var(--rule)}
   .essay .picks span{font-family:'JetBrains Mono',monospace;color:var(--ink);font-weight:600;letter-spacing:.04em;margin-right:10px}
 
-  /* ============ OVERLAP ============ */
   .overlap-grid{display:grid;grid-template-columns:140px repeat(3,1fr);gap:0;border:1px solid var(--rule)}
   .overlap-grid .cell{padding:14px 16px;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);font-size:13px;display:flex;align-items:center;gap:10px}
   .overlap-grid .cell:nth-child(4n){border-right:none}
@@ -178,10 +171,13 @@
   .overlap-grid .empty{color:var(--mute);opacity:.4;font-family:'JetBrains Mono',monospace;font-size:11px}
   .overlap-grid .pct{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-2);font-weight:500}
 
-  /* ============ MODAL ============ */
+  /* MODALS */
   .modal-bg{position:fixed;inset:0;background:rgba(20,12,4,.7);display:none;align-items:center;justify-content:center;z-index:100;padding:24px;backdrop-filter:blur(6px)}
   .modal-bg.show{display:flex}
-  .modal{background:var(--paper);border:1px solid var(--ink);max-width:640px;width:100%;padding:36px 40px;position:relative;max-height:88vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.4)}
+  .modal{background:var(--paper);border:1px solid var(--ink);max-width:640px;width:calc(100vw - 48px);padding:36px 40px;position:relative;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.4);scrollbar-width:thin;scrollbar-color:var(--rule) transparent}
+  .modal::-webkit-scrollbar{width:5px}
+  .modal::-webkit-scrollbar-track{background:transparent}
+  .modal::-webkit-scrollbar-thumb{background:var(--rule-2);border-radius:10px}
   .modal::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--oxblood)}
   .modal .close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--mute);font-family:'Lexend';font-weight:300}
   .modal .close:hover{color:var(--ink)}
@@ -195,19 +191,21 @@
   .modal .stats .val{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;letter-spacing:-0.02em}
   .modal .rationale{font-size:15px;line-height:1.65;color:var(--ink-2);font-style:italic;border-left:3px solid var(--oxblood);padding:4px 0 4px 18px}
   .modal .rationale-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--oxblood);font-weight:600;margin-bottom:10px;font-style:normal}
-  .modal-wide{max-width:880px;padding:0}
+  .modal-wide{max-width:1060px;padding:0;width:calc(100vw - 48px)}
   .about-head{padding:36px 44px 0;border-bottom:1px solid var(--ink)}
   .about-head .kicker{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--oxblood);font-weight:600;margin-bottom:8px}
   .about-head h3{font-weight:700;font-size:38px;letter-spacing:-0.03em;margin:0 0 6px}
   .about-head p{font-size:14px;color:var(--ink-2);font-style:italic;margin:0 0 24px;max-width:640px;line-height:1.5}
   .about-tabs{display:flex;gap:0;margin-bottom:-1px}
-  .about-tab{padding:14px 22px 12px;cursor:pointer;font-size:14px;font-weight:600;letter-spacing:-0.005em;
-    color:var(--mute);border:none;background:none;border-bottom:2px solid transparent;font-family:'Lexend';
-    display:flex;align-items:center;gap:8px;transition:color .15s}
+  .about-tab{padding:14px 22px 12px;cursor:pointer;font-size:14px;font-weight:600;letter-spacing:-0.005em;color:var(--mute);border:none;background:none;border-bottom:2px solid transparent;font-family:'Lexend';display:flex;align-items:center;gap:8px;transition:color .15s}
   .about-tab:hover{color:var(--ink)}
   .about-tab.active{color:var(--ink);border-bottom-color:var(--oxblood)}
   .about-tab .marker{width:8px;height:8px;border-radius:50%;display:inline-block}
-  .about-body{padding:32px 44px 40px;max-height:60vh;overflow-y:auto}
+  .about-body{padding:32px 44px 40px;max-height:54vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--rule) transparent}
+  .about-body::-webkit-scrollbar{width:5px}
+  .about-body::-webkit-scrollbar-track{background:transparent}
+  .about-body::-webkit-scrollbar-thumb{background:var(--rule-2);border-radius:10px}
+  .about-body::-webkit-scrollbar-thumb:hover{background:var(--mute)}
   .about-pane{display:none}
   .about-pane.show{display:block;animation:fadeIn .25s ease}
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -225,30 +223,203 @@
   .about-pane ul li{margin-bottom:6px}
   .about-pane ul li::marker{color:var(--oxblood)}
   .about-pane .picks-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-  .about-pane .picks-row span{font-family:'JetBrains Mono';font-size:11px;font-weight:600;letter-spacing:.05em;
-    padding:5px 10px;border:1px solid var(--rule);background:var(--paper-3);color:var(--ink)}
+  .about-pane .picks-row span{font-family:'JetBrains Mono';font-size:11px;font-weight:600;letter-spacing:.05em;padding:5px 10px;border:1px solid var(--rule);background:var(--paper-3);color:var(--ink)}
 
-  /* ============ FOOTER ============ */
+  /* LEADERBOARD RACING BARS */
+  #leaderboardSlider::-webkit-slider-thumb{
+    -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+    background:var(--ink);border:3px solid var(--paper);
+    box-shadow:0 0 0 1px var(--ink),0 2px 8px rgba(0,0,0,.25);cursor:grab;
+    transition:transform .1s;
+  }
+  #leaderboardSlider:active::-webkit-slider-thumb{transform:scale(1.2);cursor:grabbing}
+  #leaderboardSlider::-moz-range-thumb{
+    width:18px;height:18px;border-radius:50%;border:3px solid var(--paper);
+    background:var(--ink);box-shadow:0 0 0 1px var(--ink);cursor:grab;
+  }
+  .lb-track-fill{
+    position:absolute;left:0;top:50%;transform:translateY(-50%);
+    height:3px;border-radius:2px;background:var(--ink);pointer-events:none;z-index:1;
+    transition:width .05s;
+  }
+  .lb-track-bg{
+    position:absolute;inset:0;margin:auto;height:3px;border-radius:2px;
+    background:var(--rule);pointer-events:none;
+  }
+  .lb-bar-row{
+    display:flex;align-items:center;gap:14px;
+    padding:10px 0;border-bottom:1px solid var(--rule);
+    transition:all .4s cubic-bezier(.4,0,.2,1);
+  }
+  .lb-bar-row:last-child{border-bottom:none}
+  .lb-rank{
+    font-family:'JetBrains Mono';font-size:28px;font-weight:600;
+    width:36px;text-align:right;flex-shrink:0;line-height:1;
+    transition:color .4s;
+  }
+  .lb-name-col{width:100px;flex-shrink:0}
+  .lb-agent-name{font-size:11px;font-weight:600;color:var(--ink);letter-spacing:.01em}
+  .lb-agent-sub{font-family:'JetBrains Mono';font-size:9px;color:var(--mute);letter-spacing:.06em;text-transform:uppercase}
+  .lb-bar-wrap{flex:1;position:relative;height:32px}
+  .lb-bar-bg{position:absolute;inset:0;background:var(--paper-3);border-radius:2px}
+  .lb-bar-fill{
+    position:absolute;top:0;left:0;height:100%;border-radius:2px;
+    transition:width .6s cubic-bezier(.4,0,.2,1);min-width:3px;
+  }
+  .lb-bar-stripe{
+    position:absolute;inset:0;border-radius:2px;
+    background:repeating-linear-gradient(
+      -45deg,rgba(255,255,255,.06) 0px,rgba(255,255,255,.06) 2px,transparent 2px,transparent 8px
+    );
+  }
+  .lb-value{
+    font-family:'JetBrains Mono';font-size:14px;font-weight:600;
+    width:72px;text-align:right;flex-shrink:0;
+    transition:color .4s;letter-spacing:-.01em;
+  }
+  .lb-delta{
+    font-family:'JetBrains Mono';font-size:9px;width:42px;flex-shrink:0;
+    text-align:right;letter-spacing:.04em;
+  }
+  .lb-delta.pos{color:var(--pos)} .lb-delta.neg{color:var(--neg)} .lb-delta.flat{color:var(--mute)}
+  #lbPlayBtn:hover{opacity:.8}
+
+  /* HERO BANNER */
+  .hero-banner{
+    margin:34px 0 0;padding:20px 28px;
+    background:var(--ink);color:var(--paper);
+    display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap;
+  }
+  .hero-banner .hero-block{display:flex;flex-direction:column;gap:3px}
+  .hero-banner .hero-label{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--paper);opacity:.5;font-weight:600}
+  .hero-banner .hero-val{font-family:'JetBrains Mono';font-weight:600;font-size:28px;letter-spacing:-.03em;line-height:1}
+  .hero-banner .hero-val.winner{color:#7ab089}
+  .hero-banner .hero-val.total{font-size:38px}
+  .hero-banner .hero-div{width:1px;align-self:stretch;background:rgba(255,255,255,.12)}
+
+  /* STAT BLOCK UPGRADE */
+  .stat-block{position:relative}
+  .stat-block .agent-accent{
+    display:block;width:32px;height:3px;margin-bottom:14px;
+    background:var(--agent-color,var(--rule));border-radius:1px;
+  }
+  .stat-block.trend-block{--agent-color:var(--gold)}
+  .stat-block.contra-block{--agent-color:var(--forest)}
+  .stat-block.macro-block{--agent-color:var(--oxblood)}
+
+  /* SECTION POLISH */
+  .section-head h2{font-size:36px;font-weight:700;letter-spacing:-.035em}
+  .kicker{position:relative;padding-left:14px}
+  .kicker::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--oxblood)}
+
+  /* MODAL NEWS LINK HOVER */
+  #modalNewsLink:hover{opacity:.7}
+
+  /* CARD SHADOW */
+  .card{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+  body.dark .card{box-shadow:0 2px 16px rgba(0,0,0,.3)}
+
+  /* TICKER TAPE UPGRADE */
+  .ticker-tape{border-bottom:2px solid var(--oxblood)}
+
+  /* MASTHEAD ORNAMENT LINE */
+  .masthead{border-bottom:3px double var(--ink)}
+
   footer{margin-top:80px;padding:32px 56px;border-top:3px double var(--ink);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);display:flex;justify-content:space-between}
   footer .ornament{color:var(--oxblood);letter-spacing:0;font-style:italic;text-transform:none;font-size:13px}
 
+  /* ── MASTHEAD ROBOTS ── */
+  .masthead-title-row{display:block;width:max-content;max-width:100%;margin:10px 0 4px;position:relative}
+  .masthead-robots{position:absolute;top:-8px;left:calc(100% + 54px);width:390px;display:flex;gap:34px;align-items:flex-end;justify-content:center;min-width:0}
+  .mrobot-wrap{display:flex;flex-direction:column;align-items:center;gap:9px}
+  .mrobot-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;opacity:.85}
+
+  /* full-size robots, staggered float */
+  .mrobot{
+    display:flex;flex-direction:column;align-items:center;gap:0;width:108px;
+    animation:mrFloat 3.8s ease-in-out infinite;
+  }
+  @keyframes mrFloat{0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)}}
+
+  /* antenna */
+  .mr-antenna{width:2px;height:18px;background:rgba(22,16,10,.2);position:relative;display:flex;justify-content:center}
+  .mr-antenna::before{
+    content:"";position:absolute;top:-10px;
+    width:13px;height:13px;border-radius:50%;
+    background:var(--ac,var(--gold));
+    box-shadow:0 0 10px var(--ac,var(--gold)),0 0 22px var(--ac,var(--gold));
+    animation:mrGlow 2s ease-in-out infinite alternate;
+  }
+  @keyframes mrGlow{from{opacity:.65;box-shadow:0 0 7px var(--ac,var(--gold))}to{opacity:1;box-shadow:0 0 16px var(--ac,var(--gold)),0 0 30px var(--ac,var(--gold))}}
+  /* head */
+  .mr-head{
+    width:90px;height:70px;background:var(--ink);
+    border:2px solid rgba(255,255,255,.18);border-radius:10px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    margin-top:4px;position:relative;overflow:hidden;
+  }
+  /* scanline */
+  .mr-head::after{content:"";position:absolute;width:100%;height:2px;left:0;background:rgba(154,107,28,.16);animation:scanline 2.4s linear infinite;pointer-events:none}
+  .mr-eyes{display:flex;gap:16px}
+  .mr-eye{width:21px;height:12px;border-radius:3px;animation:eyeblink 5s ease-in-out infinite}
+  .mr-mouth{display:flex;gap:6px;align-items:center;border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:5px 10px;background:rgba(255,255,255,.04)}
+  .mr-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);animation:mouthpulse 1.4s ease-in-out infinite}
+  /* neck */
+  .mr-neck{width:20px;height:9px;background:var(--ink);border-left:2px solid rgba(255,255,255,.15);border-right:2px solid rgba(255,255,255,.15)}
+  /* body */
+  .mr-shoulder-row{display:flex;align-items:flex-start;gap:0}
+  .mr-arm{
+    width:14px;height:54px;background:var(--ink);
+    border:2px solid rgba(255,255,255,.18);border-radius:6px;margin-top:6px;
+    transform-origin:top center;
+    animation:mrArmL 3.8s ease-in-out infinite;
+  }
+  @keyframes mrArmL{0%,100%{transform:rotate(0deg)} 50%{transform:rotate(10deg)}}
+  @keyframes mrArmR{0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-10deg)}}
+  .mr-body{
+    width:86px;height:68px;background:var(--ink);
+    border:2px solid rgba(255,255,255,.2);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .mr-chest{width:50px;height:30px;border:1px solid rgba(255,255,255,.12);border-radius:5px;display:flex;align-items:center;justify-content:center;gap:7px}
+  .mr-light{width:8px;height:8px;border-radius:50%;animation:lights 2.4s ease-in-out infinite}
+  /* legs */
+  .mr-leg-row{display:flex;gap:16px;margin-top:3px}
+  .mr-leg{width:18px;height:26px;background:var(--ink);border:2px solid rgba(255,255,255,.18);border-radius:4px 4px 6px 6px}
+
+  @media (max-width:720px){
+    .about-hero{flex-direction:column}
+    .about-hero-left{padding-right:0;border-right:none;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:20px}
+    .robot-stage{width:100%;padding:20px 0}
+    .about-tabs-dark{flex-wrap:wrap}
+    .about-tab-dark{padding:10px 14px;font-size:12px}
+    .about-body{padding:24px 20px 32px;max-height:45vh}
+    .about-hero{padding:24px 24px 0}
+  }
+  @media (min-width:1281px){
+    .standfirst{max-width:890px}
+  }
   @media (max-width:1100px){
     .grid-3,.grid-2-1{grid-template-columns:1fr}
     .col-divider > *+*{border-left:none;padding-left:0;border-top:1px solid var(--rule);padding-top:32px;margin-top:32px}
     .title{font-size:50px} .keyhint{display:none}
     .masthead,main,footer{padding-left:24px;padding-right:24px}
     .overlap-grid{grid-template-columns:90px repeat(3,1fr)}
+    .masthead-robots{display:none}
+    .masthead-title-row{margin:10px 0 4px}
+  }
+  @media (max-width:1280px){
+    .masthead-title-row{display:block}
+    .masthead-robots{display:none}
   }
 </style>
 </head>
 <body>
 
-<!-- ============ TICKER TAPE ============ -->
-<div class="ticker-tape">
-  <div class="track" id="tickerTrack"></div>
-</div>
+<!-- TICKER TAPE -->
+<div class="ticker-tape"><div class="track" id="tickerTrack"></div></div>
 
-<!-- ============ MASTHEAD ============ -->
+<!-- MASTHEAD -->
 <header class="masthead">
   <div class="edition">
     <div class="left">
@@ -263,17 +434,105 @@
       <button class="theme-toggle" id="themeBtn">◐ Dark</button>
     </div>
   </div>
-  <h1 class="title">Three Agents, <em>One Market.</em></h1>
+  <div class="masthead-title-row">
+    <h1 class="title">Three Agents, <em>One Market.</em></h1>
+    <div class="masthead-robots" aria-hidden="true">
+
+      <!-- Robot 1 — Trend Follower (gold) -->
+      <div class="mrobot-wrap">
+        <div class="mrobot" style="--re:var(--gold);--rl1:#e0a857;--rl2:#e0a857;--rl3:#e0a857;animation-delay:0s">
+          <div class="mr-antenna" style="--ac:var(--gold)"></div>
+          <div class="mr-head">
+            <div class="mr-eyes"><div class="mr-eye" style="background:var(--re);box-shadow:0 0 8px var(--re)"></div><div class="mr-eye" style="background:var(--re);box-shadow:0 0 8px var(--re)"></div></div>
+            <div class="mr-mouth"><div class="mr-dot"></div><div class="mr-dot" style="animation-delay:.22s"></div><div class="mr-dot" style="animation-delay:.44s"></div></div>
+          </div>
+          <div class="mr-neck"></div>
+          <div class="mr-shoulder-row">
+            <div class="mr-arm" style="animation-delay:0s"></div>
+            <div class="mr-body"><div class="mr-chest"><div class="mr-light" style="background:var(--rl1)"></div><div class="mr-light" style="background:var(--rl2);animation-delay:.45s"></div><div class="mr-light" style="background:var(--rl3);animation-delay:.9s"></div></div></div>
+            <div class="mr-arm" style="animation:mrArmR 3.8s ease-in-out infinite;animation-delay:0s"></div>
+          </div>
+          <div class="mr-leg-row"><div class="mr-leg"></div><div class="mr-leg"></div></div>
+        </div>
+        <div class="mrobot-label" style="color:var(--gold)">Trend</div>
+      </div>
+
+      <!-- Robot 2 — Contrarian (forest green) -->
+      <div class="mrobot-wrap">
+        <div class="mrobot" style="--re:var(--forest);--rl1:#7ab089;--rl2:#7ab089;--rl3:#7ab089;animation-delay:.6s">
+          <div class="mr-antenna" style="--ac:var(--forest)"></div>
+          <div class="mr-head">
+            <div class="mr-eyes"><div class="mr-eye" style="background:var(--re);box-shadow:0 0 8px var(--re)"></div><div class="mr-eye" style="background:var(--re);box-shadow:0 0 8px var(--re)"></div></div>
+            <div class="mr-mouth"><div class="mr-dot"></div><div class="mr-dot" style="animation-delay:.22s"></div><div class="mr-dot" style="animation-delay:.44s"></div></div>
+          </div>
+          <div class="mr-neck"></div>
+          <div class="mr-shoulder-row">
+            <div class="mr-arm" style="animation-delay:.6s"></div>
+            <div class="mr-body"><div class="mr-chest"><div class="mr-light" style="background:var(--rl1)"></div><div class="mr-light" style="background:var(--rl2);animation-delay:.45s"></div><div class="mr-light" style="background:var(--rl3);animation-delay:.9s"></div></div></div>
+            <div class="mr-arm" style="animation:mrArmR 3.8s ease-in-out infinite;animation-delay:.6s"></div>
+          </div>
+          <div class="mr-leg-row"><div class="mr-leg"></div><div class="mr-leg"></div></div>
+        </div>
+        <div class="mrobot-label" style="color:var(--forest)">Contra</div>
+      </div>
+
+      <!-- Robot 3 — Macro Sentiment (oxblood) -->
+      <div class="mrobot-wrap">
+        <div class="mrobot" style="--re:var(--oxblood);--rl1:#d97962;--rl2:#d97962;--rl3:#d97962;animation-delay:1.1s">
+          <div class="mr-antenna" style="--ac:var(--oxblood)"></div>
+          <div class="mr-head">
+            <div class="mr-eyes"><div class="mr-eye" style="background:var(--re);box-shadow:0 0 8px var(--re)"></div><div class="mr-eye" style="background:var(--re);box-shadow:0 0 8px var(--re)"></div></div>
+            <div class="mr-mouth"><div class="mr-dot"></div><div class="mr-dot" style="animation-delay:.22s"></div><div class="mr-dot" style="animation-delay:.44s"></div></div>
+          </div>
+          <div class="mr-neck"></div>
+          <div class="mr-shoulder-row">
+            <div class="mr-arm" style="animation-delay:1.1s"></div>
+            <div class="mr-body"><div class="mr-chest"><div class="mr-light" style="background:var(--rl1)"></div><div class="mr-light" style="background:var(--rl2);animation-delay:.45s"></div><div class="mr-light" style="background:var(--rl3);animation-delay:.9s"></div></div></div>
+            <div class="mr-arm" style="animation:mrArmR 3.8s ease-in-out infinite;animation-delay:1.1s"></div>
+          </div>
+          <div class="mr-leg-row"><div class="mr-leg"></div><div class="mr-leg"></div></div>
+        </div>
+        <div class="mrobot-label" style="color:var(--oxblood)">Macro</div>
+      </div>
+
+    </div><!-- /.masthead-robots -->
+  </div><!-- /.masthead-title-row -->
+
   <p class="standfirst">A four-year experiment in algorithmic conviction — three Claude-driven reasoning agents, $20,000 apiece, deployed against the S&amp;P 500 from April 2022 through April 2026.</p>
   <div class="byline-row">
     <div class="byline">By <strong>Group&nbsp;8</strong> &nbsp;·&nbsp; Xinfo Final Project &nbsp;·&nbsp; Holding window <strong>2022.04.18 — 2026.04.14</strong></div>
-    <div class="keyhint">Press <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> switch agents · <kbd>D</kbd> dark mode</div>
+  </div>
+  <div class="hero-banner">
+    <div class="hero-block">
+      <div class="hero-label">Total Book Value</div>
+      <div class="hero-val total">$130,737.60</div>
+    </div>
+    <div class="hero-div"></div>
+    <div class="hero-block">
+      <div class="hero-label">Combined Return</div>
+      <div class="hero-val winner">+$70,737.60 &nbsp;/&nbsp; +117.9%</div>
+    </div>
+    <div class="hero-div"></div>
+    <div class="hero-block">
+      <div class="hero-label">Top Agent</div>
+      <div class="hero-val winner">Contrarian · +291.93%</div>
+    </div>
+    <div class="hero-div"></div>
+    <div class="hero-block">
+      <div class="hero-label">Horizon</div>
+      <div class="hero-val">4 Years &nbsp;·&nbsp; 50 Months</div>
+    </div>
+    <div class="hero-div"></div>
+    <div class="hero-block">
+      <div class="hero-label">Best Single Pick</div>
+      <div class="hero-val winner">VRT &nbsp;+2,485%</div>
+    </div>
   </div>
 </header>
 
 <main>
 
-  <!-- ============ STATS ============ -->
+  <!-- STATS -->
   <section>
     <div class="section-head">
       <div>
@@ -282,36 +541,35 @@
       </div>
       <div class="meta">Starting capital · $60,000<br/>Final book value · <span class="num">$130,737.60</span></div>
     </div>
-
     <div class="grid grid-3 col-divider">
-      <div class="stat-block">
-        <div class="agent"><span class="marker trend"></span>Trend Follower</div>
+      <div class="stat-block trend-block">
+        <span class="agent-accent"></span>
+        <div class="agent"><span class="marker trend"></span>Trend Follower Agent</div>
         <div class="desc">Low-volatility momentum, Sharpe-screened.</div>
         <div class="stat-figure"><span class="currency">$</span><span class="counter" data-target="24276.72" data-decimals="2">0</span></div>
         <div class="stat-row"><span class="label">Total Return</span><span class="value delta-pos"><span class="arrow">▲</span>+21.38%</span></div>
-        <div class="stat-row"><span class="label">P&amp;L</span><span class="value delta-pos">+$4,276.72</span></div>
-        <div class="stat-row" style="border-bottom:1px solid var(--rule)"><span class="label">Holdings</span><span class="value">10 names</span></div>
+        <div class="stat-row" style="border-bottom:1px solid var(--rule)"><span class="label">P&amp;L</span><span class="value delta-pos">+$4,276.72</span></div>
       </div>
-      <div class="stat-block">
-        <div class="agent"><span class="marker contra"></span>Contrarian</div>
+      <div class="stat-block contra-block">
+        <span class="agent-accent"></span>
+        <div class="agent"><span class="marker contra"></span>Contrarian Agent</div>
         <div class="desc">Mean-reversion, deep-discount conviction.</div>
         <div class="stat-figure"><span class="currency">$</span><span class="counter" data-target="78386.05" data-decimals="2">0</span></div>
         <div class="stat-row"><span class="label">Total Return</span><span class="value delta-pos"><span class="arrow">▲</span>+291.93%</span></div>
-        <div class="stat-row"><span class="label">P&amp;L</span><span class="value delta-pos">+$58,386.05</span></div>
-        <div class="stat-row" style="border-bottom:1px solid var(--rule)"><span class="label">Holdings</span><span class="value">10 names</span></div>
+        <div class="stat-row" style="border-bottom:1px solid var(--rule)"><span class="label">P&amp;L</span><span class="value delta-pos">+$58,386.05</span></div>
       </div>
-      <div class="stat-block">
-        <div class="agent"><span class="marker macro"></span>Macro Sentiment</div>
+      <div class="stat-block macro-block">
+        <span class="agent-accent"></span>
+        <div class="agent"><span class="marker macro"></span>Macro Sentiment Agent</div>
         <div class="desc">Top-down themes, analyst-validated.</div>
         <div class="stat-figure"><span class="currency">$</span><span class="counter" data-target="28074.83" data-decimals="2">0</span></div>
         <div class="stat-row"><span class="label">Total Return</span><span class="value delta-pos"><span class="arrow">▲</span>+40.37%</span></div>
-        <div class="stat-row"><span class="label">P&amp;L</span><span class="value delta-pos">+$8,074.83</span></div>
-        <div class="stat-row" style="border-bottom:1px solid var(--rule)"><span class="label">Holdings</span><span class="value">10 names</span></div>
+        <div class="stat-row" style="border-bottom:1px solid var(--rule)"><span class="label">P&amp;L</span><span class="value delta-pos">+$8,074.83</span></div>
       </div>
     </div>
   </section>
 
-  <!-- ============ RACE CHART ============ -->
+  <!-- RACE CHART -->
   <section>
     <div class="section-head">
       <div>
@@ -324,11 +582,12 @@
       </div>
     </div>
     <div class="card no-rule">
-      <div class="chart-wrap" style="height:420px"><canvas id="raceChart"></canvas></div>
+      <div class="d3-legend" id="raceLegend"></div>
+      <div class="d3-wrap" id="raceChartWrap" style="height:420px"></div>
     </div>
   </section>
 
-  <!-- ============ COMPARISON ============ -->
+  <!-- COMPARISON -->
   <section>
     <div class="section-head">
       <div>
@@ -341,7 +600,7 @@
       <div class="card">
         <h3>Final Portfolio Value</h3>
         <div class="sub">In U.S. dollars, post-execution, fractional shares assumed.</div>
-        <div class="chart-wrap"><canvas id="returnsChart"></canvas></div>
+        <div class="d3-wrap" id="returnsChartWrap" style="height:340px"></div>
       </div>
       <div class="card">
         <h3>Standout Trades</h3>
@@ -349,30 +608,121 @@
         <div class="winners-grid" style="margin-top:8px">
           <div>
             <h4>Top performer</h4>
-            <table>
-              <tbody>
-                <tr><td class="tk">VRT</td><td>Contrarian</td><td class="num gain">+2,485%</td></tr>
-                <tr><td class="tk">XOM</td><td>Macro</td><td class="num gain">+93.4%</td></tr>
-                <tr><td class="tk">CTAS</td><td>Trend</td><td class="num gain">+76.9%</td></tr>
-              </tbody>
-            </table>
+            <table><tbody>
+              <tr><td class="tk">VRT</td><td>Contrarian</td><td class="num gain">+2,485%</td></tr>
+              <tr><td class="tk">XOM</td><td>Macro</td><td class="num gain">+93.4%</td></tr>
+              <tr><td class="tk">CTAS</td><td>Trend</td><td class="num gain">+76.9%</td></tr>
+            </tbody></table>
           </div>
           <div>
             <h4>Worst drawdown</h4>
-            <table>
-              <tbody>
-                <tr><td class="tk">EPAM</td><td>Contrarian</td><td class="num loss">−54.7%</td></tr>
-                <tr><td class="tk">POOL</td><td>Trend</td><td class="num loss">−43.9%</td></tr>
-                <tr><td class="tk">UNH</td><td>Macro</td><td class="num loss">−36.8%</td></tr>
-              </tbody>
-            </table>
+            <table><tbody>
+              <tr><td class="tk">EPAM</td><td>Contrarian</td><td class="num loss">−54.7%</td></tr>
+              <tr><td class="tk">POOL</td><td>Trend</td><td class="num loss">−43.9%</td></tr>
+              <tr><td class="tk">UNH</td><td>Macro</td><td class="num loss">−36.8%</td></tr>
+            </tbody></table>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ HOLDINGS ============ -->
+  <!-- ANIMATED LEADERBOARD -->
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="kicker">The Race · Month by Month</div>
+        <h2>Agent Ranking Over Time</h2>
+      </div>
+      <div class="meta">Watch agents climb, fall, and compete · Drag to scrub through time</div>
+    </div>
+    <div class="card no-rule" style="padding:0;overflow:hidden">
+
+      <!-- Timeline scrubber bar -->
+      <div id="lbScrubber" style="
+        background:var(--paper-2);border-bottom:1px solid var(--rule);
+        padding:18px 28px 16px;position:relative;
+      ">
+        <!-- Timeline tick marks -->
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;align-items:flex-end">
+          <div>
+            <div style="font-family:'JetBrains Mono';font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-bottom:3px">TIMELINE</div>
+            <div id="sliderDateLabel" style="font-family:'JetBrains Mono';font-size:20px;font-weight:600;color:var(--ink);letter-spacing:-.02em;line-height:1"></div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-family:'JetBrains Mono';font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-bottom:3px">LEADER</div>
+            <div id="lbCurrentLeader" style="font-size:13px;font-weight:600;color:var(--ink);font-family:'Lexend'">—</div>
+          </div>
+        </div>
+
+        <!-- Custom slider track -->
+        <div style="position:relative;height:28px;display:flex;align-items:center">
+          <!-- Year markers -->
+          <div id="lbYearMarkers" style="position:absolute;inset:0;pointer-events:none;display:flex;align-items:center"></div>
+          <input type="range" id="leaderboardSlider" min="0" max="49" value="49"
+            style="width:100%;cursor:pointer;-webkit-appearance:none;appearance:none;
+                   height:3px;border-radius:2px;outline:none;position:relative;z-index:2;
+                   background:transparent">
+        </div>
+
+        <!-- Epoch labels -->
+        <div style="display:flex;justify-content:space-between;margin-top:6px">
+          <span style="font-family:'JetBrains Mono';font-size:9px;color:var(--mute)">Apr 2022</span>
+          <span style="font-family:'JetBrains Mono';font-size:9px;color:var(--mute)">Apr 2024</span>
+          <span style="font-family:'JetBrains Mono';font-size:9px;color:var(--mute)">Apr 2026</span>
+        </div>
+      </div>
+
+      <!-- Racing bars -->
+      <div id="lbRaceBars" style="padding:24px 28px 28px;display:flex;flex-direction:column;gap:0"></div>
+
+      <!-- Play button -->
+      <div style="border-top:1px solid var(--rule);padding:12px 28px;display:flex;align-items:center;gap:16px;background:var(--paper-2)">
+        <button id="lbPlayBtn" style="
+          background:var(--ink);color:var(--paper);border:none;
+          font-family:'Lexend';font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+          font-weight:600;padding:8px 18px;cursor:pointer;transition:opacity .15s
+        ">▶ Play</button>
+        <span style="font-family:'JetBrains Mono';font-size:10px;color:var(--mute)">Auto-advance through all 50 months</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERFORMANCE ATTRIBUTION WATERFALL -->
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="kicker">Returns Breakdown · By Agent</div>
+        <h2>What Drove the Returns</h2>
+      </div>
+      <div class="meta">Top 3 winners vs losers for each agent · Stacked to show net contribution</div>
+    </div>
+    <div class="tabs" id="attributionTabs">
+      <button class="tab active" data-agent="trend_follower"><span class="marker trend" style="width:8px;height:8px;border-radius:50%;background:var(--gold);display:inline-block"></span>Trend Follower</button>
+      <button class="tab" data-agent="contrarian"><span class="marker contra" style="width:8px;height:8px;border-radius:50%;background:var(--forest);display:inline-block"></span>Contrarian</button>
+      <button class="tab" data-agent="macro_sentiment"><span class="marker macro" style="width:8px;height:8px;border-radius:50%;background:var(--oxblood);display:inline-block"></span>Macro Sentiment</button>
+    </div>
+    <div class="card no-rule">
+      <div class="d3-wrap" id="attributionWrap" style="height:300px"></div>
+    </div>
+  </section>
+
+  <!-- MONTHLY PERFORMANCE HEATMAP -->
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="kicker">Month-by-Month Consistency</div>
+        <h2>Performance Heatmap</h2>
+      </div>
+      <div class="meta">Green = gains · Red = losses · Darker = larger moves</div>
+    </div>
+    <div class="card no-rule">
+      <div class="d3-wrap" id="heatmapWrap" style="height:200px"></div>
+    </div>
+  </section>
+
+  <!-- AGENT OVERLAP CHORD DIAGRAM -->
+  <!-- HOLDINGS -->
   <section>
     <div class="section-head">
       <div>
@@ -381,10 +731,9 @@
       </div>
       <div class="meta"><span style="color:var(--oxblood);font-style:normal;letter-spacing:.16em;text-transform:uppercase;font-size:10px;font-weight:600">Click any row for the agent's rationale</span><br/>Click column headers to sort</div>
     </div>
-
     <div class="tabs">
-      <button class="tab active" data-agent="trend_follower"><span class="key">1</span><span class="marker trend" style="width:8px;height:8px;border-radius:50%;background:var(--gold);display:inline-block"></span>Trend Follower <span class="num-tag">+21.38%</span></button>
-      <button class="tab" data-agent="contrarian"><span class="key">2</span><span class="marker contra" style="width:8px;height:8px;border-radius:50%;background:var(--forest);display:inline-block"></span>Contrarian <span class="num-tag">+291.93%</span></button>
+      <button class="tab active" data-agent="trend_follower"><span class="key">1</span><span class="marker trend" style="width:8px;height:8px;border-radius:50%;background:var(--gold);display:inline-block"></span>Trend Follower Agent <span class="num-tag">+21.38%</span></button>
+      <button class="tab" data-agent="contrarian"><span class="key">2</span><span class="marker contra" style="width:8px;height:8px;border-radius:50%;background:var(--forest);display:inline-block"></span>Contrarian Agent <span class="num-tag">+291.93%</span></button>
       <button class="tab" data-agent="macro_sentiment"><span class="key">3</span><span class="marker macro" style="width:8px;height:8px;border-radius:50%;background:var(--oxblood);display:inline-block"></span>Macro Sentiment <span class="num-tag">+40.37%</span></button>
       <div class="controls" style="margin-left:auto;align-self:center;padding-bottom:6px">
         <button class="ctrl active" data-filter="all">All</button>
@@ -392,7 +741,6 @@
         <button class="ctrl" data-filter="loss">Losers</button>
       </div>
     </div>
-
     <div class="grid grid-2-1">
       <div class="card no-rule">
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
@@ -405,7 +753,7 @@
             <button class="ctrl" data-hmode="pnl">$</button>
           </div>
         </div>
-        <div class="chart-wrap" style="height:420px"><canvas id="holdingsChart"></canvas></div>
+        <div class="d3-wrap" id="holdingsChartWrap" style="min-height:420px"></div>
       </div>
       <div>
         <table id="holdingsTable">
@@ -426,7 +774,7 @@
     </div>
   </section>
 
-  <!-- ============ OVERLAP ============ -->
+  <!-- OVERLAP -->
   <section>
     <div class="section-head">
       <div>
@@ -443,120 +791,243 @@
 <footer>
   <span>The Agent Ledger &nbsp;·&nbsp; Group 8 &nbsp;·&nbsp; Xinfo 2026</span>
   <span class="ornament">— fin —</span>
-  <span>Powered by Claude reasoning agents</span>
+  <span>Powered by Claude reasoning agents &amp; D3.js</span>
 </footer>
 
-<!-- ============ ABOUT MODAL ============ -->
+<!-- ABOUT MODAL -->
+<style>
+  /* ── About Modal Hero ── */
+  .about-hero{
+    background:var(--ink);color:var(--paper);
+    padding:36px 44px 0;
+    display:flex;gap:0;align-items:stretch;
+  }
+  .about-hero-left{
+    flex:1;display:flex;flex-direction:column;padding-bottom:20px;
+    padding-right:32px;border-right:1px solid rgba(255,255,255,.08);
+  }
+  .about-hero .kicker{
+    color:rgba(255,255,255,.4);font-size:9.5px;letter-spacing:.26em;
+    text-transform:uppercase;font-weight:600;margin-bottom:12px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .about-hero .kicker::before{
+    content:"";display:inline-block;width:6px;height:6px;
+    border-radius:50%;background:var(--gold);
+    box-shadow:0 0 6px var(--gold);
+    animation:glow 2s ease-in-out infinite alternate;
+  }
+  .about-hero h3{
+    font-weight:700;font-size:34px;letter-spacing:-.03em;
+    margin:0 0 12px;color:var(--paper);line-height:1.1;
+  }
+  .about-hero p{
+    font-size:13px;color:rgba(255,255,255,.5);line-height:1.65;
+    margin:0 0 0;flex:1;
+  }
+  /* Terminal */
+  .agent-terminal{
+    margin-top:20px;padding:12px 14px;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:4px;
+  }
+  .agent-terminal .term-line{
+    display:flex;gap:10px;align-items:baseline;
+    font-family:'JetBrains Mono';font-size:10.5px;line-height:1.8;
+  }
+  .agent-terminal .prompt{color:#7ab089;flex-shrink:0;width:12px}
+  .agent-terminal .cmd{color:rgba(255,255,255,.65);word-break:break-all}
+  .agent-terminal .cursor{
+    display:inline-block;width:7px;height:12px;background:#7ab089;
+    animation:blink 1.1s step-end infinite;vertical-align:text-bottom;margin-left:2px;
+  }
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+  /* ── CSS Robot ── */
+  .robot-stage{
+    width:180px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    padding:24px 0 0;
+  }
+  /* All robot parts use normal flow — no negative margins */
+  .robot{
+    display:flex;flex-direction:column;align-items:center;gap:0;
+    width:90px;
+  }
+  /* antenna */
+  .r-antenna{
+    width:2px;height:16px;background:rgba(255,255,255,.25);
+    position:relative;display:flex;justify-content:center;
+  }
+  .r-antenna::before{
+    content:"";position:absolute;top:-8px;
+    width:10px;height:10px;border-radius:50%;
+    background:var(--gold);box-shadow:0 0 10px var(--gold),0 0 20px rgba(154,107,28,.5);
+    animation:glow 2s ease-in-out infinite alternate;
+  }
+  @keyframes glow{from{opacity:.6;box-shadow:0 0 6px var(--gold)}to{opacity:1;box-shadow:0 0 16px var(--gold),0 0 28px rgba(154,107,28,.4)}}
+  /* head */
+  .r-head{
+    width:76px;height:60px;background:#0f0c08;
+    border:2px solid rgba(255,255,255,.2);border-radius:10px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    margin-top:4px;
+  }
+  .r-eyes{display:flex;gap:14px}
+  .r-eye{
+    width:18px;height:11px;border-radius:3px;
+    background:var(--gold);box-shadow:0 0 10px var(--gold);
+    animation:eyeblink 5s ease-in-out infinite;
+  }
+  @keyframes eyeblink{0%,88%,100%{transform:scaleY(1)}93%{transform:scaleY(0.08)}}
+  .r-mouth{
+    display:flex;gap:5px;align-items:center;
+    border:1px solid rgba(255,255,255,.18);border-radius:10px;
+    padding:4px 9px;background:rgba(255,255,255,.04);
+  }
+  .r-mouth-dot{
+    width:5px;height:5px;border-radius:50%;
+    background:rgba(255,255,255,.3);
+    animation:mouthpulse 1.4s ease-in-out infinite;
+  }
+  .r-mouth-dot:nth-child(2){animation-delay:.25s}
+  .r-mouth-dot:nth-child(3){animation-delay:.5s}
+  @keyframes mouthpulse{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1)}}
+  /* neck */
+  .r-neck{width:18px;height:8px;background:#0f0c08;border-left:2px solid rgba(255,255,255,.15);border-right:2px solid rgba(255,255,255,.15)}
+  /* shoulders + body row */
+  .r-shoulder-row{display:flex;align-items:flex-start;gap:0}
+  .r-arm{
+    width:12px;height:46px;background:#0f0c08;
+    border:2px solid rgba(255,255,255,.18);border-radius:6px;
+    margin-top:6px;
+  }
+  .r-body{
+    width:72px;height:58px;background:#0f0c08;
+    border:2px solid rgba(255,255,255,.2);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .r-chest{
+    width:42px;height:26px;
+    border:1px solid rgba(255,255,255,.12);border-radius:5px;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+  }
+  .r-light{width:7px;height:7px;border-radius:50%;animation:lights 2.4s ease-in-out infinite}
+  .r-light:nth-child(1){background:#e0a857;animation-delay:0s}
+  .r-light:nth-child(2){background:#7ab089;animation-delay:.5s}
+  .r-light:nth-child(3){background:#d97962;animation-delay:1s}
+  @keyframes lights{0%,100%{opacity:.25}50%{opacity:1;box-shadow:0 0 8px currentColor}}
+  /* legs */
+  .r-leg-row{display:flex;gap:14px;margin-top:3px}
+  .r-leg{
+    width:16px;height:22px;background:#0f0c08;
+    border:2px solid rgba(255,255,255,.18);border-radius:4px 4px 6px 6px;
+  }
+
+  /* ── Dark tab strip ── */
+  .about-tabs-dark{
+    display:flex;gap:0;background:var(--ink);
+    border-top:1px solid rgba(255,255,255,.08);
+  }
+  .about-tab-dark{
+    padding:14px 22px 12px;cursor:pointer;font-size:13px;font-weight:600;
+    color:rgba(255,255,255,.38);border:none;background:none;
+    border-bottom:2px solid transparent;margin-bottom:-1px;
+    font-family:'Lexend';display:flex;align-items:center;gap:8px;
+    transition:color .15s;letter-spacing:-.005em;
+  }
+  .about-tab-dark:hover{color:rgba(255,255,255,.7)}
+  .about-tab-dark.active{color:var(--paper);border-bottom-color:var(--gold)}
+  .about-tab-dark .marker{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
+</style>
+
 <div class="modal-bg" id="aboutBg">
   <div class="modal modal-wide">
-    <button class="close" id="aboutClose">×</button>
-    <div class="about-head">
-      <div class="kicker">Reasoning · The Three Mandates</div>
-      <h3>How Each Agent Thought</h3>
-      <p>Three Claude-driven reasoning agents were spawned in parallel as a LangGraph orchestration. Each was given the S&amp;P 500 history through April 2022 and instructed to produce a confidence-weighted ten-stock portfolio.</p>
-      <div class="about-tabs">
-        <button class="about-tab active" data-pane="trend"><span class="marker" style="background:var(--gold)"></span>Trend Follower</button>
-        <button class="about-tab" data-pane="contra"><span class="marker" style="background:var(--forest)"></span>Contrarian</button>
-        <button class="about-tab" data-pane="macro"><span class="marker" style="background:var(--oxblood)"></span>Macro Sentiment</button>
-        <button class="about-tab" data-pane="exec"><span class="marker" style="background:var(--ink)"></span>Executor</button>
+    <button class="close" id="aboutClose" style="color:rgba(255,255,255,.4);z-index:10">×</button>
+
+    <!-- Dark hero -->
+    <div class="about-hero">
+      <div class="about-hero-left">
+        <div class="kicker">Reasoning · The Three Mandates</div>
+        <h3>How Each Agent Thought</h3>
+        <p>Three Claude-driven reasoning agents were spawned in parallel as a LangGraph orchestration. Each was given the S&amp;P 500 history through April 2022 and instructed to produce a confidence-weighted ten-stock portfolio.</p>
+        <div class="agent-terminal">
+          <div class="term-line"><span class="prompt">$</span><span class="cmd">langgraph run --agents 3 --parallel --capital 20000</span></div>
+          <div class="term-line"><span class="prompt">→</span><span class="cmd">spawning trend_follower · contrarian · macro_sentiment</span></div>
+          <div class="term-line"><span class="prompt">→</span><span class="cmd">reasoning complete · portfolios locked<span class="cursor"></span></span></div>
+        </div>
+      </div>
+
+      <!-- Robot -->
+      <div class="robot-stage">
+        <div class="robot">
+          <div class="r-antenna"></div>
+          <div class="r-head">
+            <div class="r-eyes"><div class="r-eye"></div><div class="r-eye"></div></div>
+            <div class="r-mouth"><div class="r-mouth-dot"></div><div class="r-mouth-dot"></div><div class="r-mouth-dot"></div></div>
+          </div>
+          <div class="r-neck"></div>
+          <div class="r-shoulder-row">
+            <div class="r-arm"></div>
+            <div class="r-body"><div class="r-chest"><div class="r-light"></div><div class="r-light"></div><div class="r-light"></div></div></div>
+            <div class="r-arm"></div>
+          </div>
+          <div class="r-leg-row"><div class="r-leg"></div><div class="r-leg"></div></div>
+        </div>
       </div>
     </div>
 
+    <!-- Tabs -->
+    <div class="about-tabs-dark">
+      <button class="about-tab-dark active" data-pane="trend"><span class="marker" style="background:#e0a857"></span>Trend Follower Agent</button>
+      <button class="about-tab-dark" data-pane="contra"><span class="marker" style="background:#7ab089"></span>Contrarian Agent</button>
+      <button class="about-tab-dark" data-pane="macro"><span class="marker" style="background:#d97962"></span>Macro Sentiment</button>
+      <button class="about-tab-dark" data-pane="exec"><span class="marker" style="background:rgba(255,255,255,.35)"></span>Executor</button>
+    </div>
+
     <div class="about-body">
-      <!-- TREND -->
       <div class="about-pane show" data-pane="trend">
         <h4>Mandate № I — The patient <em>compounder.</em></h4>
         <p class="lede">Identify S&amp;P 500 names with sustained upward momentum and consistent linear growth. Reward the stocks that climb without theatrics.</p>
-        <div class="meta-grid">
-          <div><div class="lbl">Strategy</div><div class="val">Low-vol momentum</div></div>
-          <div><div class="lbl">Final Return</div><div class="val" style="color:var(--pos)">+21.38%</div></div>
-          <div><div class="lbl">Final Value</div><div class="val">$24,276.72</div></div>
-        </div>
+        <div class="meta-grid"><div><div class="lbl">Strategy</div><div class="val">Low-vol momentum</div></div><div><div class="lbl">Final Return</div><div class="val" style="color:var(--pos)">+21.38%</div></div><div><div class="lbl">Final Value</div><div class="val">$24,276.72</div></div></div>
         <h5>Methodology</h5>
-        <ul>
-          <li>Compute per-ticker daily returns, standard deviation, and a Sharpe-like ratio (mean ÷ std)</li>
-          <li>Fit a linear slope to the closing price across the 11-year window</li>
-          <li>Compare current close to historical mean (close-vs-mean %); a value above 100% confirms the trend is intact and not reverting</li>
-          <li>Filter out high-volatility candidates (std &gt; 0.018); rank survivors by Sharpe-like ratio + slope</li>
-          <li>Allocate top 10 by confidence weight, summing to exactly 100%</li>
-        </ul>
+        <ul><li>Compute per-ticker daily returns, standard deviation, and a Sharpe-like ratio (mean ÷ std)</li><li>Fit a linear slope to the closing price across the 11-year window</li><li>Compare current close to historical mean; above 100% confirms the trend is intact</li><li>Filter out high-volatility candidates (std &gt; 0.018); rank survivors by Sharpe-like ratio + slope</li><li>Allocate top 10 by confidence weight, summing to exactly 100%</li></ul>
         <h5>Selected names</h5>
         <div class="picks-row"><span>COST 11.5%</span><span>CTAS 9.0%</span><span>ODFL 10.0%</span><span>MSFT 10.0%</span><span>AAPL 4.0%</span><span>SPGI 11.0%</span><span>DPZ 10.5%</span><span>TMO 10.5%</span><span>WST 12.0%</span><span>POOL 11.5%</span></div>
         <h5>Verdict</h5>
-        <p>The book compounded steadily but two of the highest-conviction picks — POOL and WST — broke down on housing-cycle and biotech-capex weakness, dragging the strategy below the index. Discipline without surprise.</p>
+        <p>The book compounded steadily but POOL and WST broke down on housing-cycle and biotech-capex weakness, dragging the strategy below the index.</p>
       </div>
-
-      <!-- CONTRA -->
       <div class="about-pane" data-pane="contra">
         <h4>Mandate № II — Buy what the market <em>just abandoned.</em></h4>
-        <p class="lede">Identify quality names trading well below their historical mean with a credible mean-reversion thesis. The agent looks for dislocation, not decay.</p>
-        <div class="meta-grid">
-          <div><div class="lbl">Strategy</div><div class="val">Mean reversion</div></div>
-          <div><div class="lbl">Final Return</div><div class="val" style="color:var(--pos)">+291.93%</div></div>
-          <div><div class="lbl">Final Value</div><div class="val">$78,386.05</div></div>
-        </div>
+        <p class="lede">Identify quality names trading well below their historical mean with a credible mean-reversion thesis.</p>
+        <div class="meta-grid"><div><div class="lbl">Strategy</div><div class="val">Mean reversion</div></div><div><div class="lbl">Final Return</div><div class="val" style="color:var(--pos)">+291.93%</div></div><div><div class="lbl">Final Value</div><div class="val">$78,386.05</div></div></div>
         <h5>Methodology</h5>
-        <ul>
-          <li>Compute close-vs-historical-mean discount; require ≥15% below long-run average</li>
-          <li>Filter for positive long-run total return — the company must have compounded historically, even if currently dislocated</li>
-          <li>Cross-check positive mean daily return — recent dip is a deviation, not a structural break</li>
-          <li>Tag dislocation cause: macro/rate-driven, COVID-driven, or geopolitical (Russia-Ukraine), and prefer macro-resolvable causes</li>
-          <li>Allocate by conviction; concentrate top picks more aggressively</li>
-        </ul>
+        <ul><li>Compute close-vs-historical-mean discount; require ≥15% below long-run average</li><li>Filter for positive long-run total return</li><li>Tag dislocation cause and prefer macro-resolvable causes</li><li>Allocate by conviction; concentrate top picks more aggressively</li></ul>
         <h5>Selected names</h5>
         <div class="picks-row"><span>VRT 6.0%</span><span>PLTR 10.0%</span><span>NFLX 14.0%</span><span>LVS 10.0%</span><span>CCL 11.0%</span><span>WYNN 10.0%</span><span>MO 5.0%</span><span>NCLH 12.0%</span><span>BIIB 9.0%</span><span>EPAM 13.0%</span></div>
         <h5>Verdict</h5>
-        <p>The clear winner — and by a wide margin. VRT (+2,485%) and PLTR (+1,017%) more than paid for the EPAM bet that never recovered from Russia-Ukraine exposure. Mean reversion compounded the most when the market's "abandonment" turned out to be a rate-cycle blip.</p>
+        <p>The clear winner. VRT (+2,485%) and PLTR (+1,017%) more than paid for EPAM. Mean reversion compounded the most when the market's "abandonment" turned out to be a rate-cycle blip.</p>
       </div>
-
-      <!-- MACRO -->
       <div class="about-pane" data-pane="macro">
         <h4>Mandate № III — Read the room, then <em>buy the room.</em></h4>
-        <p class="lede">A sentiment + fundamentals hybrid. Cross-reference price data with analyst ratings, earnings sentiment, sector news, and macro events. Validate or challenge what Agents I and II picked.</p>
-        <div class="meta-grid">
-          <div><div class="lbl">Strategy</div><div class="val">News + sector rotation</div></div>
-          <div><div class="lbl">Final Return</div><div class="val" style="color:var(--pos)">+40.37%</div></div>
-          <div><div class="lbl">Final Value</div><div class="val">$28,074.83</div></div>
-        </div>
-        <h5>Methodology</h5>
-        <ul>
-          <li>Receives Trend and Contrarian portfolios as starting context</li>
-          <li>Uses DuckDuckGo web search (capped at 20 calls) scoped with <code>before:2022-04-15</code> to avoid lookahead leakage</li>
-          <li>Searches for analyst consensus ratings, earnings surprises, sector tailwinds, and any controversies / SEC actions / leadership changes</li>
-          <li>Validates picks where bullish consensus aligns with strong price data; challenges picks with significant negative press</li>
-          <li>Adds new names that fit the 2022 macro regime (energy on Russia-Ukraine, defensives on rate hikes)</li>
-        </ul>
+        <p class="lede">A sentiment + fundamentals hybrid. Cross-reference price data with analyst ratings, earnings sentiment, sector news, and macro events.</p>
+        <div class="meta-grid"><div><div class="lbl">Strategy</div><div class="val">News + sector rotation</div></div><div><div class="lbl">Final Return</div><div class="val" style="color:var(--pos)">+40.37%</div></div><div><div class="lbl">Final Value</div><div class="val">$28,074.83</div></div></div>
         <h5>Selected names</h5>
         <div class="picks-row"><span>XOM 13.0%</span><span>COST 10.0%</span><span>MSFT 14.0%</span><span>CTAS 8.0%</span><span>MO 8.0%</span><span>ODFL 6.0%</span><span>CVX 11.0%</span><span>SPGI 9.0%</span><span>TMO 10.0%</span><span>UNH 11.0%</span></div>
         <h5>Verdict</h5>
-        <p>Beat the index modestly. XOM (+93%) was a clean read on the 2022 oil shock; UNH (−37%) was an analyst-consensus call that didn't hold. The agent's macro framing was sound, but reading the room paid less than buying what the room was selling.</p>
+        <p>Beat the index modestly. XOM (+93%) was a clean read on the 2022 oil shock; UNH (−37%) was an analyst-consensus call that didn't hold.</p>
       </div>
-
-      <!-- EXECUTOR -->
       <div class="about-pane" data-pane="exec">
         <h4>The Executor — <em>simulating live capital.</em></h4>
-        <p class="lede">A separate agent that translates the three reasoning portfolios into a live-money simulation against the actual S&amp;P 500 price record from 2022 through 2026.</p>
-        <div class="meta-grid">
-          <div><div class="lbl">Capital each</div><div class="val">$20,000</div></div>
-          <div><div class="lbl">Buy date</div><div class="val">2022-04-18</div></div>
-          <div><div class="lbl">Sell date</div><div class="val">2026-04-14</div></div>
-        </div>
-        <h5>Execution rules</h5>
-        <ul>
-          <li>Each agent receives exactly $20,000 in capital on the first market open on or after 2022-04-15</li>
-          <li>Dollars per pick = $20,000 × (allocation_pct / 100); fractional shares allowed</li>
-          <li>All positions held without rebalancing until the final market day on or before 2026-04-14</li>
-          <li>Tickers missing price data on either endpoint are skipped</li>
-          <li>P&amp;L = (sell_price − buy_price) × shares_bought; return % computed per position and per portfolio</li>
-        </ul>
+        <p class="lede">Translates the three reasoning portfolios into a live-money simulation against the actual S&amp;P 500 price record from 2022 through 2026.</p>
+        <div class="meta-grid"><div><div class="lbl">Capital each</div><div class="val">$20,000</div></div><div><div class="lbl">Buy date</div><div class="val">2022-04-18</div></div><div><div class="lbl">Sell date</div><div class="val">2026-04-14</div></div></div>
         <h5>Final leaderboard</h5>
-        <div class="picks-row" style="font-size:13px"><span style="background:var(--forest);color:#f5ecdc;border-color:var(--forest)">1. Contrarian +291.93%</span><span style="background:var(--oxblood);color:#f5ecdc;border-color:var(--oxblood)">2. Macro +40.37%</span><span style="background:var(--gold);color:#f5ecdc;border-color:var(--gold)">3. Trend +21.38%</span></div>
+        <div class="picks-row" style="font-size:13px"><span style="background:var(--forest);color:#f5ecdc;border-color:var(--forest)">1. Contrarian Agent +291.93%</span><span style="background:var(--oxblood);color:#f5ecdc;border-color:var(--oxblood)">2. Macro +40.37%</span><span style="background:var(--gold);color:#f5ecdc;border-color:var(--gold)">3. Trend +21.38%</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ============ POSITION MODAL ============ -->
+<!-- POSITION MODAL -->
 <div class="modal-bg" id="modalBg">
   <div class="modal" id="modal">
     <button class="close" id="modalClose">×</button>
@@ -570,84 +1041,87 @@
     </div>
     <div class="rationale-label">Agent's rationale</div>
     <div class="rationale" id="modalRationale">—</div>
+    <div id="modalNewsWrap" style="display:none;margin-top:18px;padding-top:14px;border-top:1px solid var(--rule)">
+      <div style="font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute);font-weight:600;margin-bottom:8px">Source · Verify the thesis</div>
+      <a id="modalNewsLink" href="#" target="_blank" rel="noopener noreferrer" style="
+        display:inline-flex;align-items:center;gap:8px;
+        font-family:'JetBrains Mono';font-size:11px;color:var(--oxblood);
+        text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px;
+        transition:opacity .15s;line-height:1.4;
+      ">
+        <span style="font-size:14px">↗</span>
+        <span id="modalNewsLabel">—</span>
+      </a>
+    </div>
   </div>
 </div>
 
+<!-- SHARED TOOLTIP -->
+<div class="d3-tooltip" id="d3Tooltip"></div>
+
 <script>
+/* =====================================================================
+   DATA
+===================================================================== */
 const HOLDINGS = {
   trend_follower:[
-    ["COST",11.5,555.07,974.80,75.62,1739.18],
-    ["CTAS",9.0,99.58,176.14,76.88,1383.88],
-    ["ODFL",10.0,129.89,210.41,62.00,1239.93],
-    ["MSFT",10.0,271.37,393.11,44.86,897.24],
-    ["AAPL",4.0,161.73,258.83,60.04,480.28],
-    ["SPGI",11.0,377.44,425.24,12.66,278.60],
-    ["DPZ",10.5,358.38,369.17,3.01,63.20],
-    ["TMO",10.5,565.56,527.22,-6.78,-142.35],
-    ["WST",12.0,368.41,267.93,-27.27,-654.59],
-    ["POOL",11.5,388.24,217.98,-43.85,-1008.65]
+    ["COST",11.5,555.07,974.80,75.62,1739.18],["CTAS",9.0,99.58,176.14,76.88,1383.88],
+    ["ODFL",10.0,129.89,210.41,62.00,1239.93],["MSFT",10.0,271.37,393.11,44.86,897.24],
+    ["AAPL",4.0,161.73,258.83,60.04,480.28],["SPGI",11.0,377.44,425.24,12.66,278.60],
+    ["DPZ",10.5,358.38,369.17,3.01,63.20],["TMO",10.5,565.56,527.22,-6.78,-142.35],
+    ["WST",12.0,368.41,267.93,-27.27,-654.59],["POOL",11.5,388.24,217.98,-43.85,-1008.65]
   ],
   contrarian:[
-    ["VRT",6.0,12.01,310.51,2485.49,29825.84],
-    ["PLTR",10.0,12.15,135.70,1016.87,20337.45],
-    ["NFLX",14.0,33.79,106.28,214.57,6007.91],
-    ["LVS",10.0,34.81,55.52,59.48,1189.64],
-    ["CCL",11.0,18.95,28.69,51.38,1130.34],
-    ["WYNN",10.0,71.25,105.59,48.20,964.06],
-    ["MO",5.0,39.75,65.62,65.07,650.74],
-    ["NCLH",12.0,21.21,21.09,-0.57,-13.58],
-    ["BIIB",9.0,212.54,178.96,-15.80,-284.39],
-    ["EPAM",13.0,281.20,127.41,-54.69,-1421.96]
+    ["VRT",6.0,12.01,310.51,2485.49,29825.84],["PLTR",10.0,12.15,135.70,1016.87,20337.45],
+    ["NFLX",14.0,33.79,106.28,214.57,6007.91],["LVS",10.0,34.81,55.52,59.48,1189.64],
+    ["CCL",11.0,18.95,28.69,51.38,1130.34],["WYNN",10.0,71.25,105.59,48.20,964.06],
+    ["MO",5.0,39.75,65.62,65.07,650.74],["NCLH",12.0,21.21,21.09,-0.57,-13.58],
+    ["BIIB",9.0,212.54,178.96,-15.80,-284.39],["EPAM",13.0,281.20,127.41,-54.69,-1421.96]
   ],
   macro_sentiment:[
-    ["XOM",13.0,77.16,149.24,93.42,2428.79],
-    ["COST",10.0,555.07,974.80,75.62,1512.33],
-    ["MSFT",14.0,271.37,393.11,44.86,1256.14],
-    ["CTAS",8.0,99.58,176.14,76.88,1230.11],
-    ["MO",8.0,39.75,65.62,65.07,1041.19],
-    ["ODFL",6.0,129.89,210.41,62.00,743.96],
-    ["CVX",11.0,148.07,187.02,26.30,578.64],
-    ["SPGI",9.0,377.44,425.24,12.66,227.95],
-    ["TMO",10.0,565.56,527.22,-6.78,-135.57],
-    ["UNH",11.0,496.82,314.19,-36.76,-808.71]
+    ["XOM",13.0,77.16,149.24,93.42,2428.79],["COST",10.0,555.07,974.80,75.62,1512.33],
+    ["MSFT",14.0,271.37,393.11,44.86,1256.14],["CTAS",8.0,99.58,176.14,76.88,1230.11],
+    ["MO",8.0,39.75,65.62,65.07,1041.19],["ODFL",6.0,129.89,210.41,62.00,743.96],
+    ["CVX",11.0,148.07,187.02,26.30,578.64],["SPGI",9.0,377.44,425.24,12.66,227.95],
+    ["TMO",10.0,565.56,527.22,-6.78,-135.57],["UNH",11.0,496.82,314.19,-36.76,-808.71]
   ]
 };
 const RATIONALES = {
   trend_follower:{
     "COST":"Best-in-class low volatility (std=0.0131) with solid Sharpe-like ratio (0.0687). Linear slope of 0.0949 is strong relative to price level, and close-vs-mean of 135.4% shows the trend remains intact without being overextended.",
     "CTAS":"Very low volatility (std=0.0145) with a reliable Sharpe-like ratio (0.0621) and strong linear slope of 0.0786. Close-vs-mean of 134.3% confirms an intact trend; the defensive uniform-services business model supports low-volatility compounding.",
-    "ODFL":"Sharpe-like ratio of 0.0659 with low volatility and standout close-vs-mean of 210.7%, indicating deeply sustained trend momentum. Total return of 1654.3% across the window underscores persistent compounding.",
-    "MSFT":"Solid Sharpe-like ratio (0.0675) with low volatility and strong linear slope of 0.0647. Close-vs-mean of 171.8% shows the stock trading substantially above its long-run average; high liquidity adds execution reliability.",
-    "AAPL":"Highest close-vs-mean among FAANG-type names (247.9%), indicating the stock is still far above its long-run average with trend intact. Total return of 1550.6% affirms durable momentum.",
-    "SPGI":"Strong Sharpe-like ratio (0.0699) with very low volatility (std=0.0143). Linear slope of 0.0823 is robust; close-vs-mean of 147.0% indicates continued uptrend without extreme overextension.",
-    "DPZ":"Top Sharpe-like ratio (0.0710) with low volatility. Exceptional linear slope of 0.1586 — among the highest in the cohort — reflecting relentless steady appreciation. Close-vs-mean of 109.7% signals continuation without frothy overextension.",
-    "TMO":"Excellent low-volatility profile (std=0.0136) with strong Sharpe-like ratio (0.0662) and impressive linear slope of 0.1289. Total return of 867.8% demonstrates durable trend strength.",
-    "WST":"Highest Sharpe-like ratio among low-volatility candidates (0.0745) with the lowest std_daily_return in the top tier. Close-vs-mean of 232.4% shows sustained trend well above historical average.",
-    "POOL":"Exceptional Sharpe-like ratio (0.0694) with very low volatility. Close-vs-mean of 189.4% demonstrates sustained momentum; strong linear slope of 0.1378 confirms consistent upward trajectory."
+    "ODFL":"Sharpe-like ratio of 0.0659 with low volatility and standout close-vs-mean of 210.7%, indicating deeply sustained trend momentum.",
+    "MSFT":"Solid Sharpe-like ratio (0.0675) with low volatility and strong linear slope of 0.0647. Close-vs-mean of 171.8% shows the stock trading substantially above its long-run average.",
+    "AAPL":"Highest close-vs-mean among FAANG-type names (247.9%), indicating the stock is still far above its long-run average with trend intact.",
+    "SPGI":"Strong Sharpe-like ratio (0.0699) with very low volatility (std=0.0143). Linear slope of 0.0823 is robust.",
+    "DPZ":"Top Sharpe-like ratio (0.0710) with low volatility. Exceptional linear slope of 0.1586 — among the highest in the cohort.",
+    "TMO":"Excellent low-volatility profile (std=0.0136) with strong Sharpe-like ratio (0.0662) and impressive linear slope of 0.1289.",
+    "WST":"Highest Sharpe-like ratio among low-volatility candidates (0.0745). Close-vs-mean of 232.4% shows sustained trend well above historical average.",
+    "POOL":"Exceptional Sharpe-like ratio (0.0694) with very low volatility. Close-vs-mean of 189.4% demonstrates sustained momentum."
   },
   contrarian:{
-    "VRT":"Final close of $28.99 is 20.0% below its historical mean of $36.24, with total return of +24.0%. The decline appears macro/rate-driven rather than fundamental — data center infrastructure demand underpins long-term fundamentals.",
-    "PLTR":"Final close of $11.17 is 41.1% below its historical mean of $18.97, yet total return is +30.7% and mean daily return of 0.0018 is the highest in the dataset. Dip is macro-driven, not fundamental — government and commercial contracts remain intact.",
-    "NFLX":"Final close of $348.61 is 19.0% below its historical mean, yet total return is +1187.5% — one of the strongest long-run compounders in the dataset. The dip appears valuation-driven rather than fundamental. High-conviction mean-reversion play.",
-    "LVS":"Final close of $48.67 is 21.0% below its historical mean of $61.61, with total return of +25.6% confirming long-run value creation. Macau/Singapore exposure suppressed by COVID; structural recovery as restrictions ease.",
-    "CCL":"Final close of $20.29 is 47.1% below its historical mean — the deepest discount among cruise names. COVID-driven dislocation in a dominant industry player; recovery in travel bookings supports mean reversion over a multi-year horizon.",
-    "WYNN":"Final close of $80.01 is 33.0% below its historical mean of $119.43. Dip driven by Macau COVID restrictions and broader macro pressures. Premium gaming brand with strong asset base; recovery thesis tied to Asia reopening.",
-    "MO":"Final close of $55.94 is 14.5% below its historical mean of $65.44. Defensive consumer staples with a strong dividend yield. Low volatility (std 0.0135) provides downside protection in a risk-off environment.",
-    "NCLH":"Final close of $20.70 is 46.9% below its historical mean — a deep COVID-driven dip. Total return of −12.7% is a relatively shallow loss given the pandemic. Cruise recovery thesis intact as travel demand rebounds.",
-    "BIIB":"Final close of $197.54 is 18.8% below its historical mean of $243.22, yet total return is +156.2%. Dip tied to Aduhelm controversy and pipeline uncertainty. Biotech with a deep pipeline; positive clinical/regulatory news is a strong catalyst.",
-    "EPAM":"Final close of $352.55 is 18.1% below its historical mean, but total return is +1971.9% — the highest in the dataset. Dip is likely Russia-Ukraine conflict related (operational disruption), not a structural collapse in business fundamentals."
+    "VRT":"Final close is 20.0% below its historical mean. The decline appears macro/rate-driven rather than fundamental — data center infrastructure demand underpins long-term fundamentals.",
+    "PLTR":"Final close of $11.17 is 41.1% below its historical mean, yet mean daily return of 0.0018 is the highest in the dataset. Dip is macro-driven, not fundamental.",
+    "NFLX":"Final close is 19.0% below its historical mean, yet total return is +1187.5% — one of the strongest long-run compounders in the dataset.",
+    "LVS":"Final close is 21.0% below its historical mean. Macau/Singapore exposure suppressed by COVID; structural recovery as restrictions ease.",
+    "CCL":"Final close is 47.1% below its historical mean — the deepest discount among cruise names. COVID-driven dislocation in a dominant industry player.",
+    "WYNN":"Final close is 33.0% below its historical mean. Dip driven by Macau COVID restrictions and broader macro pressures.",
+    "MO":"Final close is 14.5% below its historical mean. Defensive consumer staples with a strong dividend yield.",
+    "NCLH":"Final close is 46.9% below its historical mean — a deep COVID-driven dip. Cruise recovery thesis intact as travel demand rebounds.",
+    "BIIB":"Final close is 18.8% below its historical mean. Dip tied to Aduhelm controversy and pipeline uncertainty.",
+    "EPAM":"Final close is 18.1% below its historical mean. Dip is likely Russia-Ukraine conflict related (operational disruption)."
   },
   macro_sentiment:{
-    "XOM":"Goldman Sachs flagged energy majors on conviction Buy lists in early 2022, citing oil price surge post Russia-Ukraine invasion (WTI above $100/bbl). Energy was the #1 performing S&P 500 sector in Q1 2022. Inflation hedge with strong free cash flow and dividend growth.",
-    "COST":"Membership renewal rates above 90% and bulk-buying pricing power make Costco an inflation-resilient retailer. Membership fee model provides recurring revenue independent of consumer spending cycles. Strong Buy consensus across 19+ analysts.",
-    "MSFT":"Azure grew 50% YoY in fiscal Q1 2022 with Intelligent Cloud revenue up 31% to $16.96B, beating consensus. Strong Buy consensus across major banks. Rising-rate headwind partially offset by durable subscription revenue and pricing power.",
-    "CTAS":"B2B uniform/services company with sticky recurring revenues from small and mid-size businesses, making it resilient during inflationary periods as it can pass through cost increases via contract renewals. Tight 2022 labor markets are a tailwind.",
-    "MO":"Tobacco's defensive qualities held up in Q1 2022 — despite declining cigarette volumes, smokeable segment operating income grew 7.9% YoY through margin expansion and pricing. ~6.5% dividend yield provides attractive income as bond yields rose.",
-    "ODFL":"Premier LTL operator with best-in-class operating ratios. In early 2022, strong freight demand from industrial restocking and supply-chain disruptions supported elevated pricing. Smaller allocation reflects cyclical-peak risk.",
-    "CVX":"Moderate Buy consensus and Zacks Rank #1 (Strong Buy) in early 2022. Increased dividend for 39+ consecutive years. With Brent crude above $100, integrated energy majors with disciplined capex are printing large free cash flow.",
-    "SPGI":"Completed its $140B IHS Markit merger Feb 2022, creating a dominant data and financial-intelligence platform. Q1 2022 post-merger results showed 7%+ pro forma revenue growth and 16% adjusted operating profit growth from synergies.",
-    "TMO":"Q1 2022 revenue of $11.82B, up 19% YoY, supported by COVID testing/vaccine manufacturing and core life science tools demand. Life sciences infrastructure spending viewed as durable due to multi-year R&D contracts.",
-    "UNH":"Cited as a defensive healthcare play for rising rates and inflation — managed care organisations face fewer inflationary pressures given that contracts are frequently renegotiated. TipRanks consensus Strong Buy with 14 Buys and 3 Holds."
+    "XOM":"Goldman Sachs flagged energy majors on conviction Buy lists in early 2022, citing oil price surge post Russia-Ukraine invasion. Energy was the #1 performing S&P 500 sector in Q1 2022.",
+    "COST":"Membership renewal rates above 90% and bulk-buying pricing power make Costco an inflation-resilient retailer. Strong Buy consensus across 19+ analysts.",
+    "MSFT":"Azure grew 50% YoY in fiscal Q1 2022 with Intelligent Cloud revenue up 31% to $16.96B, beating consensus.",
+    "CTAS":"B2B uniform/services company with sticky recurring revenues, resilient during inflationary periods. Tight 2022 labor markets are a tailwind.",
+    "MO":"Tobacco's defensive qualities held up in Q1 2022 — smokeable segment operating income grew 7.9% YoY. ~6.5% dividend yield provides attractive income.",
+    "ODFL":"Premier LTL operator with best-in-class operating ratios. Strong freight demand from industrial restocking in early 2022.",
+    "CVX":"Moderate Buy consensus. Increased dividend for 39+ consecutive years. With Brent crude above $100, integrated energy majors are printing large free cash flow.",
+    "SPGI":"Completed its $140B IHS Markit merger Feb 2022. Q1 2022 post-merger results showed 7%+ pro forma revenue growth.",
+    "TMO":"Q1 2022 revenue of $11.82B, up 19% YoY. Life sciences infrastructure spending viewed as durable due to multi-year R&D contracts.",
+    "UNH":"Cited as a defensive healthcare play for rising rates and inflation. TipRanks consensus Strong Buy with 14 Buys and 3 Holds."
   }
 };
 const TIMESERIES = {
@@ -656,41 +1130,109 @@ const TIMESERIES = {
   contrarian:[20000,18319.72,16699.71,15018.63,16897.41,16799.56,16793.48,18595.4,20085.11,18366.41,21659.78,20688.24,20601.25,21036.3,22282.11,24911.53,25465.53,25125.81,23397.51,22531.08,25545.81,26491.97,28361.59,31490.54,32256.25,30492.14,31827.21,32024.89,29819.01,30991.6,36148.8,39144.26,47933.95,47067.37,49014.74,44882.59,42095.3,49931.11,56347.52,59822.7,65223.41,65852.94,73431.35,79343.33,72008.67,70802.44,67826.9,74303.28,73680.37,78386.05],
   macro_sentiment:[20000,19287.19,19223.95,18283.58,19866.23,19169.89,18202.77,19569.72,20502.66,19549.87,20783.27,19722.59,20796.74,20916.71,20650.16,21417.34,21948.48,22118.24,21785.03,21160.43,22533.79,23081.99,23661.13,24313.79,25032.35,24261.45,24888.55,25602.89,26566.69,26989.89,27277.35,26857.82,28582.89,25850.15,27081.74,26766.73,27033.96,25834.92,26412.46,27034.33,27035.74,27577.88,27398.52,26859.8,26831.05,27054.37,28102.61,28819.72,27986.43,28074.82]
 };
-const COLORS = {trend_follower:"#9a6b1c", contrarian:"#2f4a2e", macro_sentiment:"#7a1f17"};
-const AGENT_NAMES = {trend_follower:"Trend Follower", contrarian:"Contrarian", macro_sentiment:"Macro Sentiment"};
-const NEG = "#7a1f17";
+
+// Verified source URLs for each Macro Sentiment pick
+const MACRO_LINKS = {
+  "XOM":{
+    label:"Motley Fool · ExxonMobil Q4 2021 Earnings Call Transcript — oil demand recovery (Feb 2022)",
+    url:"https://www.fool.com/earnings/call-transcripts/2022/02/01/exxonmobil-xom-q4-2021-earnings-call-transcript/"
+  },
+  "COST":{
+    label:"Motley Fool · Costco Q2 2022 Earnings Call Transcript (Mar 2022)",
+    url:"https://www.fool.com/earnings/call-transcripts/2022/03/04/costco-wholesale-cost-q2-2022-earnings-call-transc/"
+  },
+  "MSFT":{
+    label:"Motley Fool · Microsoft Q2 2022 Earnings Call Transcript — Azure +46%, Intelligent Cloud beats (Jan 2022)",
+    url:"https://www.fool.com/earnings/call-transcripts/2022/01/26/microsoft-msft-q2-2022-earnings-call-transcript/"
+  },
+  "CTAS":{
+    label:"Motley Fool · Cintas Q2 2022 Earnings Call Transcript — labor market tailwind (Dec 2021)",
+    url:"https://www.fool.com/earnings/call-transcripts/2021/12/22/cintas-corporation-ctas-q2-2022-earnings-call-tran/"
+  },
+  "MO":{
+    label:"Motley Fool · Altria Q1 2022 Earnings Call Transcript — stable earnings, dividend yield (Apr 2022)",
+    url:"https://www.fool.com/earnings/call-transcripts/2022/04/28/altria-group-mo-q1-2022-earnings-call-transcript/"
+  },
+  "ODFL":{
+    label:"Motley Fool · Old Dominion Q1 2022 Earnings Call — record $1.5B revenue (Apr 2022)",
+    url:"https://www.fool.com/earnings/call-transcripts/2022/04/27/old-dominion-freight-line-odfl-q1-2022-earnings-ca/"
+  },
+  "CVX":{
+    label:"Motley Fool · Chevron Q1 2022 Earnings Call Transcript — record FCF on $100+ Brent crude (Apr 2022)",
+    url:"https://www.fool.com/earnings/call-transcripts/2022/04/29/chevron-cvx-q1-2022-earnings-call-transcript/"
+  },
+  "SPGI":{
+    label:"Yahoo Finance · S&P Global & IHS Markit: Final approval, merger closes Feb 28 2022",
+    url:"https://finance.yahoo.com/news/p-global-ihs-markit-announce-133000615.html"
+  },
+  "TMO":{
+    label:"Motley Fool · Thermo Fisher Q1 2022 Earnings Call — $11.82B revenue, +19% YoY (Apr 2022)",
+    url:"https://www.fool.com/earnings/call-transcripts/2022/04/28/thermo-fisher-scientific-tmo-q1-2022-earnings-call/"
+  },
+  "UNH":{
+    label:"Yahoo Finance · UnitedHealth Q1 2022: $80.1B revenue, EPS beat, raised guidance (Apr 2022)",
+    url:"https://finance.yahoo.com/video/unitedhealth-group-stock-pops-q1-135734643.html"
+  }
+};
+
+const COMPANY_NAMES = {
+  "COST":"Costco Wholesale Corporation","CTAS":"Cintas Corporation","ODFL":"Old Dominion Freight Line, Inc.",
+  "MSFT":"Microsoft Corporation","AAPL":"Apple Inc.","SPGI":"S&P Global Inc.",
+  "DPZ":"Domino's Pizza, Inc.","TMO":"Thermo Fisher Scientific Inc.","WST":"West Pharmaceutical Services, Inc.",
+  "POOL":"Pool Corporation","VRT":"Vertiv Holdings Co","PLTR":"Palantir Technologies Inc.",
+  "NFLX":"Netflix, Inc.","LVS":"Las Vegas Sands Corp.","CCL":"Carnival Corporation & plc",
+  "WYNN":"Wynn Resorts, Limited","MO":"Altria Group, Inc.","NCLH":"Norwegian Cruise Line Holdings Ltd.",
+  "BIIB":"Biogen Inc.","EPAM":"EPAM Systems, Inc.","XOM":"Exxon Mobil Corporation",
+  "CVX":"Chevron Corporation","UNH":"UnitedHealth Group Incorporated"
+};
+const AGENT_NAMES = {trend_follower:"Trend Follower Agent", contrarian:"Contrarian Agent", macro_sentiment:"Macro Sentiment Agent"};
+const AGENT_CSS  = {trend_follower:"--gold", contrarian:"--forest", macro_sentiment:"--oxblood"};
+const parseDate = d3.timeParse("%Y-%m-%d");
+let raceMode = "dollar", currentAgent = "trend_follower", currentSort = {key:"ret",asc:false}, currentFilter = "all", hMode = "pct";
+
+/* =====================================================================
+   HELPERS
+===================================================================== */
 const cssVar = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmtMoney = n => (n>=0?"+":"−")+"$"+Math.abs(n).toLocaleString(undefined,{maximumFractionDigits:0});
+const fmtPct   = n => (n>=0?"+":"−")+Math.abs(n).toFixed(2)+"%";
 
-Chart.defaults.font.family = "'Lexend', sans-serif";
-Chart.defaults.font.size = 11.5;
+const tooltip = document.getElementById("d3Tooltip");
+function showTip(html, event){
+  tooltip.innerHTML = html;
+  tooltip.style.display = "block";
+  moveTip(event);
+}
+function moveTip(event){
+  tooltip.style.left = (event.clientX + 18) + "px";
+  tooltip.style.top  = (event.clientY - 8) + "px";
+}
+function hideTip(){ tooltip.style.display = "none"; }
 
-/* ============ TICKER TAPE ============ */
+/* =====================================================================
+   TICKER TAPE
+===================================================================== */
 function buildTickerTape(){
   const all = [];
-  Object.entries(HOLDINGS).forEach(([agent,rows])=>{
-    rows.forEach(r=>all.push({agent,t:r[0],ret:r[4]}));
-  });
+  Object.entries(HOLDINGS).forEach(([agent,rows])=>rows.forEach(r=>all.push({t:r[0],ret:r[4]})));
   const html = all.map(x=>{
-    const cls = x.ret >= 0 ? "pos" : "neg";
-    const sym = x.ret >= 0 ? "▲" : "▼";
+    const cls = x.ret>=0?"pos":"neg", sym = x.ret>=0?"▲":"▼";
     return `<span class="item"><span class="tk">${x.t}</span><span class="${cls}">${sym} ${x.ret>=0?"+":""}${x.ret.toFixed(2)}%</span></span>`;
   }).join("");
   document.getElementById("tickerTrack").innerHTML = html + html;
 }
 buildTickerTape();
 
-/* ============ ANIMATED COUNTERS ============ */
+/* =====================================================================
+   ANIMATED COUNTERS
+===================================================================== */
 function animateCounters(){
   document.querySelectorAll(".counter").forEach(el=>{
-    const target = parseFloat(el.dataset.target);
-    const dec = parseInt(el.dataset.decimals||"0");
-    const dur = 1600;
-    const start = performance.now();
+    const target = parseFloat(el.dataset.target), dec = parseInt(el.dataset.decimals||"0");
+    const dur = 1600, start = performance.now();
     function step(now){
-      const t = Math.min((now-start)/dur,1);
-      const e = 1 - Math.pow(1-t, 3);
-      const val = target * e;
-      el.textContent = val.toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec});
+      const t = Math.min((now-start)/dur,1), e = 1-Math.pow(1-t,3);
+      el.textContent = (target*e).toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec});
       if(t<1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
@@ -698,7 +1240,9 @@ function animateCounters(){
 }
 setTimeout(animateCounters, 200);
 
-/* ============ THEME TOGGLE ============ */
+/* =====================================================================
+   THEME
+===================================================================== */
 const themeBtn = document.getElementById("themeBtn");
 function setTheme(dark){
   document.body.classList.toggle("dark",dark);
@@ -709,43 +1253,134 @@ function setTheme(dark){
 themeBtn.addEventListener("click",()=>setTheme(!document.body.classList.contains("dark")));
 if(localStorage.getItem("ledger-dark")==="1") setTheme(true);
 
-/* ============ RACE CHART ============ */
-let raceChart, raceMode = "dollar";
+/* =====================================================================
+   D3 RACE CHART
+===================================================================== */
+let raceChartInstance = null;
 function buildRaceChart(){
-  const ink = cssVar("--ink"), mute = cssVar("--mute"), rule = cssVar("--rule");
+  const wrap = document.getElementById("raceChartWrap");
+  wrap.innerHTML = "";
+  const W = wrap.clientWidth || 900;
+  const H = 420;
+  const m = {top:12, right:28, bottom:42, left:68};
+  const w = W - m.left - m.right, h = H - m.top - m.bottom;
+
+  const svg = d3.select(wrap).append("svg")
+    .attr("viewBox", `0 0 ${W} ${H}`)
+    .attr("width", W).attr("height", H)
+    .style("overflow","visible");
+
+  const g = svg.append("g").attr("transform",`translate(${m.left},${m.top})`);
+
+  const agents = ["trend_follower","contrarian","macro_sentiment"];
+  const dates  = TIMESERIES.dates.map(parseDate);
+
   const transform = v => raceMode === "dollar" ? v : ((v-20000)/20000)*100;
-  const datasets = ["trend_follower","contrarian","macro_sentiment"].map(a=>({
-    label: AGENT_NAMES[a],
-    data: TIMESERIES[a].map(transform),
-    borderColor: cssVar("--"+(a==="trend_follower"?"gold":a==="contrarian"?"forest":"oxblood")),
-    backgroundColor: "transparent",
-    borderWidth: 2.4, tension:.25, pointRadius:0, pointHoverRadius:5,
+
+  const series = agents.map(a=>({
+    key: a,
+    name: AGENT_NAMES[a],
+    color: cssVar(AGENT_CSS[a]),
+    values: dates.map((d,i)=>({date:d, value:transform(TIMESERIES[a][i])}))
   }));
-  if(raceChart) raceChart.destroy();
-  raceChart = new Chart(document.getElementById("raceChart"),{
-    type:"line",
-    data:{labels:TIMESERIES.dates, datasets},
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      interaction:{mode:"index",intersect:false},
-      plugins:{
-        legend:{align:"end",labels:{boxWidth:10,boxHeight:10,padding:14,font:{size:12,weight:"500"},color:ink}},
-        tooltip:{
-          backgroundColor:ink, titleColor:cssVar("--paper"), bodyColor:cssVar("--paper"),
-          titleFont:{size:12,weight:"600"}, bodyFont:{family:"'JetBrains Mono'",size:11},
-          padding:12, borderColor:cssVar("--oxblood"),borderWidth:1,
-          callbacks:{label:c=>` ${c.dataset.label}: ${raceMode==="dollar"?"$"+c.parsed.y.toLocaleString(undefined,{maximumFractionDigits:0}):c.parsed.y.toFixed(1)+"%"}`}
-        }
-      },
-      scales:{
-        x:{grid:{display:false},border:{color:ink},ticks:{color:mute,maxTicksLimit:8,font:{family:"'JetBrains Mono'",size:10}}},
-        y:{grid:{color:rule,drawTicks:false},border:{display:false},
-          ticks:{color:mute,font:{family:"'JetBrains Mono'",size:10},
-            callback:v=>raceMode==="dollar"?"$"+(v/1000).toFixed(0)+"k":v.toFixed(0)+"%"}}
-      }
-    }
+
+  const xScale = d3.scaleTime().domain(d3.extent(dates)).range([0,w]);
+  const allVals = series.flatMap(s=>s.values.map(v=>v.value));
+  const yScale = d3.scaleLinear()
+    .domain([d3.min(allVals)*0.97, d3.max(allVals)*1.03]).range([h,0]);
+
+  // Gridlines
+  g.append("g").attr("class","grid")
+    .call(d3.axisLeft(yScale).ticks(6).tickSize(-w).tickFormat(""))
+    .call(gg=>gg.select(".domain").remove())
+    .call(gg=>gg.selectAll("line").attr("stroke",cssVar("--rule")).attr("stroke-dasharray","3,3"));
+
+  // X axis
+  g.append("g").attr("transform",`translate(0,${h})`)
+    .call(d3.axisBottom(xScale).ticks(8).tickFormat(d3.timeFormat("%b '%y")))
+    .call(ax=>ax.select(".domain").attr("stroke",cssVar("--ink")))
+    .call(ax=>ax.selectAll("text").attr("fill",cssVar("--mute"))
+      .style("font-family","'JetBrains Mono'").style("font-size","10px"))
+    .call(ax=>ax.selectAll(".tick line").attr("stroke",cssVar("--rule")));
+
+  // Y axis
+  const yFmt = v => raceMode==="dollar" ? "$"+(v/1000).toFixed(0)+"k" : v.toFixed(0)+"%";
+  g.append("g")
+    .call(d3.axisLeft(yScale).ticks(6).tickFormat(yFmt))
+    .call(ax=>ax.select(".domain").remove())
+    .call(ax=>ax.selectAll("text").attr("fill",cssVar("--mute"))
+      .style("font-family","'JetBrains Mono'").style("font-size","10px"))
+    .call(ax=>ax.selectAll(".tick line").remove());
+
+  // Line generator
+  const line = d3.line().x(d=>xScale(d.date)).y(d=>yScale(d.value)).curve(d3.curveCatmullRom.alpha(0.5));
+
+  // Lines — draw-on animation
+  series.forEach(s=>{
+    const path = g.append("path")
+      .datum(s.values)
+      .attr("fill","none")
+      .attr("stroke",s.color)
+      .attr("stroke-width",2.4)
+      .attr("d",line);
+    const len = path.node().getTotalLength();
+    path.attr("stroke-dasharray",`${len} ${len}`).attr("stroke-dashoffset",len)
+      .transition().duration(1400).ease(d3.easeCubicOut).attr("stroke-dashoffset",0);
   });
+
+  // End-point labels
+  series.forEach(s=>{
+    const last = s.values[s.values.length-1];
+    g.append("text")
+      .attr("x", xScale(last.date)+6).attr("y", yScale(last.value)+4)
+      .attr("fill", s.color).style("font-family","'JetBrains Mono'")
+      .style("font-size","10px").style("font-weight","600")
+      .text(raceMode==="dollar" ? "$"+(last.value/1000).toFixed(1)+"k" : last.value.toFixed(1)+"%");
+  });
+
+  // Crosshair + hover
+  const bisect = d3.bisector(d=>d.date).left;
+  const crosshair = g.append("line")
+    .attr("y1",0).attr("y2",h).attr("stroke",cssVar("--rule-2"))
+    .attr("stroke-width",1).attr("stroke-dasharray","4,3").style("display","none");
+
+  const dots = series.map(s=>
+    g.append("circle").attr("r",5).attr("fill",s.color)
+      .attr("stroke",cssVar("--paper")).attr("stroke-width",2).style("display","none")
+  );
+
+  svg.append("rect")
+    .attr("transform",`translate(${m.left},${m.top})`)
+    .attr("width",w).attr("height",h)
+    .attr("fill","none").attr("pointer-events","all")
+    .on("mousemove", function(event){
+      const [mx] = d3.pointer(event, this);
+      const x0 = xScale.invert(mx);
+      crosshair.style("display",null).attr("x1",mx).attr("x2",mx);
+      dots.forEach(d=>d.style("display",null));
+      let html = `<strong>${d3.timeFormat("%b %d, %Y")(x0)}</strong>`;
+      series.forEach((s,i)=>{
+        const idx = Math.min(bisect(s.values, x0, 1), s.values.length-1);
+        const dpt = s.values[idx];
+        dots[i].attr("cx",xScale(dpt.date)).attr("cy",yScale(dpt.value));
+        const label = raceMode==="dollar"
+          ? "$"+dpt.value.toLocaleString(undefined,{maximumFractionDigits:0})
+          : dpt.value.toFixed(1)+"%";
+        html += `<span style="color:${s.color}">■</span> ${s.name}: ${label}<br/>`;
+      });
+      showTip(html, event);
+    })
+    .on("mousemove.move", function(event){ moveTip(event); })
+    .on("mouseleave",()=>{ crosshair.style("display","none"); dots.forEach(d=>d.style("display","none")); hideTip(); });
+
+  // Legend
+  const legendEl = document.getElementById("raceLegend");
+  legendEl.innerHTML = series.map(s=>`
+    <div class="d3-legend-item">
+      <span style="background:${s.color}"></span>${s.name}
+    </div>`).join("");
 }
+
 document.querySelectorAll("#raceControls .ctrl").forEach(b=>{
   b.addEventListener("click",()=>{
     document.querySelectorAll("#raceControls .ctrl").forEach(x=>x.classList.remove("active"));
@@ -755,36 +1390,355 @@ document.querySelectorAll("#raceControls .ctrl").forEach(b=>{
   });
 });
 
-/* ============ RETURNS BAR CHART ============ */
-let returnsChart;
+/* =====================================================================
+   D3 ANIMATIONS - NEW VISUALIZATIONS
+===================================================================== */
+
+// 1. CAPITAL FLOW DIAGRAM
+// 2. ANIMATED LEADERBOARD (redesigned)
+const LB_AGENTS = ["trend_follower","contrarian","macro_sentiment"];
+const LB_SHORT  = {trend_follower:"Trend", contrarian:"Contrarian", macro_sentiment:"Macro"};
+const LB_SUB    = {trend_follower:"Momentum", contrarian:"Mean-Reversion", macro_sentiment:"Sentiment"};
+let currentLeaderboardIdx = 49;
+let lbPrevRanks = {}; // track previous ranks for delta indicators
+let lbPlayTimer = null;
+
+// Build the slider track fill + year markers once
+(function initSliderDecor(){
+  const wrap = document.querySelector("#lbScrubber > div:nth-child(2)");
+  const bg = document.createElement("div"); bg.className = "lb-track-bg"; wrap.appendChild(bg);
+  const fill = document.createElement("div"); fill.className = "lb-track-fill"; fill.id = "lbTrackFill"; wrap.appendChild(fill);
+
+  // Year markers (2023, 2024, 2025)
+  const markers = document.getElementById("lbYearMarkers");
+  const total = 49;
+  // dates: 0=Apr22, ~13=Jan23, ~25=Jan24, ~37=Jan25
+  const years = [{label:"2023",idx:13},{label:"2024",idx:25},{label:"2025",idx:37}];
+  years.forEach(({label,idx})=>{
+    const pct = (idx/total)*100;
+    const m = document.createElement("div");
+    m.style.cssText = `position:absolute;left:${pct}%;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none`;
+    m.innerHTML = `<div style="width:1px;height:10px;background:var(--rule-2);margin-bottom:2px"></div><span style="font-family:'JetBrains Mono';font-size:8px;color:var(--mute);letter-spacing:.08em">${label}</span>`;
+    markers.appendChild(m);
+  });
+})();
+
+function buildLeaderboard(){
+  const idx = Math.round(currentLeaderboardIdx);
+  if(idx < 0 || idx > 49) return;
+  const vals = LB_AGENTS.map(a => TIMESERIES[a][idx]);
+  const maxVal = Math.max(...vals);
+
+  // Sort descending
+  const sorted = LB_AGENTS.map((a,i)=>({
+    agent:a, val:vals[i], color:cssVar(AGENT_CSS[a])
+  })).sort((a,b)=>b.val-a.val);
+
+  // Compute deltas vs previous
+  const newRanks = {};
+  sorted.forEach((d,i)=>{ newRanks[d.agent] = i+1; });
+
+  const container = document.getElementById("lbRaceBars");
+
+  // First render: create rows
+  if(!container._built){
+    container._built = true;
+    container.innerHTML = "";
+    LB_AGENTS.forEach(a=>{
+      const row = document.createElement("div");
+      row.className = "lb-bar-row";
+      row.id = "lb-row-"+a;
+      row.innerHTML = `
+        <div class="lb-rank" id="lb-rank-${a}">1</div>
+        <div class="lb-name-col">
+          <div class="lb-agent-name">${LB_SHORT[a]}</div>
+          <div class="lb-agent-sub">${LB_SUB[a]}</div>
+        </div>
+        <div class="lb-bar-wrap">
+          <div class="lb-bar-bg"></div>
+          <div class="lb-bar-fill" id="lb-fill-${a}" style="background:${cssVar(AGENT_CSS[a])}">
+            <div class="lb-bar-stripe"></div>
+          </div>
+        </div>
+        <div class="lb-value" id="lb-val-${a}">$0k</div>
+        <div class="lb-delta flat" id="lb-delta-${a}">—</div>
+      `;
+      container.appendChild(row);
+    });
+  }
+
+  // Update each agent row
+  sorted.forEach((d,rankIdx)=>{
+    const a = d.agent;
+    const rankEl    = document.getElementById("lb-rank-"+a);
+    const fillEl    = document.getElementById("lb-fill-"+a);
+    const valEl     = document.getElementById("lb-val-"+a);
+    const deltaEl   = document.getElementById("lb-delta-"+a);
+    const rowEl     = document.getElementById("lb-row-"+a);
+
+    const rank      = rankIdx+1;
+    const pct       = maxVal > 0 ? (d.val/maxVal)*100 : 0;
+    const prevRank  = lbPrevRanks[a];
+    const rankDelta = prevRank ? prevRank - rank : 0;
+
+    rankEl.textContent = rank;
+    rankEl.style.color  = rank===1 ? d.color : cssVar("--mute");
+    rankEl.style.fontSize = rank===1 ? "32px" : "22px";
+
+    fillEl.style.width  = pct+"%";
+    fillEl.style.background = d.color;
+    fillEl.style.opacity = rank===1 ? "1" : rank===2 ? "0.8" : "0.6";
+
+    const valK = (d.val/1000).toFixed(1);
+    valEl.textContent = "$"+valK+"k";
+    valEl.style.color = d.color;
+
+    if(rankDelta > 0){
+      deltaEl.textContent = "▲"+rankDelta;
+      deltaEl.className = "lb-delta pos";
+    } else if(rankDelta < 0){
+      deltaEl.textContent = "▼"+Math.abs(rankDelta);
+      deltaEl.className = "lb-delta neg";
+    } else {
+      deltaEl.textContent = "—";
+      deltaEl.className = "lb-delta flat";
+    }
+
+    // Reorder rows by rank using CSS order
+    rowEl.style.order = rank;
+  });
+
+  // Flip container to column with order
+  container.style.display = "flex";
+  container.style.flexDirection = "column";
+
+  // Update header
+  const dateStr = TIMESERIES.dates[idx];
+  const dateDisp = dateStr ? new Date(dateStr).toLocaleDateString("en-US",{month:"short",year:"numeric"}) : "—";
+  document.getElementById("sliderDateLabel").textContent = dateDisp;
+  document.getElementById("lbCurrentLeader").textContent = LB_SHORT[sorted[0].agent] + " · $"+(sorted[0].val/1000).toFixed(1)+"k";
+
+  lbTrackFill();
+  lbPrevRanks = newRanks;
+}
+
+function lbTrackFill(){
+  const pct = (currentLeaderboardIdx/49)*100;
+  const fill = document.getElementById("lbTrackFill");
+  if(fill) fill.style.width = pct+"%";
+}
+
+document.getElementById("leaderboardSlider").addEventListener("input",(e)=>{
+  currentLeaderboardIdx = parseInt(e.target.value,10);
+  buildLeaderboard();
+});
+
+// Play button
+document.getElementById("lbPlayBtn").addEventListener("click",function(){
+  if(lbPlayTimer){
+    clearInterval(lbPlayTimer); lbPlayTimer = null;
+    this.textContent = "▶ Play";
+    return;
+  }
+  if(currentLeaderboardIdx >= 49) currentLeaderboardIdx = 0;
+  this.textContent = "◼ Stop";
+  const slider = document.getElementById("leaderboardSlider");
+  lbPlayTimer = setInterval(()=>{
+    currentLeaderboardIdx = Math.min(currentLeaderboardIdx+1, 49);
+    slider.value = currentLeaderboardIdx;
+    buildLeaderboard();
+    if(currentLeaderboardIdx >= 49){
+      clearInterval(lbPlayTimer); lbPlayTimer = null;
+      document.getElementById("lbPlayBtn").textContent = "▶ Play";
+    }
+  }, 120);
+});
+
+// 3. PERFORMANCE ATTRIBUTION WATERFALL
+let currentAttributionAgent = "trend_follower";
+function buildAttribution(){
+  const wrap = document.getElementById("attributionWrap");
+  wrap.innerHTML = "";
+  const W = wrap.clientWidth || 900, H = 300;
+  const m = {top:20,right:40,bottom:40,left:70};
+  const w = W-m.left-m.right, h = H-m.top-m.bottom;
+
+  const holdings = HOLDINGS[currentAttributionAgent];
+  const sorted = [...holdings].sort((a,b)=>b[5]-a[5]);
+  const top3win = sorted.slice(0,3);
+  const top3loss = sorted.slice(-3).reverse();
+  const data = [...top3win.map(h=>({ticker:h[0],pnl:h[5],type:"win"})),...top3loss.map(h=>({ticker:h[0],pnl:h[5],type:"loss"}))];
+
+  const svg = d3.select(wrap).append("svg").attr("viewBox",`0 0 ${W} ${H}`).attr("width",W).attr("height",H);
+  const g = svg.append("g").attr("transform",`translate(${m.left},${m.top})`);
+
+  const minPnl = d3.min(data.map(d=>d.pnl));
+  const maxPnl = d3.max(data.map(d=>d.pnl));
+  const yScale = d3.scaleLinear().domain([minPnl*1.2,maxPnl*1.2]).range([h,0]);
+  const xScale = d3.scaleBand().domain(data.map(d=>d.ticker)).range([0,w]).padding(0.3);
+  const colors = data.map(d=>d.type==="win"?cssVar("--pos"):cssVar("--neg"));
+
+  // Zero line
+  g.append("line").attr("x1",0).attr("x2",w).attr("y1",yScale(0)).attr("y2",yScale(0))
+    .attr("stroke",cssVar("--ink")).attr("stroke-width",1);
+
+  // Bars
+  g.selectAll(".bar").data(data).enter().append("rect")
+    .attr("x",d=>xScale(d.ticker)).attr("width",xScale.bandwidth())
+    .attr("y",d=>Math.min(yScale(0),yScale(d.pnl)))
+    .attr("height",0).attr("fill",(d,i)=>colors[i]).attr("opacity",0.85)
+    .transition().duration(700).delay((d,i)=>i*100)
+    .attr("height",d=>Math.abs(yScale(d.pnl)-yScale(0)));
+
+  // Labels
+  g.selectAll(".label").data(data).enter().append("text")
+    .attr("x",d=>xScale(d.ticker)+xScale.bandwidth()/2)
+    .attr("y",d=>yScale(d.pnl)+(d.pnl>0?-6:12))
+    .attr("text-anchor","middle").attr("font-size","10px").attr("font-weight","600")
+    .attr("fill",(d,i)=>colors[i]).attr("font-family","'JetBrains Mono'")
+    .attr("opacity",0).text(d=>fmtMoney(d.pnl))
+    .transition().duration(700).delay((d,i)=>i*100+300).attr("opacity",1);
+
+  // X axis
+  g.append("g").attr("transform",`translate(0,${h})`)
+    .call(d3.axisBottom(xScale).tickSize(0))
+    .call(ax=>ax.select(".domain").remove())
+    .call(ax=>ax.selectAll("text").attr("fill",cssVar("--ink")).attr("font-size","11px").attr("font-weight","600"));
+}
+
+document.querySelectorAll("#attributionTabs .tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    document.querySelectorAll("#attributionTabs .tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    currentAttributionAgent = t.dataset.agent;
+    buildAttribution();
+  });
+});
+
+// 4. MONTHLY PERFORMANCE HEATMAP
+function buildHeatmap(){
+  const wrap = document.getElementById("heatmapWrap");
+  wrap.innerHTML = "";
+  const W = wrap.clientWidth || 900, H = 200;
+  const dates = TIMESERIES.dates;
+  const monthStarts = [0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,50];
+  const agents = ["trend_follower","contrarian","macro_sentiment"];
+
+  const svg = d3.select(wrap).append("svg").attr("viewBox",`0 0 ${W} ${H}`).attr("width",W).attr("height",H);
+  const g = svg.append("g").attr("transform","translate(80,20)");
+
+  const cellW = (W-120)/monthStarts.length;
+  const cellH = (H-40)/3;
+  const colorScale = d3.scaleLinear().domain([-6,0,6]).range(["#c0392b","#f0ead8","#27ae60"]).clamp(true);
+
+  agents.forEach((agent,ai)=>{
+    const ts = TIMESERIES[agent];
+    monthStarts.forEach((mi,mi_idx)=>{
+      const val1 = ts[mi], val2 = ts[Math.min(mi+1,ts.length-1)];
+      const ret = ((val2-val1)/val1)*100;
+      const x = mi_idx*cellW, y = ai*cellH;
+
+      g.append("rect").attr("x",x).attr("y",y).attr("width",cellW-2).attr("height",cellH-2)
+        .attr("fill",colorScale(ret)).attr("opacity",0)
+        .transition().duration(600).delay(ai*100+mi_idx*30).attr("opacity",1);
+    });
+  });
+
+  // Legend
+  g.append("text").attr("x",-60).attr("y",cellH/2+3).attr("font-size","9px").attr("fill",cssVar("--mute")).text("Trend");
+  g.append("text").attr("x",-60).attr("y",cellH*1.5+3).attr("font-size","9px").attr("fill",cssVar("--mute")).text("Contrarian");
+  g.append("text").attr("x",-60).attr("y",cellH*2.5+3).attr("font-size","9px").attr("fill",cssVar("--mute")).text("Macro");
+}
+
+// 5. AGENT OVERLAP CHORD DIAGRAM
+
+/* =====================================================================
+   D3 RETURNS BAR CHART (grouped)
+===================================================================== */
 function buildReturnsChart(){
-  const ink = cssVar("--ink"), mute = cssVar("--mute"), rule = cssVar("--rule");
-  if(returnsChart) returnsChart.destroy();
-  returnsChart = new Chart(document.getElementById("returnsChart"),{
-    type:"bar",
-    data:{labels:["Trend Follower","Contrarian","Macro Sentiment"],
-      datasets:[
-        {label:"Starting capital",data:[20000,20000,20000],
-          backgroundColor:cssVar("--paper-3"),borderColor:rule,borderWidth:1,borderRadius:0,barPercentage:.7},
-        {label:"Final value",data:[24276.72,78386.05,28074.83],
-          backgroundColor:[cssVar("--gold"),cssVar("--forest"),cssVar("--oxblood")],borderRadius:0,barPercentage:.7}
-      ]},
-    options:{plugins:{
-      legend:{align:"end",labels:{boxWidth:10,padding:14,color:ink,font:{size:11}}},
-      tooltip:{backgroundColor:ink,titleColor:cssVar("--paper"),bodyColor:cssVar("--paper"),padding:10,
-        callbacks:{label:c=>` ${c.dataset.label}: $${c.parsed.y.toLocaleString()}`}}},
-    scales:{
-      y:{ticks:{callback:v=>"$"+(v/1000)+"k",color:mute,font:{family:"'JetBrains Mono'",size:10}},grid:{color:rule},border:{display:false}},
-      x:{grid:{display:false},border:{color:ink},ticks:{color:ink,font:{size:12,weight:"600"}}}
-    }}
+  const wrap = document.getElementById("returnsChartWrap");
+  wrap.innerHTML = "";
+  const W = wrap.clientWidth || 600;
+  const H = 340;
+  const m = {top:16, right:16, bottom:44, left:64};
+  const w = W - m.left - m.right, h = H - m.top - m.bottom;
+
+  const svg = d3.select(wrap).append("svg")
+    .attr("viewBox",`0 0 ${W} ${H}`).attr("width",W).attr("height",H);
+  const g = svg.append("g").attr("transform",`translate(${m.left},${m.top})`);
+
+  const agents = ["Trend Follower Agent","Contrarian","Macro Sentiment"];
+  const startVals = [20000,20000,20000];
+  const finalVals = [24276.72,78386.05,28074.83];
+  const colors = [cssVar("--gold"),cssVar("--forest"),cssVar("--oxblood")];
+
+  const x0 = d3.scaleBand().domain(agents).range([0,w]).padding(0.28);
+  const x1 = d3.scaleBand().domain(["start","final"]).range([0,x0.bandwidth()]).padding(0.06);
+  const yMax = d3.max(finalVals)*1.08;
+  const yScale = d3.scaleLinear().domain([0,yMax]).range([h,0]);
+
+  // Grid
+  g.append("g").attr("class","grid")
+    .call(d3.axisLeft(yScale).ticks(5).tickSize(-w).tickFormat(""))
+    .call(gg=>gg.select(".domain").remove())
+    .call(gg=>gg.selectAll("line").attr("stroke",cssVar("--rule")).attr("stroke-dasharray","3,3"));
+
+  // Y axis
+  g.append("g")
+    .call(d3.axisLeft(yScale).ticks(5).tickFormat(v=>"$"+(v/1000)+"k"))
+    .call(ax=>ax.select(".domain").remove())
+    .call(ax=>ax.selectAll("text").attr("fill",cssVar("--mute"))
+      .style("font-family","'JetBrains Mono'").style("font-size","10px"))
+    .call(ax=>ax.selectAll(".tick line").remove());
+
+  // X axis
+  g.append("g").attr("transform",`translate(0,${h})`)
+    .call(d3.axisBottom(x0).tickSize(0))
+    .call(ax=>ax.select(".domain").attr("stroke",cssVar("--ink")))
+    .call(ax=>ax.selectAll("text").attr("fill",cssVar("--ink"))
+      .style("font-size","12px").style("font-weight","600").style("font-family","'Lexend'"))
+    .call(ax=>ax.selectAll(".tick line").remove());
+
+  // Bars — starting capital (cream)
+  g.selectAll(".bar-start").data(agents).enter().append("rect")
+    .attr("x",(d,i)=>x0(d)+x1("start"))
+    .attr("width",x1.bandwidth())
+    .attr("y",yScale(20000))
+    .attr("height",h-yScale(20000))
+    .attr("fill",cssVar("--paper-3"))
+    .attr("stroke",cssVar("--rule")).attr("stroke-width",1);
+
+  // Bars — final value (coloured, animated)
+  g.selectAll(".bar-final").data(finalVals).enter().append("rect")
+    .attr("x",(d,i)=>x0(agents[i])+x1("final"))
+    .attr("width",x1.bandwidth())
+    .attr("y",h).attr("height",0)
+    .attr("fill",(d,i)=>colors[i])
+    .on("mousemove",(event,d)=>{
+      showTip(`<strong>${agents[finalVals.indexOf(d)]}</strong>Final: $${d.toLocaleString()}`, event);
+    })
+    .on("mouseleave",hideTip)
+    .transition().duration(900).delay((d,i)=>i*160).ease(d3.easeCubicOut)
+    .attr("y",d=>yScale(d)).attr("height",d=>h-yScale(d));
+
+  // Value labels above final bars
+  finalVals.forEach((v,i)=>{
+    g.append("text")
+      .attr("x", x0(agents[i])+x1("final")+x1.bandwidth()/2)
+      .attr("y", yScale(v)-6)
+      .attr("text-anchor","middle")
+      .attr("fill",colors[i])
+      .style("font-family","'JetBrains Mono'").style("font-size","10px").style("font-weight","600")
+      .text("$"+(v/1000).toFixed(1)+"k")
+      .style("opacity",0)
+      .transition().delay(900+i*160).duration(400)
+      .style("opacity",1);
   });
 }
 
-/* ============ HOLDINGS CHART + TABLE ============ */
-let holdingsChart, currentAgent="trend_follower", currentSort={key:"ret",asc:false}, currentFilter="all", hMode="pct";
-function fmtMoney(n){return (n>=0?"+":"−")+"$"+Math.abs(n).toLocaleString(undefined,{maximumFractionDigits:0})}
-function fmtPct(n){return (n>=0?"+":"−")+Math.abs(n).toFixed(2)+"%"}
-
+/* =====================================================================
+   D3 HOLDINGS HORIZONTAL BAR CHART
+===================================================================== */
 function getRows(){
   let rows = HOLDINGS[currentAgent].map((r,i)=>({rank:i+1,ticker:r[0],alloc:r[1],buy:r[2],sell:r[3],ret:r[4],pnl:r[5]}));
   if(currentFilter==="gain") rows = rows.filter(r=>r.ret>=0);
@@ -798,6 +1752,97 @@ function getRows(){
   return rows;
 }
 
+function buildHoldingsChart(){
+  const wrap = document.getElementById("holdingsChartWrap");
+  wrap.innerHTML = "";
+  const rows = getRows();
+  const n = rows.length;
+  if(n===0) return;
+
+  const barH = 36, m = {top:8, right:60, bottom:30, left:52};
+  const W = wrap.clientWidth || 600;
+  const H = n*barH + m.top + m.bottom;
+  const w = W - m.left - m.right;
+  wrap.style.minHeight = H + "px";
+
+  const svg = d3.select(wrap).append("svg")
+    .attr("viewBox",`0 0 ${W} ${H}`).attr("width",W).attr("height",H);
+  const g = svg.append("g").attr("transform",`translate(${m.left},${m.top})`);
+
+  const agentColor = cssVar(AGENT_CSS[currentAgent]);
+  const negColor   = cssVar("--neg");
+
+  const values = rows.map(r=>hMode==="pct"?r.ret:r.pnl);
+  const absMax = d3.max(values.map(Math.abs));
+  const xScale = d3.scaleLinear().domain([-absMax*1.1, absMax*1.1]).range([0,w]);
+  const yScale = d3.scaleBand().domain(rows.map(r=>r.ticker)).range([0,n*barH]).padding(0.22);
+
+  // Zero line
+  g.append("line")
+    .attr("x1",xScale(0)).attr("x2",xScale(0))
+    .attr("y1",0).attr("y2",n*barH)
+    .attr("stroke",cssVar("--ink")).attr("stroke-width",1.5);
+
+  // Gridlines
+  g.append("g").attr("class","grid")
+    .call(d3.axisBottom(xScale).ticks(5).tickSize(n*barH).tickFormat(""))
+    .attr("transform","translate(0,0)")
+    .call(gg=>gg.select(".domain").remove())
+    .call(gg=>gg.selectAll("line").attr("stroke",cssVar("--rule")).attr("stroke-dasharray","3,3").attr("y1",0));
+
+  // X axis (bottom)
+  const xFmt = v => hMode==="pct" ? v+"%": "$"+(v/1000).toFixed(1)+"k";
+  g.append("g").attr("transform",`translate(0,${n*barH})`)
+    .call(d3.axisBottom(xScale).ticks(5).tickFormat(xFmt))
+    .call(ax=>ax.select(".domain").remove())
+    .call(ax=>ax.selectAll("text").attr("fill",cssVar("--mute"))
+      .style("font-family","'JetBrains Mono'").style("font-size","9.5px"))
+    .call(ax=>ax.selectAll(".tick line").remove());
+
+  // Y axis (ticker labels)
+  g.append("g")
+    .call(d3.axisLeft(yScale).tickSize(0))
+    .call(ax=>ax.select(".domain").remove())
+    .call(ax=>ax.selectAll("text").attr("fill",cssVar("--ink"))
+      .style("font-family","'JetBrains Mono'").style("font-size","12px").style("font-weight","700")
+      .attr("x",-8));
+
+  // Bars
+  g.selectAll(".bar").data(rows).enter().append("rect")
+    .attr("class","bar")
+    .attr("x", d=>{ const v=hMode==="pct"?d.ret:d.pnl; return v>=0 ? xScale(0) : xScale(v); })
+    .attr("y", d=>yScale(d.ticker))
+    .attr("height", yScale.bandwidth())
+    .attr("width", 0)
+    .attr("fill", d=>{ const v=hMode==="pct"?d.ret:d.pnl; return v>=0?agentColor:negColor; })
+    .attr("rx",1)
+    .on("mousemove",(event,d)=>{
+      showTip(`<strong>${d.ticker}</strong>${fmtPct(d.ret)} · ${fmtMoney(d.pnl)}`, event);
+    })
+    .on("mouseleave",hideTip)
+    .transition().duration(700).delay((d,i)=>i*45).ease(d3.easeCubicOut)
+    .attr("width", d=>{ const v=hMode==="pct"?d.ret:d.pnl; return Math.abs(xScale(v)-xScale(0)); });
+
+  // Value labels at bar end
+  rows.forEach((d,i)=>{
+    const v = hMode==="pct"?d.ret:d.pnl;
+    const label = hMode==="pct" ? fmtPct(v) : fmtMoney(v);
+    const xPos = v>=0 ? xScale(v)+4 : xScale(v)-4;
+    const anchor = v>=0 ? "start" : "end";
+    g.append("text")
+      .attr("x",xPos)
+      .attr("y",yScale(d.ticker)+yScale.bandwidth()/2+4)
+      .attr("text-anchor",anchor)
+      .attr("fill",v>=0?agentColor:negColor)
+      .style("font-family","'JetBrains Mono'").style("font-size","9.5px").style("font-weight","600")
+      .style("opacity",0).text(label)
+      .transition().delay(700+i*45).duration(200).style("opacity",1);
+  });
+}
+
+/* =====================================================================
+   TABLE
+===================================================================== */
 function renderTable(){
   const rows = getRows();
   const tbody = document.querySelector("#holdingsTable tbody");
@@ -815,53 +1860,104 @@ function renderTable(){
   }).join("");
   document.querySelectorAll("#holdingsTable th").forEach(th=>{
     th.classList.remove("sorted","asc");
-    if(th.dataset.sort===currentSort.key){
-      th.classList.add("sorted");
-      if(currentSort.asc) th.classList.add("asc");
-    }
+    if(th.dataset.sort===currentSort.key){ th.classList.add("sorted"); if(currentSort.asc) th.classList.add("asc"); }
   });
   tbody.querySelectorAll("tr.holding").forEach(row=>{
     row.addEventListener("click",()=>openModal(row.dataset.ticker));
   });
 }
 
-function renderHoldingsChart(){
-  const rows = getRows();
-  const ink = cssVar("--ink"), mute = cssVar("--mute"), rule = cssVar("--rule");
-  const labels = rows.map(r=>r.ticker);
-  const values = rows.map(r=>hMode==="pct"?r.ret:r.pnl);
-  const colors = values.map(v=>v>=0?cssVar("--"+(currentAgent==="trend_follower"?"gold":currentAgent==="contrarian"?"forest":"oxblood")):cssVar("--neg"));
-  if(holdingsChart) holdingsChart.destroy();
-  holdingsChart = new Chart(document.getElementById("holdingsChart"),{
-    type:"bar",
-    data:{labels,datasets:[{data:values,backgroundColor:colors,borderRadius:0,barPercentage:.72}]},
-    options:{indexAxis:"y",
-      plugins:{legend:{display:false},
-        tooltip:{backgroundColor:ink,titleColor:cssVar("--paper"),bodyColor:cssVar("--paper"),padding:10,
-          callbacks:{label:c=>" "+(hMode==="pct"?c.parsed.x.toFixed(2)+"%":"$"+c.parsed.x.toLocaleString(undefined,{maximumFractionDigits:0}))}}},
-      scales:{
-        x:{ticks:{color:mute,font:{family:"'JetBrains Mono'",size:10},
-          callback:v=>hMode==="pct"?v+"%":"$"+(v/1000).toFixed(1)+"k"},grid:{color:rule},border:{display:false}},
-        y:{grid:{display:false},border:{color:ink},ticks:{color:ink,font:{size:12,weight:"700"}}}
-      }
-    }
+/* =====================================================================
+   OVERLAP
+===================================================================== */
+function buildOverlap(){
+  const tickerSet = {};
+  Object.entries(HOLDINGS).forEach(([agent,rows])=>{
+    rows.forEach(r=>{ if(!tickerSet[r[0]]) tickerSet[r[0]]={}; tickerSet[r[0]][agent]=r[1]; });
   });
+  const overlapping = Object.entries(tickerSet).filter(([t,m])=>Object.keys(m).length>=2);
+  overlapping.sort((a,b)=>Object.keys(b[1]).length-Object.keys(a[1]).length);
+  const grid = document.getElementById("overlapGrid");
+  let html = '<div class="cell head">Ticker</div><div class="cell head">Trend Follower Agent</div><div class="cell head">Contrarian Agent</div><div class="cell head">Macro Sentiment</div>';
+  overlapping.forEach(([t,m])=>{
+    html += `<div class="cell"><span class="tk">${t}</span></div>`;
+    ["trend_follower","contrarian","macro_sentiment"].forEach(a=>{
+      const color = a==="trend_follower"?"var(--gold)":a==="contrarian"?"var(--forest)":"var(--oxblood)";
+      html += m[a]!==undefined
+        ? `<div class="cell"><span class="check" style="background:${color}"></span><span class="pct">${m[a].toFixed(1)}%</span></div>`
+        : `<div class="cell"><span class="empty">—</span></div>`;
+    });
+  });
+  grid.innerHTML = html;
 }
+buildOverlap();
 
+/* =====================================================================
+   MODAL
+===================================================================== */
+function openModal(ticker){
+  const h = HOLDINGS[currentAgent].find(r=>r[0]===ticker);
+  if(!h) return;
+  const [t,a,b,s,ret,pnl] = h;
+  const color = cssVar(AGENT_CSS[currentAgent]);
+  const companyName = COMPANY_NAMES[t] || "";
+  document.getElementById("modalTicker").innerHTML = t + (companyName ? `<span style="font-size:18px;font-weight:400;color:var(--mute);letter-spacing:0;margin-left:14px;font-family:'Lexend'">— ${companyName}</span>` : "");
+  document.getElementById("modalKicker").textContent = AGENT_NAMES[currentAgent].toUpperCase()+" · POSITION DETAIL";
+  document.getElementById("modalAgent").innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color}"></span> Held by ${AGENT_NAMES[currentAgent]} · ${a.toFixed(1)}% allocation`;
+  document.getElementById("modalAlloc").textContent = a.toFixed(1)+"%";
+  const retEl = document.getElementById("modalRet");
+  retEl.textContent = fmtPct(ret); retEl.style.color = ret>=0?"var(--pos)":"var(--neg)";
+  const pnlEl = document.getElementById("modalPnl");
+  pnlEl.textContent = fmtMoney(pnl); pnlEl.style.color = pnl>=0?"var(--pos)":"var(--neg)";
+  document.getElementById("modalRationale").textContent = (RATIONALES[currentAgent]||{})[t]||"No rationale recorded.";
+
+  // Show news link only for contrarian holdings
+  const newsWrap = document.getElementById("modalNewsWrap");
+  const link = MACRO_LINKS[t];
+  if(currentAgent === "macro_sentiment" && link){
+    document.getElementById("modalNewsLink").href = link.url;
+    document.getElementById("modalNewsLabel").textContent = link.label;
+    newsWrap.style.display = "block";
+  } else {
+    newsWrap.style.display = "none";
+  }
+
+  document.getElementById("modalBg").classList.add("show");
+}
+document.getElementById("modalClose").addEventListener("click",()=>document.getElementById("modalBg").classList.remove("show"));
+document.getElementById("modalBg").addEventListener("click",e=>{if(e.target.id==="modalBg") e.target.classList.remove("show")});
+
+/* ABOUT */
+document.getElementById("aboutBtn").addEventListener("click",()=>document.getElementById("aboutBg").classList.add("show"));
+document.getElementById("aboutClose").addEventListener("click",()=>document.getElementById("aboutBg").classList.remove("show"));
+document.getElementById("aboutBg").addEventListener("click",e=>{if(e.target.id==="aboutBg") e.target.classList.remove("show")});
+// Both old .about-tab and new .about-tab-dark drive the same panes
+function switchAboutPane(pane){
+  document.querySelectorAll(".about-tab,.about-tab-dark").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(`.about-tab[data-pane="${pane}"],.about-tab-dark[data-pane="${pane}"]`).forEach(x=>x.classList.add("active"));
+  document.querySelectorAll(".about-pane").forEach(x=>x.classList.toggle("show",x.dataset.pane===pane));
+}
+document.querySelectorAll(".about-tab,.about-tab-dark").forEach(t=>{
+  t.addEventListener("click",()=>switchAboutPane(t.dataset.pane));
+});
+
+/* =====================================================================
+   TAB / FILTER / SORT CONTROLS
+===================================================================== */
 document.querySelectorAll(".tab").forEach(t=>{
   t.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
     t.classList.add("active");
     currentAgent = t.dataset.agent;
-    renderTable();renderHoldingsChart();
+    renderTable(); buildHoldingsChart();
   });
 });
 document.querySelectorAll("#holdingsTable th").forEach(th=>{
   th.addEventListener("click",()=>{
     const k = th.dataset.sort;
-    if(currentSort.key===k) currentSort.asc=!currentSort.asc;
-    else {currentSort={key:k,asc:k==="rank"||k==="ticker"};}
-    renderTable();
+    if(currentSort.key===k) currentSort.asc = !currentSort.asc;
+    else currentSort = {key:k, asc:k==="rank"||k==="ticker"};
+    renderTable(); buildHoldingsChart();
   });
 });
 document.querySelectorAll(".tabs .ctrl").forEach(b=>{
@@ -869,7 +1965,7 @@ document.querySelectorAll(".tabs .ctrl").forEach(b=>{
     document.querySelectorAll(".tabs .ctrl").forEach(x=>x.classList.remove("active"));
     b.classList.add("active");
     currentFilter = b.dataset.filter;
-    renderTable();renderHoldingsChart();
+    renderTable(); buildHoldingsChart();
   });
 });
 document.querySelectorAll("#holdingsModeCtrl .ctrl").forEach(b=>{
@@ -877,102 +1973,458 @@ document.querySelectorAll("#holdingsModeCtrl .ctrl").forEach(b=>{
     document.querySelectorAll("#holdingsModeCtrl .ctrl").forEach(x=>x.classList.remove("active"));
     b.classList.add("active");
     hMode = b.dataset.hmode;
-    renderHoldingsChart();
+    buildHoldingsChart();
   });
 });
 
-/* ============ OVERLAP MATRIX ============ */
-function buildOverlap(){
-  const tickerSet = {};
-  Object.entries(HOLDINGS).forEach(([agent,rows])=>{
-    rows.forEach(r=>{
-      if(!tickerSet[r[0]]) tickerSet[r[0]]={};
-      tickerSet[r[0]][agent]=r[1];
-    });
-  });
-  const overlapping = Object.entries(tickerSet).filter(([t,m])=>Object.keys(m).length>=2);
-  overlapping.sort((a,b)=>Object.keys(b[1]).length-Object.keys(a[1]).length);
-  const grid = document.getElementById("overlapGrid");
-  let html = '<div class="cell head">Ticker</div><div class="cell head">Trend Follower</div><div class="cell head">Contrarian</div><div class="cell head">Macro Sentiment</div>';
-  overlapping.forEach(([t,m])=>{
-    html += `<div class="cell"><span class="tk">${t}</span></div>`;
-    ["trend_follower","contrarian","macro_sentiment"].forEach(a=>{
-      if(m[a]!==undefined){
-        const color = a==="trend_follower"?"var(--gold)":a==="contrarian"?"var(--forest)":"var(--oxblood)";
-        html += `<div class="cell"><span class="check" style="background:${color}"></span><span class="pct">${m[a].toFixed(1)}%</span></div>`;
-      } else {
-        html += `<div class="cell"><span class="empty">—</span></div>`;
-      }
-    });
-  });
-  grid.innerHTML = html;
-}
-buildOverlap();
-
-/* ============ MODAL ============ */
-function findHolding(ticker){
-  for(const a of Object.keys(HOLDINGS)){
-    const h = HOLDINGS[a].find(r=>r[0]===ticker);
-    if(h && a===currentAgent) return {agent:a,h};
-  }
-  return null;
-}
-function openModal(ticker){
-  const found = findHolding(ticker);
-  if(!found) return;
-  const {agent,h} = found;
-  const [t,a,b,s,ret,pnl] = h;
-  document.getElementById("modalTicker").textContent = t;
-  document.getElementById("modalKicker").textContent = AGENT_NAMES[agent].toUpperCase()+" · POSITION DETAIL";
-  const color = agent==="trend_follower"?"var(--gold)":agent==="contrarian"?"var(--forest)":"var(--oxblood)";
-  document.getElementById("modalAgent").innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color}"></span> Held by ${AGENT_NAMES[agent]} · ${a.toFixed(1)}% allocation`;
-  document.getElementById("modalAlloc").textContent = a.toFixed(1)+"%";
-  const retEl = document.getElementById("modalRet");
-  retEl.textContent = fmtPct(ret);
-  retEl.style.color = ret>=0?"var(--pos)":"var(--neg)";
-  const pnlEl = document.getElementById("modalPnl");
-  pnlEl.textContent = fmtMoney(pnl);
-  pnlEl.style.color = pnl>=0?"var(--pos)":"var(--neg)";
-  document.getElementById("modalRationale").textContent = (RATIONALES[agent]||{})[t] || "No rationale recorded.";
-  document.getElementById("modalBg").classList.add("show");
-}
-document.getElementById("modalClose").addEventListener("click",()=>document.getElementById("modalBg").classList.remove("show"));
-document.getElementById("modalBg").addEventListener("click",e=>{if(e.target.id==="modalBg") e.target.classList.remove("show")});
-
-/* ABOUT MODAL */
-document.getElementById("aboutBtn").addEventListener("click",()=>document.getElementById("aboutBg").classList.add("show"));
-document.getElementById("aboutClose").addEventListener("click",()=>document.getElementById("aboutBg").classList.remove("show"));
-document.getElementById("aboutBg").addEventListener("click",e=>{if(e.target.id==="aboutBg") e.target.classList.remove("show")});
-document.querySelectorAll(".about-tab").forEach(t=>{
-  t.addEventListener("click",()=>{
-    document.querySelectorAll(".about-tab").forEach(x=>x.classList.remove("active"));
-    t.classList.add("active");
-    const p = t.dataset.pane;
-    document.querySelectorAll(".about-pane").forEach(x=>x.classList.toggle("show",x.dataset.pane===p));
-  });
-});
+/* =====================================================================
+   KEYBOARD
+===================================================================== */
 document.addEventListener("keydown",e=>{
-  if(e.key==="Escape"){document.getElementById("modalBg").classList.remove("show");document.getElementById("aboutBg").classList.remove("show");}
+  if(e.key==="Escape"){ document.getElementById("modalBg").classList.remove("show"); document.getElementById("aboutBg").classList.remove("show"); }
   if(document.activeElement.tagName==="INPUT") return;
   if(e.key==="1"||e.key==="2"||e.key==="3"){
     const map=["trend_follower","contrarian","macro_sentiment"];
-    const target = map[parseInt(e.key)-1];
-    document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.agent===target));
-    currentAgent = target; renderTable(); renderHoldingsChart();
+    currentAgent = map[parseInt(e.key)-1];
+    document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.agent===currentAgent));
+    renderTable(); buildHoldingsChart();
   }
   if(e.key==="d"||e.key==="D") setTheme(!document.body.classList.contains("dark"));
 });
 
-/* ============ INIT + REBUILD ============ */
+/* =====================================================================
+   INIT + RESIZE
+===================================================================== */
 function rebuildAllCharts(){
-  buildRaceChart(); buildReturnsChart(); renderHoldingsChart();
-  Chart.defaults.color = cssVar("--mute");
+  // Reset leaderboard so colors refresh after theme change
+  const lbContainer = document.getElementById("lbRaceBars");
+  if(lbContainer) lbContainer._built = false;
+  buildRaceChart();
+  buildReturnsChart();
+  buildHoldingsChart();
+  buildLeaderboard();
+  buildAttribution();
+  buildHeatmap();
 }
-Chart.defaults.color = cssVar("--mute");
+
+// Debounced resize
+let resizeTimer;
+window.addEventListener("resize",()=>{ clearTimeout(resizeTimer); resizeTimer=setTimeout(rebuildAllCharts,200); });
+
+// Cascade animation on load
+function cascadeLoad(){
+  const sections = document.querySelectorAll("main section");
+  sections.forEach(s=>s.style.opacity="0");
+  sections.forEach((s,i)=>{
+    setTimeout(()=>{
+      s.style.transition="opacity 600ms ease";
+      s.style.opacity="1";
+    }, i*120);
+  });
+}
+
+// Initial render
 buildRaceChart();
 buildReturnsChart();
 renderTable();
-renderHoldingsChart();
+buildHoldingsChart();
+buildLeaderboard();
+buildAttribution();
+buildHeatmap();
+buildChord();
+buildTreemap();
+
+setTimeout(cascadeLoad, 300);
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     ANIMATION SYSTEM — added for YC demo
+     ═══════════════════════════════════════════════════ -->
+<style>
+/* ── Keyframes ── */
+@keyframes slideUpFade   { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:none} }
+@keyframes slideDownFade { from{opacity:0;transform:translateY(-18px)} to{opacity:1;transform:none} }
+@keyframes heroShimmer   { 0%{left:-60%} 100%{left:130%} }
+@keyframes robotFloat    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+@keyframes scanline      { 0%{top:0%;opacity:.7} 90%{top:92%;opacity:.7} 100%{top:0%;opacity:0} }
+@keyframes armLeft       { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(10deg)} }
+@keyframes armRight      { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-10deg)} }
+@keyframes kickerPulse   { 0%,100%{transform:translateY(-50%) scale(1);opacity:1} 50%{transform:translateY(-50%) scale(1.5);opacity:.6} }
+@keyframes statPulseIn   { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
+@keyframes numGlow       { 0%{text-shadow:0 0 22px var(--gold),0 0 6px var(--gold)} 100%{text-shadow:none} }
+@keyframes playPulse     { 0%,100%{box-shadow:0 0 0 0 rgba(22,16,10,.35)} 50%{box-shadow:0 0 0 10px rgba(22,16,10,0)} }
+@keyframes cellFadeIn    { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:none} }
+@keyframes borderDraw    { from{transform:scaleX(0)} to{transform:scaleX(1)} }
+@keyframes cursorPop     { 0%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.6)} 100%{transform:translate(-50%,-50%) scale(1)} }
+
+/* ── Ticker + masthead entrance ── */
+.ticker-tape { animation: slideDownFade .5s cubic-bezier(.16,1,.3,1) both }
+.masthead    { animation: slideDownFade .7s cubic-bezier(.16,1,.3,1) .1s both }
+footer       { animation: slideUpFade  .8s cubic-bezier(.16,1,.3,1) .4s both }
+
+/* ── Title word wrap ── */
+.title-word { display:inline }
+.title-word > * { display:inline; opacity:0; transform:translateY(14px); animation:wordFadeUp .6s cubic-bezier(.16,1,.3,1) both }
+@keyframes wordFadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+
+/* ── Stat blocks entrance ── */
+.stat-figure { animation: statPulseIn 1s cubic-bezier(.16,1,.3,1) .6s both }
+.counter.done { animation: numGlow .9s ease-out }
+
+/* ── Agent accent bar animated width ── */
+.agent-accent {
+  width: 0 !important;
+  transition: width .9s cubic-bezier(.16,1,.3,1) !important;
+}
+.agent-accent.grown { width: 32px !important }
+
+/* ── Card hover lift ── */
+.card {
+  transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s ease !important;
+  will-change: transform;
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(0,0,0,.13) !important }
+body.dark .card:hover { box-shadow: 0 10px 36px rgba(0,0,0,.45) !important }
+
+/* ── Modal scale-in (override display:none with opacity control) ── */
+.modal-bg {
+  display: flex !important;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .22s ease;
+}
+.modal-bg.show { pointer-events: all; opacity: 1 }
+.modal-bg .modal, .modal-bg .modal.modal-wide {
+  transform: translateY(18px) scale(.97);
+  opacity: 0;
+  transition: transform .35s cubic-bezier(.16,1,.3,1), opacity .3s ease;
+}
+.modal-bg.show .modal { transform: none; opacity: 1 }
+
+/* ── Hero shimmer sweep ── */
+.hero-banner { position:relative; overflow:hidden }
+.hero-banner::after {
+  content:""; position:absolute; top:0; left:-60%; width:55%; height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);
+  animation: heroShimmer 5s ease-in-out infinite;
+  pointer-events:none;
+}
+
+/* ── Hero blocks initial state ── */
+.hero-block  { opacity:0; transform:translateY(14px) }
+.hero-block.entered {
+  opacity:1; transform:none;
+  transition: opacity .6s ease, transform .6s cubic-bezier(.16,1,.3,1);
+}
+.hero-div { opacity:0; transition: opacity .5s ease }
+
+/* ── Robot float + arm swing + scanline ── */
+.robot { animation: robotFloat 3.8s ease-in-out infinite }
+.r-arm:first-child { transform-origin:top center; animation: armLeft  3.8s ease-in-out infinite }
+.r-arm:last-child  { transform-origin:top center; animation: armRight 3.8s ease-in-out infinite }
+.r-head { position:relative; overflow:hidden }
+.r-head::after {
+  content:""; position:absolute; width:100%; height:2px; left:0;
+  background:rgba(154,107,28,.18);
+  animation: scanline 2.4s linear infinite;
+  pointer-events:none;
+}
+
+/* ── Kicker dot pulse ── */
+.kicker::before { animation: kickerPulse 2.8s ease-in-out infinite }
+
+/* ── Tab sliding indicator ── */
+.tab-indicator {
+  position:absolute; bottom:-1px; height:2px;
+  background:var(--oxblood); pointer-events:none;
+  transition: left .32s cubic-bezier(.16,1,.3,1), width .32s cubic-bezier(.16,1,.3,1);
+}
+.tabs { position:relative }
+
+/* ── Table row stagger ── */
+tbody tr.holding {
+  opacity:0; transform:translateX(-10px);
+  transition: opacity .35s ease, transform .35s cubic-bezier(.16,1,.3,1);
+}
+tbody tr.holding.row-in { opacity:1; transform:none }
+
+/* ── Overlap grid cell stagger ── */
+.overlap-grid .cell { opacity:0; animation: cellFadeIn .4s ease forwards }
+
+/* ── Section head border draw ── */
+.section-head { position:relative }
+.section-head-line {
+  position:absolute; bottom:-1px; left:0; width:100%; height:1px;
+  background:var(--ink); transform:scaleX(0); transform-origin:left;
+  transition: transform .9s cubic-bezier(.16,1,.3,1) .2s;
+}
+.section-head-line.drawn { transform:scaleX(1) }
+
+/* ── Play button pulse when playing ── */
+#lbPlayBtn.is-playing { animation: playPulse 1.6s ease-in-out infinite }
+
+/* ── Button active ripple ── */
+.ctrl, .theme-toggle {
+  position:relative; overflow:hidden;
+}
+.ctrl::after, .theme-toggle::after {
+  content:""; position:absolute; inset:0; background:currentColor;
+  opacity:0; transition:opacity .15s;
+}
+.ctrl:active::after, .theme-toggle:active::after { opacity:.12 }
+
+/* ── Custom cursor dot ── */
+#cursor-dot {
+  position:fixed; pointer-events:none; z-index:9999;
+  width:6px; height:6px; border-radius:50%;
+  background:var(--oxblood); opacity:0;
+  transform:translate(-50%,-50%);
+  transition:opacity .4s ease, left .04s linear, top .04s linear;
+}
+
+/* ── Ctrl hover micro-transition ── */
+.ctrl { transition: all .15s, background .15s !important }
+</style>
+
+<div id="cursor-dot"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   ANIMATION SYSTEM
+   ═══════════════════════════════════════════════════ */
+
+// ── 1. Title word-by-word reveal ──────────────────────────────
+(function(){
+  const title = document.querySelector('.title');
+  if(!title) return;
+  const raw = title.innerHTML;
+  const tmp = document.createElement('div');
+  tmp.innerHTML = raw;
+  let out = '';
+  tmp.childNodes.forEach(node => {
+    if(node.nodeType === 3) {
+      node.textContent.split(/(\s+)/).forEach(tok => {
+        if(tok.trim()) out += `<span class="title-word"><span>${tok}</span></span>`;
+        else out += tok;
+      });
+    } else if(node.nodeName === 'EM') {
+      node.textContent.split(/(\s+)/).forEach(tok => {
+        if(tok.trim()) out += `<span class="title-word"><em style="font-style:italic;font-weight:400;color:var(--oxblood)">${tok}</em></span>`;
+        else out += tok;
+      });
+    }
+  });
+  title.innerHTML = out;
+  title.querySelectorAll('.title-word > *').forEach((el, i) => {
+    el.style.animationDelay = (0.35 + i * 0.09) + 's';
+  });
+})();
+
+// ── 2. Hero banner stagger entrance ──────────────────────────
+(function(){
+  document.querySelectorAll('.hero-block').forEach((b, i) => {
+    setTimeout(() => b.classList.add('entered'), 820 + i * 110);
+  });
+  document.querySelectorAll('.hero-div').forEach((d, i) => {
+    setTimeout(() => { d.style.opacity = '1'; }, 900 + i * 110);
+  });
+})();
+
+// ── 3. Section slide-up (transform only; cascadeLoad handles opacity) ──
+(function(){
+  const sections = document.querySelectorAll('main section');
+  // Set translateY before cascadeLoad kicks in
+  sections.forEach(s => {
+    s.style.transform = 'translateY(30px)';
+    s.style.willChange = 'transform, opacity';
+  });
+
+  // Add border-draw element to each section head
+  sections.forEach(s => {
+    const head = s.querySelector('.section-head');
+    if(head && !head.querySelector('.section-head-line')) {
+      head.style.borderBottom = 'none';
+      const line = document.createElement('div');
+      line.className = 'section-head-line';
+      head.appendChild(line);
+    }
+  });
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        const s = entry.target;
+        if(!s._tfRevealed) {
+          s._tfRevealed = true;
+          s.style.transition = 'transform .75s cubic-bezier(.16,1,.3,1), opacity .75s cubic-bezier(.16,1,.3,1)';
+          s.style.transform = 'none';
+          // Trigger border draw
+          const line = s.querySelector('.section-head-line');
+          if(line) setTimeout(() => line.classList.add('drawn'), 120);
+        }
+        io.unobserve(s);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  setTimeout(() => sections.forEach(s => io.observe(s)), 0);
+})();
+
+// ── 4. Agent accent bars grow ────────────────────────────────
+setTimeout(() => {
+  document.querySelectorAll('.agent-accent').forEach((bar, i) => {
+    setTimeout(() => bar.classList.add('grown'), 550 + i * 180);
+  });
+}, 100);
+
+// ── 5. Counter glow on completion ────────────────────────────
+setTimeout(() => {
+  document.querySelectorAll('.counter').forEach(el => {
+    setTimeout(() => {
+      el.classList.add('done');
+      setTimeout(() => el.classList.remove('done'), 900);
+    }, 1900);
+  });
+}, 0);
+
+// ── 6. Masthead elements slide up ────────────────────────────
+(function(){
+  ['.standfirst', '.byline-row', '.hero-banner'].forEach((sel, i) => {
+    const el = document.querySelector(sel);
+    if(!el) return;
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(14px)';
+    setTimeout(() => {
+      el.style.transition = 'opacity .6s ease, transform .6s cubic-bezier(.16,1,.3,1)';
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    }, 750 + i * 140);
+  });
+})();
+
+// ── 7. Table row stagger via MutationObserver ─────────────────
+(function(){
+  const tbody = document.querySelector('#holdingsTable tbody');
+  if(!tbody) return;
+  const staggerRows = () => {
+    tbody.querySelectorAll('tr.holding').forEach((row, i) => {
+      row.classList.remove('row-in');
+      row.style.transitionDelay = (i * 38) + 'ms';
+      requestAnimationFrame(() => requestAnimationFrame(() => row.classList.add('row-in')));
+    });
+  };
+  new MutationObserver(staggerRows).observe(tbody, { childList: true });
+  staggerRows();
+})();
+
+// ── 8. Sliding tab indicator ──────────────────────────────────
+(function(){
+  document.querySelectorAll('.tabs').forEach(group => {
+    const ind = document.createElement('div');
+    ind.className = 'tab-indicator';
+    group.appendChild(ind);
+    const update = () => {
+      const active = group.querySelector('.tab.active');
+      if(!active) return;
+      const gr = group.getBoundingClientRect();
+      const ar = active.getBoundingClientRect();
+      ind.style.left  = (ar.left - gr.left) + 'px';
+      ind.style.width = ar.width + 'px';
+    };
+    // hide the border-bottom on active tab since indicator handles it
+    update();
+    group.querySelectorAll('.tab').forEach(t => {
+      t.addEventListener('click', () => setTimeout(update, 10));
+    });
+    window.addEventListener('resize', update);
+  });
+})();
+
+// ── 9. Overlap grid cell stagger ─────────────────────────────
+(function(){
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting) {
+        e.target.querySelectorAll('.cell').forEach((c, i) => {
+          c.style.animationDelay = (i * 22) + 'ms';
+        });
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  const grid = document.getElementById('overlapGrid');
+  if(grid) io.observe(grid);
+})();
+
+// ── 10. Play button pulse class ───────────────────────────────
+(function(){
+  const btn = document.getElementById('lbPlayBtn');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    // lbPlayTimer is set in original code; check one frame later
+    setTimeout(() => {
+      this.classList.toggle('is-playing', !!window.lbPlayTimer);
+    }, 20);
+  });
+})();
+
+// ── 11. Modal open animation (patch classList.add) ────────────
+(function(){
+  ['modalBg','aboutBg'].forEach(id => {
+    const bg = document.getElementById(id);
+    if(!bg) return;
+    // CSS already handles the show/hide via opacity; just ensure display flex is always on
+    // The .modal-bg CSS override (display:flex !important) handles it
+  });
+})();
+
+// ── 12. Subtle parallax on masthead title ────────────────────
+(function(){
+  const title = document.querySelector('.title');
+  if(!title) return;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if(y < 300) title.style.transform = `translateY(${y * 0.08}px)`;
+  }, { passive: true });
+})();
+
+// ── 13. Cursor glow dot ───────────────────────────────────────
+(function(){
+  const dot = document.getElementById('cursor-dot');
+  if(!dot) return;
+  let hide;
+  document.addEventListener('mousemove', e => {
+    dot.style.left = e.clientX + 'px';
+    dot.style.top  = e.clientY + 'px';
+    dot.style.opacity = '.55';
+    clearTimeout(hide);
+    hide = setTimeout(() => { dot.style.opacity = '0'; }, 1200);
+  });
+  document.addEventListener('mousedown', () => {
+    dot.style.transition = 'opacity .1s, width .15s, height .15s, left .04s, top .04s, transform .15s';
+    dot.style.width = '12px'; dot.style.height = '12px'; dot.style.opacity = '.9';
+  });
+  document.addEventListener('mouseup', () => {
+    dot.style.width = '6px'; dot.style.height = '6px'; dot.style.opacity = '.55';
+    dot.style.transition = 'opacity .4s ease, width .2s, height .2s, left .04s, top .04s';
+  });
+})();
+
+// ── 14. Heatmap cells stagger on scroll ──────────────────────
+(function(){
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting) {
+        e.target.querySelectorAll('rect').forEach((r, i) => {
+          r.style.animationDelay = (i * 18) + 'ms';
+        });
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  const hw = document.getElementById('heatmapWrap');
+  if(hw) io.observe(hw);
+})();
 </script>
 </body>
 </html>
