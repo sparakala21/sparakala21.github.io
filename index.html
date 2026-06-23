@@ -3,7 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio</title>
+  <title>Sravan Parakala — Data Science &amp; Analytics</title>
+  <meta name="description" content="Portfolio of Sravan Parakala — Master's in IT with a focus on Data Science &amp; Analytics at RPI. Projects in bioinformatics, network analysis, MLOps, and open source." />
+  <link rel="canonical" href="https://sparakala21.github.io/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Sravan Parakala — Data Science &amp; Analytics" />
+  <meta property="og:description" content="Portfolio of Sravan Parakala — Master's in IT with a focus on Data Science &amp; Analytics at RPI. Projects in bioinformatics, network analysis, MLOps, and open source." />
+  <meta property="og:url" content="https://sparakala21.github.io/" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Sravan Parakala — Data Science &amp; Analytics" />
+  <meta name="twitter:description" content="Portfolio of Sravan Parakala — Master's in IT with a focus on Data Science &amp; Analytics at RPI. Projects in bioinformatics, network analysis, MLOps, and open source." />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -13,135 +22,134 @@
   <header>
     <p class="eyebrow">Portfolio</p>
     <h1>Sravan<br /><em>Parakala</em></h1>
-    <p class="tagline">Master's of IT with a focus Data Science & Analytics @ RPI</p>
+    <p class="tagline">Master's in IT with a focus on Data Science &amp; Analytics @ RPI</p>
   </header>
 
-  <section>
-    <p class="section-label">Graduate Work</p>
+  <main>
+    <section aria-labelledby="graduate-heading">
+      <h2 id="graduate-heading" class="section-label">Graduate Work</h2>
 
-    <div class="entry">
-      <p class="entry-title">Teaching Assistant</p>
-      <p class="entry-meta">Rensselaer Polytechnic Institute</p>
-      <p class="entry-body">Taught Python fundamentals, logical reasoning, web development, and Git best practices.</p>
-      <div class="tags">
-        <span class="tag">Python</span><span class="tag">Web Dev</span><span class="tag">Git</span><span class="tag">Agile</span>
-      </div>
-    </div>
+      <article class="entry">
+        <h3 class="entry-title">Teaching Assistant</h3>
+        <p class="entry-meta">Rensselaer Polytechnic Institute</p>
+        <p class="entry-body">Taught Python fundamentals, logical reasoning, web development, and Git best practices.</p>
+        <ul class="tags" aria-label="Skills">
+          <li class="tag">Python</li>
+          <li class="tag">Web Dev</li>
+          <li class="tag">Git</li>
+          <li class="tag">Agile</li>
+        </ul>
+      </article>
 
-    <div class="entry">
-      <p class="entry-title">President, GDG on Campus @ RPI</p>
-      <p class="entry-meta">Google Developer Groups · Member -> E-Board -> President</p>
-      <p class="entry-body">Won the Open Data Hackathon 2025. Organized speaker events and MLOps workshops.</p>
-      <div class="tags">
-        <span class="tag">MLOps</span><span class="tag">Leadership</span><span class="tag">Community</span>
-      </div>
-    </div>
+      <article class="entry">
+        <h3 class="entry-title">President, GDG on Campus @ RPI</h3>
+        <p class="entry-meta">Google Developer Groups · Member → E-Board → President</p>
+        <p class="entry-body">Won the Open Data Hackathon 2025. Organized speaker events and MLOps workshops.</p>
+        <ul class="tags" aria-label="Skills">
+          <li class="tag">MLOps</li>
+          <li class="tag">Leadership</li>
+          <li class="tag">Community</li>
+        </ul>
+      </article>
 
-    <div class="entry">
-      <p class="entry-title">Foundations of Human Computer Interaction</p>
-      <p class="entry-meta">Design · Cognitive Science · Information Architecture</p>
-      <p class="entry-body">Learned how to analyze the way information is presented.</p>
-      <button class="more-link" onclick="toggle(this, 'hci-more')">
-        <span class="arrow">></span> Read more
-      </button>
-      <div class="expandable" id="hci-more">
-        <div class="expandable-inner">
-          <p>I started this class thinking it was entirely pointless to me.</p>
-          <p>Then we watched a documentary about Helvetica and I ended up in a passionate debate with the professor. Long story short: if you try to imagine a world without design, you will quickly come to a logical contradiction.</p>
-          <p>Reading Don Norman's "Design for a Better World" reframed how I imagine my technical impact.</p>
+      <article class="entry">
+        <h3 class="entry-title">Foundations of Human Computer Interaction</h3>
+        <p class="entry-meta">Design · Cognitive Science · Information Architecture</p>
+        <p class="entry-body">Learned how to analyze the way information is presented.</p>
+        <button type="button" class="more-link" id="hci-more-btn" data-expand aria-expanded="false" aria-controls="hci-more">
+          <span class="arrow" aria-hidden="true">&gt;</span> Read more
+        </button>
+        <div class="expandable" id="hci-more" role="region" aria-labelledby="hci-more-btn" aria-hidden="true">
+          <div class="expandable-panel">
+            <div class="expandable-inner">
+              <p>I started this class thinking it was entirely pointless to me.</p>
+              <p>Then we watched a documentary about Helvetica and I ended up in a passionate debate with the professor. Long story short: if you try to imagine a world without design, you will quickly come to a logical contradiction.</p>
+              <p>Reading Don Norman's "Design for a Better World" reframed how I imagine my technical impact.</p>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </article>
 
-    <div class="entry">
-      <p class="entry-title">Bioinformatics & Sequence Analysis</p>
-      <p class="entry-meta">Computational Biology · Deep Learning · Sequence Data</p>
-      <p class="entry-body">Coursework that fundamentally changed how I think about computation and biological data.</p>
-      <button class="more-link" onclick="toggle(this, 'bio-more')">
-        <span class="arrow">></span> Read more
-      </button>
-      <div class="expandable" id="bio-more">
-        <div class="expandable-inner">
-          <p>This work gave purpose to every matrix decomposition and graph theory proof I'd ever done. It felt as though I had spent years learning how to do things to numbers and finally learned what the numbers actually mean.</p>
-          <p>The idea that biological sequences are just another kind of structured data subject to probabilistic tools reframed my entire approach to data science.</p>
-          <a class="more-link viz-btn" href="coexpression.html">
-            <span class="arrow">></span> Current Progress
-          </a>
-          <a class="more-link viz-btn" href="GTEx/network.html">
-            <span class="arrow">></span> Launch Interactive Visualization
-          </a>
+      <article class="entry">
+        <h3 class="entry-title">Bioinformatics &amp; Sequence Analysis</h3>
+        <p class="entry-meta">Computational Biology · Deep Learning · Sequence Data</p>
+        <p class="entry-body">Coursework that fundamentally changed how I think about computation and biological data.</p>
+        <button type="button" class="more-link" id="bio-more-btn" data-expand aria-expanded="false" aria-controls="bio-more">
+          <span class="arrow" aria-hidden="true">&gt;</span> Read more
+        </button>
+        <div class="expandable" id="bio-more" role="region" aria-labelledby="bio-more-btn" aria-hidden="true">
+          <div class="expandable-panel">
+            <div class="expandable-inner">
+              <p>This work gave purpose to every matrix decomposition and graph theory proof I'd ever done. It felt as though I had spent years learning how to do things to numbers and finally learned what the numbers actually mean.</p>
+              <p>The idea that biological sequences are just another kind of structured data subject to probabilistic tools reframed my entire approach to data science.</p>
+              <a class="more-link viz-btn" href="coexpression.html">
+                <span class="arrow" aria-hidden="true">&gt;</span> Current Progress
+              </a>
+              <a class="more-link viz-btn" href="GTEx/network.html">
+                <span class="arrow" aria-hidden="true">&gt;</span> Launch Interactive Visualization
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </article>
+    </section>
 
-  <section>
-    <p class="section-label">Undergraduate Work</p>
+    <section aria-labelledby="undergrad-heading">
+      <h2 id="undergrad-heading" class="section-label">Undergraduate Work</h2>
 
-    <div class="entry">
-      <p class="entry-title">Spotify Artist Network Dataset</p>
-      <p class="entry-meta">Data Analytics · python+networkx · NLP</p>
-      <p class="entry-body">Built a social network connecting artists based on Spotify recommendation co-occurrence.</p>
-      
-      <button class="more-link" onclick="toggle(this, 'spotify-more')">
-        <span class="arrow">></span> Read more
-      </button>
-      <div class="expandable" id="spotify-more">
-        <div class="expandable-inner">
-          <p>The project started by crawling recommendation paths. I scraped data from artist profile pages to build a behavioral co-occurrence graph.</p>
-          <p>The dataset revealed dense communities and unexpected bridges between genres. I used <strong>node2vec</strong> for embeddings and projected them using <strong>T-SNE</strong> and <strong>UMAP</strong> into 3D space.</p>
-          <a class="more-link viz-btn" href="visualizer.html">
-            <span class="arrow">></span> Launch Interactive Visualization
-          </a>
-          <a class="more-link viz-btn" href="artist2vec.html">
-            <span class="arrow">></span> Motivation and Methodology
-          </a>
+      <article class="entry">
+        <h3 class="entry-title">Spotify Artist Network Dataset</h3>
+        <p class="entry-meta">Data Analytics · Python · NetworkX · NLP</p>
+        <p class="entry-body">Built a social network connecting artists based on Spotify recommendation co-occurrence.</p>
+        <button type="button" class="more-link" id="spotify-more-btn" data-expand aria-expanded="false" aria-controls="spotify-more">
+          <span class="arrow" aria-hidden="true">&gt;</span> Read more
+        </button>
+        <div class="expandable" id="spotify-more" role="region" aria-labelledby="spotify-more-btn" aria-hidden="true">
+          <div class="expandable-panel">
+            <div class="expandable-inner">
+              <p>The project started by crawling recommendation paths. I scraped data from artist profile pages to build a behavioral co-occurrence graph.</p>
+              <p>The dataset revealed dense communities and unexpected bridges between genres. I used <strong>node2vec</strong> for embeddings and projected them using <strong>T-SNE</strong> and <strong>UMAP</strong> into 3D space.</p>
+              <a class="more-link viz-btn" href="visualizer.html">
+                <span class="arrow" aria-hidden="true">&gt;</span> Launch Interactive Visualization
+              </a>
+              <a class="more-link viz-btn" href="artist2vec.html">
+                <span class="arrow" aria-hidden="true">&gt;</span> Motivation and Methodology
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </article>
 
-    <div class="entry">
-      <p class="entry-title">Open Source Contributions</p>
-      <p class="entry-meta">Java · JavaScript · RCOS</p>
-      <p class="entry-body">UI accessibility for logic engines and building testing infrastructure for energy dashboards.</p>
-      <button class="more-link" onclick="toggle(this, 'os-more')">
-        <span class="arrow">></span> Read more
-      </button>
-      <div class="expandable" id="os-more">
-        <div class="expandable-inner">
-          <p><strong>LEGUP:</strong> Most of my contributions focused on making the UI accessible for colorblind users - a feature I ended up needing myself 2 years later.</p>
-          <p><strong>OED:</strong> Built testing infrastructure for an Open Energy Dashboard designed to interface with smart meters via MQTT protocols.</p>
-          <p><strong>TMC</strong> Lead a team of 9 to build a full-stack cross platform application to display a menu, manage orders, and fulfill deliveries for Thunder Mountain Curry.</p>
+      <article class="entry">
+        <h3 class="entry-title">Open Source Contributions</h3>
+        <p class="entry-meta">Java · JavaScript · RCOS</p>
+        <p class="entry-body">UI accessibility for logic engines and building testing infrastructure for energy dashboards.</p>
+        <button type="button" class="more-link" id="os-more-btn" data-expand aria-expanded="false" aria-controls="os-more">
+          <span class="arrow" aria-hidden="true">&gt;</span> Read more
+        </button>
+        <div class="expandable" id="os-more" role="region" aria-labelledby="os-more-btn" aria-hidden="true">
+          <div class="expandable-panel">
+            <div class="expandable-inner">
+              <p><strong>LEGUP:</strong> Most of my contributions focused on making the UI accessible for colorblind users — a feature I ended up needing myself 2 years later.</p>
+              <p><strong>OED:</strong> Built testing infrastructure for an Open Energy Dashboard designed to interface with smart meters via MQTT protocols.</p>
+              <p><strong>TMC:</strong> Led a team of 9 to build a full-stack cross-platform application to display a menu, manage orders, and fulfill deliveries for Thunder Mountain Curry.</p>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </article>
+    </section>
+  </main>
 
   <footer>
     <p>2026 Sravan Parakala</p>
     <div class="footer-links">
-        <a href="https://github.com/sparakala21">GitHub</a>
-        <a href="https://linkedin.com/in/sravan-parakala">LinkedIn</a>
+      <a href="https://github.com/sparakala21" rel="me noopener noreferrer">GitHub</a>
+      <a href="https://linkedin.com/in/sravan-parakala" rel="me noopener noreferrer">LinkedIn</a>
     </div>
   </footer>
 
 </div>
 
-<script>
-  function toggle(btn, id) {
-    const el = document.getElementById(id);
-    const isOpen = el.classList.contains('open');
-    
-    // Close any other open sections (Optional - keeps it clean)
-    // document.querySelectorAll('.expandable').forEach(s => s.classList.remove('open'));
-    // document.querySelectorAll('.more-link').forEach(b => b.classList.remove('open'));
-
-    el.classList.toggle('open', !isOpen);
-    btn.classList.toggle('open', !isOpen);
-    
-    // Accessibility
-    btn.setAttribute('aria-expanded', !isOpen);
-  }
-</script>
+<script src="main.js" defer></script>
 </body>
 </html>
