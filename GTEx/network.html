@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GTEx Network</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spinner"></div>
+  fetching graph
+</div>
+
+<div id="error-bar"></div>
+
+<header>
+  <h1>GTEx Network</h1>
+  <div id="status">
+    nodes: <span id="stat-nodes">—</span> &nbsp;
+    edges: <span id="stat-edges">—</span>
+  </div>
+</header>
+
+<main>
+  <div id="cy">
+    <div id="toast"></div>
+  </div>
+
+  <aside>
+    <!-- Search -->
+    <div class="panel-section">
+      <div class="panel-label">Search</div>
+      <div id="search-row">
+        <input id="search-input" type="text" placeholder="gene id or label…"
+               autocomplete="off" spellcheck="false"/>
+        <button id="search-btn"   title="Search">▶</button>
+        <button id="search-clear" title="Clear">✕</button>
+      </div>
+      
+      <div id="search-status"></div>
+      <div class="search-container">
+        <div class="search-box">
+          <input type="text" id="search-input" placeholder="Search disease...">
+          <button id="search-clear">×</button>
+          <button id="search-btn">Search</button>
+        </div>
+        <div id="search-status" class="small-hint"></div>
+        <div id="search-results-dropdown" class="dropdown"></div>
+      </div>
+    </div>
+
+    <!-- Selected node detail -->
+    <div class="panel-section">
+      <div class="panel-label">Selected</div>
+      <div id="detail-content">
+        <span class="muted">click a node</span>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="panel-section">
+      <button id="fit-btn">fit to screen</button>
+    </div>
+  </aside>
+</main>
+
+<script src="main.js"></script>
+</body>
+</html>

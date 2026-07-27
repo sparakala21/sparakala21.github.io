@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gene2vec | Project Overview</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Unnamed Gene Expression Visualizer[WIP]</h1>
+    <p class="tagline">My Graduate Independent study so far</p>
+  </header>
+
+  <article class="prose">
+    <span class="meta-note">Reading Time: 12 Minutes</span>
+
+    <h2>Abstract</h2>
+    <p>While genes often influence our likelihood of specific diseases, it can be difficult to attribute specific genes to specific diseases. This is especially the case when groups of genes(referred to as gene modules) are responsible for a specific disease. As a result, network representations of gene co-expression becomes a meaningful tool in understanding the roles of gene modules and disease. Many papers and methodologies have been used to find important gene modules. In this paper, we will explore how those methodologies work and how we can use them to allow users to identify gene modules and find targets for their own research. We will also explore a new clustering approach using subgraph detection to see if it can be used to better identify relationships between gene modules and disease.</p>
+
+    <hr>
+
+    <h2>Introduction</h2>
+    <p>Understanding how organisms develop, function, and behave fundamentally begins with the genome. The genome encodes the biological instructions that govern everything from embryonic development to physiological function and, in some cases, susceptibility to disease. It reflects both our evolutionary history and the genetic material we pass on to future generations. As such, the genome represents the most information-dense blueprint of biological identity.</p>
+
+    <p>At a molecular level, genetic information is stored in DNA, a double-stranded helical structure composed of nucleotide base pairs. During gene expression, DNA is transcribed into a single-stranded molecule known as RNA. This RNA is then read in groups of three nucleotides, called codons, each of which corresponds to one of twenty amino acids. These amino acids are sequentially linked to form proteins, which serve as the primary functional units within biological systems. A significant proportion of observable biological structures such as hair, muscle, and skin are composed largely of proteins. Moreover, proteins act as enzymes that catalyze the synthesis of carbohydrates, fats, and other complex molecules, and they regulate the storage and release of these compounds within the body. In short, genes encode proteins, and proteins largely determine biological form and function.</p>
+
+    <p>Because genes play a central role in maintaining health and biological stability, disruptions in the genome can substantially increase the likelihood of disease. Many genetic disorders arise not from single mutations, but from complex interactions among multiple genetic variants. Genome-Wide Association Studies (GWAS) aim to identify statistical associations between specific genetic variations most commonly single nucleotide polymorphisms (SNPs) and particular traits or disorders. While GWAS have successfully mapped thousands of SNPs to diseases, the biological interpretation of these results remains challenging, especially since most disorders are influenced by combinations of variants rather than isolated SNPs. In the last decade, the GTEx consortium has compiled gene expression values by sequencing RNA(via bulk-RNA-seq) for a large selection of tissue samples.</p>
+
+    <div class="visual-placeholder">
+      <!-- Placeholder for Co-expression Network Concept -->
+    </div>
+
+    <p>While genes often influence our likelihood of specific diseases, it can be difficult to attribute specific genes to specific diseases. This is especially the case when groups of genes (referred to as gene modules) are responsible for a specific disease. As a result, network representations of gene co-expression becomes a meaningful tool in understanding the roles of gene modules and disease. Many papers and methodologies have been used to find important gene modules. Here, we will explore if we can use those methodologies to allow users to identify gene modules and find targets for their own research.</p>
+
+    <p>In the last decade, the GTEx consortium has compiled gene expression values by sequencing RNA (via bulk RNA-seq) for a large selection of tissue samples. To quantify how actively any given gene is being expressed in a tissue, GTEx reports expression levels in units of transcripts per million (TPM). TPM is calculated by first counting the number of RNA sequencing reads that map to a given gene, normalizing for the length of that gene (since longer genes naturally capture more reads), and then scaling the result so that all values within a sample sum to one million. This normalization strategy makes TPM values directly comparable across both genes and samples: a gene with a TPM of 100 in liver tissue and a TPM of 1 in brain tissue is being transcribed at substantially higher levels in the liver, indicating that it is more actively expressed there. A gene with near-zero TPM across all tissues is considered transcriptionally silent or lowly expressed, while genes with high TPM values in specific tissues are considered tissue-enriched or tissue-specific markers. Critically, because TPM normalizes within each sample, it does not reflect the absolute number of RNA molecules but rather the relative proportion of transcriptional activity devoted to a given gene in that tissue at the time of sampling.</p>
+
+    <p>The GTEx v8 dataset, as described in the consortium's landmark 2020 publication in Science, encompasses 15,201 RNA-sequencing samples from 49 tissues of 838 postmortem donors, with each tissue's mRNA sequenced to a median depth of 82.6 million reads, from which gene expression and splicing were quantified from bulk RNA-seq of heterogeneous tissue samples. By aggregating these TPM-level expression profiles across dozens of tissues and hundreds of individuals, GTEx provides a comprehensive reference atlas of where and how much each gene is expressed across the human body. This resource is particularly powerful for interpreting GWAS findings: when a SNP is associated with a disease, researchers can consult GTEx to determine whether that SNP coincides with a region that regulates gene expression in a disease-relevant tissue which are a class of variants known as expression quantitative trait loci (eQTLs). The GTEx project was established to characterize genetic effects on the transcriptome across human tissues and to link these regulatory mechanisms to trait and disease associations, and the v8 analysis comprehensively characterizes genetic associations for gene expression and splicing in cis and trans, showing that regulatory associations are found for almost all genes. Science In doing so, GTEx bridges the gap between statistical genetic associations and the underlying molecular biology, enabling researchers to move from a list of disease-associated SNPs toward a mechanistic understanding of how those variants alter gene activity and, ultimately, biological function.</p>
+
+    <p>With a dataset of this scale and resolution, the challenge shifts from data availability to interpretation: how do we surface meaningful gene relationships from hundreds of thousands of pairwise expression signals? That question motivates the network construction approach described below.</p>
+
+    <hr>
+
+    <h2>Methodology</h2>
+    
+    <h3>Network Construction</h3>
+    <p>When creating gene co-expression networks there exist two main methodologies: Weighted Gene Correlation Network Analysis(WGCNA) and Multiscale Embedded Gene Expression Analysis(MEGENA). WGCNA starts by calculating correlation coefficients between every gene pair using the consensus data, scaling via a power function, applying a soft threshold to transform the correlation matrix into an adjacency matrix, and finally performing hierarchical clustering to identify gene modules. In contrast, MEGENA adopts a multiscale approach that builds a Planar Maximally Filtered Graph (PMFG) from the correlation matrix to retain the most significant topological information without the need for global soft-thresholding.</p>
+
+    <p>While WGCNA relies on the assumption that gene networks follow a scale-free topology MEGENA focuses on identifying highly connected subgraphs across multiple scales. By utilizing the PMFG, MEGENA avoids the information loss inherent in arbitrary thresholding and captures both local and global network structures, often leading to more biologically nuanced module detection in complex genomic datasets like GTEx.</p>
+
+    <h3>Clustering Approach</h3>
+    <p>WGCNA approaches clustering by computing the Topological Overlap Matrix (TOM), which measures the shared connection patterns between gene pairs. This dissimilarity matrix serves as the input for average-linkage hierarchical clustering, which organizes all genes into a dendrogram. Module identification is then achieved by applying a dynamic branch-cutting algorithm, which traverses the dendrogram to extract stable, distinct branches that satisfy specific size and significance criteria. This method excels at partitioning genes into a flat list of modules, effectively creating a global summary of the network's co-expression landscape.</p>
+
+    <p>MEGENA, conversely, utilizes a multiscale, topology-based approach that emphasizes the nested nature of biological systems. Within this sparse structure, it performs iterative, multi-scale clustering to identify communities at varying levels of resolution. The defining feature of this process is the construction of a hierarchical tree where smaller, fine-grained sub-modules are embedded within larger, coarser meta-modules. This allows MEGENA to capture both localized functional clusters and the broader organizational hierarchy of the transcriptome, rather than forcing the data into a single level of modularity. In the original paper, this hierarchal clustering was performed by using Louvain community detection at different resolutions.</p>
+    <div class="visual-placeholder">[Placeholder: Louvain Community Detection at Multiple Resolutions Hierarchy Diagram]</div>
+
+    <p>For this project, a third clustering approach was used called clique percolation. A feature of PMFG graphs is their increased likelihood of containing $K_3$ and $K_4$ cliques relative to other random graphs with the same number of nodes and average degree.(the figure above shows that the GTEx PMFG contains 100x more triangles than either Erdos-Renyi, and Chung-lu) CPM will work by taking transforming triangles into single nodes. Thus guaranteeing the existence of a strong hierarchy, and full encapsulation.</p>
+
+    <h3>Evaluation</h3>
+    <p>In order to evaluate WGCNA, MEGENA with Louvain, and MEGENA with CPM, we will be using the DisGeNET dataset. DisGeNET is a comprehensive discovery platform that standardizes information on human gene-disease associations from diverse sources, including curated databases, literature-mined data, and GWAS catalogs. By mapping genes to disease terms using controlled vocabularies, it provides a benchmark for functional analysis. In this case, it allows us to quantify the biological relevance of network modules by measuring the statistical overlap between module membership and known disease-associated gene sets.</p>
+
+    <p>In order to calculate whether a gene module’s relationship with a disease is statistically significant, we use the scipy hypergeometric survival function. For each pairing, we determine the intersection size x between the module genes and disease-associated genes, then utilize the hypergeometric survival function (hypergeom.sf) to calculate the probability of observing this level of overlap (or greater) by random chance. By setting the population size M to your total background gene count and defining the success count n as the size of the disease-associated gene set, the function filters for modules where the p-value falls below the 0.05 threshold. This essentially isolates modules that are non-randomly enriched with disease-linked genes, returning a structured list of significant associations which allows us to quantitatively compare the biological meaningfulness of the clusters produced by WGCNA, MEGENA-Louvain, and MEGENA-CPM.</p>
+
+    <hr>
+
+    <h2>Results</h2>
+    <p>Because the testing framework is not hierarchical, we need to perform the test at different levels. Because the number of levels between MEGENA-louvain and MEGENA-CPM is different, and its hard to draw relationships between middle layers of each, we use the top and bottom layers of each. It is important to note that WCGNA does not have the same notion of hierarchy that the other two methods use and therefore the same modules will be compared against the upper and lower layers of MEGENA-Louvain and MEGENA-CPM.</p>
+
+    <h3>Upper-level Results</h3>
+    <div class="visual-placeholder">[Placeholder: Upper-level Comparison Chart - Unique Significant Relationships (WGCNA vs CPM vs MEGENA-Louvain)]</div>
+    
+    <p>Here we have the number of unique statistically significant relationships found between gene modules and diseases and we see that WGCNA and CPM perform similarly with WGCNA finding nearly 300 more unique relationships than CPM. We also see that MEGENA-Louvain finds nearly 3 times as many as both CPM and WGCNA. While it looks like CPM seems to be a contender compared to WGCNA, it is important to note that CPM and MEGENA-Louvain use the same underlying network. This means that Clique percolation is not effective at mining the information stored within the PMFG.(at least at the highest level)</p>
+    <div class="visual-placeholder">[Placeholder: High-level Network Information Mining Efficiency Plot]</div>
+
+    <p>At the lowest level, we see a similar result. MEGENA-CPM improves compared to WGCNA(which is unchanged). But MEGENA-Louvain still stays the strongest clustering approach.</p>
+    <div class="visual-placeholder">[Placeholder: Lower-level Results Chart - Edge Density and Module Performance]</div>
+
+    <p>We can also see that compared to MEGENA-Louvain(red), MEGENA-CPM(blue) does not produce any novel disease relationships while WGCNA(Yellow) finds 107 unique results.</p>
+
+    <p>Because the PMFG is designed to be sparse and inherently planar, the strict requirement of Clique Percolation Method (CPM) for fully connected k-cliques limits its ability to traverse the graph’s deeper hierarchical layers. CPM effectively "prunes" the network too aggressively. It identifies rigid, highly redundant local clusters but misses the intermediate, larger-scale community structures that the Louvain algorithm successfully aggregates.</p>
+
+    <p>Now that we know that MEGENA-Louvain is effectively the best among the 3 methods we investigated, we can move forward with dynamically visualizing it.</p>
+
+    <hr>
+
+    <h2>System Overview</h2>
+    <p>In order to visualize the network, gene modules, and disease relationships, we employ the following data pipeline and backend design.</p>
+    <div class="visual-placeholder">[Placeholder: Data Pipeline Flowchart and Database Schema Diagram]</div>
+
+    <p>Results from different stages of the data pipeline are packaged into each table type. The PMFG goes into the nodes and edges tables of the database, the hierarchal Louvain is included in the clique table, and the disease associations found in the hypergeometric enrichment analysis end up in the disease associations table.</p>
+
+    <hr>
+
+    <h2>Representing The Graph</h2>
+    <p>To create a co-expression network, we must begin by gaining an understanding of how genes co-express. We can calculate pairwise correlation coefficients over all tissue types and use those signals to inform whether a link should exist. Networks built on these cascading signals are often noisy and contain too much information. Existing techniques have their own drawbacks. For example, Weighted Gene Co-Expression Analysis (WCGNA) enforces connectivity constraints in order to exhibit power law distributions. Unweighted approaches lead to noisy data with many false positives. In order to address some of these issues, the writers of the MEGENA paper adopted a network embedding paradigm on a topological sphere. Planar Maximally Filtered Graph (PMFG) was developed to extract most relevant information from similarity matrices based on topological sphere and has been applied mostly in financial domains. PMFG becomes an ideal platform to construct co-expression networks due to the following attractive features: i) the preservation of hierarchy by retaining Minimum Spanning Tree (MST) as a subgraph, ii) the correspondence between a coherent cluster (if any) and a connected subnetwork, iii) the abundance of 3- and 4-cliques and exhibition of rich clustering structures.</p>
+
+    <div class="visual-placeholder">
+      <!-- Placeholder for PMFG Structure -->
+    </div>
+
+    <p>While PMFG serves as an effective tool, the enforcement of connectivity and edge creation based on correlation criteria will still lead to false positives. To deal with this, the authors created an analysis framework named Multiscale Embedded Gene Co-expression Network Analysis (MEGENA).</p>
+
+    <p>Fast Planar Filtered Network construction (FPFNC): Rather than the traditional PMFG algorithm, the authors introduce parallelization, early termination and prior quality control to effectively generate a PMFG over all tissue types.</p>
+
+    <hr>
+
+    <h2>Network Layout</h2>
+    <p>The Fruchterman-Reingold algorithm produces aesthetically pleasing, two-dimensional visualizations of graphs by performing simplified simulations of physical systems. It presents a modification of the spring-embedder model originally proposed by Eades, designed for drawing undirected graphs with straight edges, and develops its heuristic in analogy to forces in natural systems.</p>
+
+    <p>The physical intuition is as follows: vertices are treated as steel rings and edges as springs connecting them, forming a mechanical system. The vertices are placed in some initial layout and then released, so that the spring forces move the system toward a minimal energy configuration. Crucially, the algorithm makes only neighboring vertices attract each other, while all vertices repel each other regardless of connectivity. This asymmetry ensures that connected nodes cluster together while unconnected nodes spread apart, producing layouts that intuitively reflect the community structure of the graph.</p>
+
+    <p>Each iteration of the algorithm proceeds in three steps: computing attractive forces between adjacent nodes, computing repulsive forces between all pairs of nodes, and then limiting total displacement by a global temperature parameter. This temperature controls the step width of node movements. When the temperature is high, nodes move faster and over larger distances; the temperature then cools at each iteration until the nodes stop moving and the system reaches its equilibrium state. This simulated annealing-like schedule allows the layout to settle into a stable configuration without becoming trapped in poor local minima early in the optimization. Vertices are typically initialized at random positions within a bounding frame, and the algorithm iterates until convergence. The result is a layout in which edge lengths tend toward uniformity and nodes are distributed with roughly equal spacing (all aesthetic properties that make the graph easier to interpret visually).</p>
+
+    <p>While Fruchterman-Reingold produces layouts by simulating physical forces, an alternative family of approaches derives node positions from learned low-dimensional embeddings of graph structure. The most influential of these is node2vec, introduced by Grover and Leskovec in 2016. node2vec is an algorithmic framework for learning continuous feature representations for nodes in networks. It learns a mapping of nodes to a low-dimensional space of features that maximizes the likelihood of preserving network neighborhoods of nodes, defines a flexible notion of a node's network neighborhood, and designs a biased random walk procedure that efficiently explores diverse neighborhoods.</p>
+
+    <p>The key innovation of node2vec over prior work lies in this flexibility of neighborhood definition. The algorithm accommodates various definitions of network neighborhoods by simulating biased random walks, and specifically provides a way of balancing the exploration-exploitation tradeoff that leads to representations obeying a spectrum of equivalences from homophily to structural equivalence.</p>
+
+    <div class="technical-card">
+        <h4>The Search Bias Parameters</h4>
+        <p><strong>Return parameter (p):</strong> Controls the likelihood of immediately revisiting a node in the walk. High values ensure already-visited nodes are less likely to be sampled again, forcing the walk to explore further.</p>
+        <p><strong>In-out parameter (q):</strong> Governs the "Search Strategy." High values encourage a Breadth-First Search (BFS) to capture local community homophily, while low values encourage a Depth-First Search (DFS) to capture structural equivalence across the graph.</p>
+    </div>
+
+    <p>By tuning these two parameters, node2vec can interpolate between capturing nodes that belong to the same community and nodes that occupy analogous structural positions in different parts of the graph.</p>
+
+    <p>Once random walks are generated for each node, node2vec optimizes a custom graph-based objective function using stochastic gradient descent, motivated by prior work in natural language processing, treating sequences of nodes in random walks analogously to sequences of words in sentences. The result is a vector embedding for each node in the graph, where nodes with similar neighborhoods occupy nearby positions in the embedding space.</p>
+
+  <hr>
+
+  <h2>Graph Coarsening</h2>
+  <p>Now that we have our graph layout, we need to address the high degree in the order of $10^4$ unique nodes. One way to do this and make a meaningful visual is by finding highly connected subgraphs and rendering them as one node with an average x and y of the members of the community. Our visual will dynamically coarsen and resolve based on the zoom level of the user so we will need a highly parameterized graph community detection algorithm.</p>
+
+  <p>The objective function the algorithm seeks to maximize is modularity, a scalar quantity that measures the quality of a given partition.</p>
+
+    <div class="technical-card">
+        <h4>Modularity ($Q$)</h4>
+        <p>A value between −1 and 1 that measures the relative density of edges inside communities with respect to edges outside communities. High modularity indicates dense internal connections and sparse external connections, suggesting a "natural" community structure.</p>
+    </div>
+    
+    <p>The algorithm proceeds in two alternating phases that are repeated iteratively. In the first phase, the method looks for small communities by optimizing modularity in a local way. In the second phase, it aggregates nodes of the same community and builds a new network whose nodes are the communities. These steps are repeated iteratively until a maximum of modularity is attained, producing several partitions as output. More concretely, in Phase 1 every node begins as its own singleton community. The algorithm then cycles through all nodes and, for each one, evaluates the modularity gain that would result from moving it into each of its neighboring communities. The node is assigned to the neighboring community that yields the greatest positive modularity gain; if no positive gain is achievable, the node remains in its original community. This phase continues until no individual move can improve the modularity. In Phase 2, all nodes belonging to the same community are collapsed into a single supernode. The edge weights between supernodes are set to the sum of all edge weights between the member nodes of the corresponding communities, and the algorithm then re-enters Phase 1 on this reduced graph. The partition found after the first iteration typically consists of many communities of small sizes, while at subsequent steps larger and larger communities emerge due to the aggregation mechanism, naturally leading to a hierarchical decomposition of the network.</p>
+
+    <p>This hierarchical, multi-resolution character is precisely what makes the Louvain method well-suited to our dynamic visualization. The method seems to run in time $O(n \log n)$, with most of the computational effort concentrated in the optimization at the first level. For our purposes, each level of the hierarchy corresponds to a different zoom resolution: at low zoom, the graph is rendered in its most coarsened form, with large supernodes representing entire gene modules; as the user zooms in, the algorithm's intermediate partitions are progressively resolved, eventually revealing individual gene nodes at full zoom. The key parameter governing this behavior is the resolution parameter $\gamma$, which appears in the modularity gain formula. When the resolution is set to less than 1, the algorithm favors larger communities, while values greater than 1 favor smaller communities, giving us fine-grained control over the granularity of coarsening at each zoom level. By precomputing the full hierarchy of Louvain partitions across a sweep of resolution values and storing the community assignments alongside their centroid coordinates, the visualization can transition fluidly between coarse and fine-grained representations entirely client-side.</p>
+
+    <p>It is worth noting one known limitation of the method: the resolution limit of modularity can cause multiple small communities to be grouped together into a larger one, causing the smaller communities to be hidden and making it no longer possible to differentiate those nodes from nodes already present in the absorbing community. For the purposes of a first-pass visualization of gene coexpression structure, this tradeoff between resolution and computational tractability is acceptable, though downstream analyses requiring more precise community boundaries may benefit from the Leiden algorithm, a refined successor that guarantees well-connected communities at each level of the hierarchy.</p>
+
+  </article>
+
+  <footer>
+    <p>Sravan Parakala · 2026</p>
+    <div class="footer-links">
+      <a href="index.html">Back to Portfolio</a>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

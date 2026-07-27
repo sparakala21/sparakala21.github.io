@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>artist2vec</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Artist2vec</h1>
+    <p class="tagline">Visualizing tendencies of recommendation algorithms and the hidden structure of listener behavior.</p>
+  </header>
+
+  <article class="prose">
+    <span class="meta-note">Reading Time: 4 Minutes</span>
+
+    <p>We often think of music genres as rigid categories defined by the instruments used or the tempo of the beat. However, the data suggests something much more fluid. When we look at how listeners move between artists, we aren't seeing a library; we are seeing a living social network.</p>
+    
+    <p>
+        Genres don't exist in a vacuum. They are a product of continuous innovation and cultural evolution. These factors shape the way we perceive and categorize music, which is exactly why genres are so hard to quantify. Look at the <a href="https://www.npr.org/2026/02/01/nx-s1-5693046/2026-grammy-awards-full-list-winners-nominees">2026 Grammy nominees</a>—how would you quantify the genre membership of <em>Lady Gaga</em>? Is she "Pop"? "Dance"? "Electronic"?
+    </p>
+
+    <div class="embed-container">
+        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/2x7MyWybabEz6Y6wvHuwGE?utm_source=generator" width="50%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/5WQQIDU3HRaMyPkob8mpFb?utm_source=generator" width="50%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+
+    <p>
+        If you categorize Gaga and Rihanna similarly, you begin to erase the nuance of their individual sub-networks. Another major issue is that genres often form <strong>chains</strong>. Artists create sounds, and successor artists use that work as a foundation. The traditional Venn diagram approach fails here.
+    </p>
+
+    <p>
+        A favorite recent example is <em>Hanumankind</em>. While his production is rooted in Indian classical textures, his flow is an unmistakable descendant of 2000s Memphis rap. In a standard database, he might be tagged "Indian Hip-Hop," but in a graph, he is a bridge between two geographically distant but stylistically connected nodes.
+    </p>
+
+    <div class="embed-container">
+        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/4nLZSSwHqgNFib0Ww91o1S?utm_source=generator" width="50%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/5zd9TgduWbfFXwgnm3K3Rz?utm_source=generator" width="50%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+
+    <h2>The Methodology</h2>
+    <p>
+        In building the Spotify Artist Network, I focused on <strong>behavioral co-occurrence</strong>. I recursively crawled the "fans also like" endpoint, starting with the top 100 artists and branching out until I had a graph of 100k nodes and 1.5 million edges.
+    </p>
+
+    <p>
+        To make sense of this "hairball," I turned to <strong>Node2Vec</strong>. This algorithm learns feature representations by simulating "random walks". Essentially tracing the path a listener might take if they spent all day clicking on related artists.
+    </p>
+
+    
+
+    <p>
+        The result was a 128-dimensional embedding for each artist. To visualize this, I used <strong>UMAP</strong> (Uniform Manifold Approximation and Projection) because it excels at preserving global structure. It allowed the data to "speak for itself," revealing clusters that represent the true state of modern music culture, rather than the arbitrary labels we've inherited.
+    </p>
+    <h2>The Living Map</h2>
+    <p>
+    This graph is a static snapshot, but the music landscape it represents is always evolving. 
+    As new artists emerge and listener behavior shifts, the map will continue to change, reflecting the dynamic nature of our musical culture. 
+    The goal is to show that if we move beyond text-based tags and into the geometry of graph theory, we can see some cool stuff.
+    See if you can find your own favorite artists and explore the connections that make them unique. (the redder an artist is, the more "mainstream" they are, and the bluer they are, the more "underground" they are).
+    </p>
+    <div style="margin-top: 32px; text-align: center;">
+    <a href="visualizer.html" class="cta-button">Explore the Interactive Map</a>
+    </div>
+
+  </article>
+
+  <footer>
+    <p>Sravan Parakala · 2026</p>
+    <div class="footer-links">
+      <a href="index.html">Back to Portfolio</a>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

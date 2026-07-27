@@ -1,7 +1,255 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sravan Parakala — Data Science &amp; Analytics</title>
+  <meta name="description" content="Portfolio of Sravan Parakala — Software engineer and data scientist. Work at Promptly Technologies, RPI research, Merck MLOps, and projects in bioinformatics, network analysis, and open source." />
+  <link rel="canonical" href="https://sparakala21.github.io/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Sravan Parakala — Data Science &amp; Analytics" />
+  <meta property="og:description" content="Portfolio of Sravan Parakala — Software engineer and data scientist. Work at Promptly Technologies, RPI research, Merck MLOps, and projects in bioinformatics, network analysis, and open source." />
+  <meta property="og:url" content="https://sparakala21.github.io/" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Sravan Parakala — Data Science &amp; Analytics" />
+  <meta name="twitter:description" content="Portfolio of Sravan Parakala — Software engineer and data scientist. Work at Promptly Technologies, RPI research, Merck MLOps, and projects in bioinformatics, network analysis, and open source." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+<div class="container">
+
+  <header>
+    <h1>Sravan Parakala</h1>
+    <p class="tagline">Master's in IT with a focus on Data Science &amp; Analytics @ RPI</p>
+  </header>
+
+  <main>
+    <section aria-labelledby="experience-heading">
+      <h2 id="experience-heading" class="section-label">Work Experience</h2>
+
+      <article class="entry">
+        <h3 class="entry-title">Software Engineer</h3>
+        <p class="entry-meta">Promptly Technologies · Troy, NY · <time datetime="2026-06">Jun 2026</time> – Present</p>
+        <p class="entry-body">Led development on an open-source library that transpiles Excel ledgers to Python using graph theory and functional programming.</p>
+        <button type="button" class="more-link" id="promptly-more-btn" data-expand aria-expanded="false" aria-controls="promptly-more">
+          <span class="arrow" aria-hidden="true">&gt;</span> Read more
+        </button>
+        <div class="expandable" id="promptly-more" role="region" aria-labelledby="promptly-more-btn" aria-hidden="true">
+          <div class="expandable-panel">
+            <div class="expandable-inner">
+              <p>Shipped features including a bespoke canonicalizing and hashing algorithm, an AST analyzer, and parametric function collapse.</p>
+              <p>Transpiled a Microsoft Excel workbook with over a million nodes into a Python backend used by researchers, hedge funds, and government officials worldwide.</p>
+            </div>
+          </div>
+        </div>
+        <ul class="tags" aria-label="Skills">
+          <li class="tag">Python</li>
+          <li class="tag">Graph Theory</li>
+          <li class="tag">AST</li>
+          <li class="tag">Open Source</li>
+        </ul>
+      </article>
+
+      <article class="entry">
+        <h3 class="entry-title">Researcher</h3>
+        <p class="entry-meta">Rensselaer Polytechnic Institute, School of Science · Troy, NY · <time datetime="2025-08">Aug 2025</time> – Present</p>
+        <p class="entry-body">Developed ETL pipelines for GTEx co-expression data on AWS and built large-scale graph visualizations using coarsening techniques.</p>
+        <button type="button" class="more-link" id="rpi-research-more-btn" data-expand aria-expanded="false" aria-controls="rpi-research-more">
+          <span class="arrow" aria-hidden="true">&gt;</span> Read more
+        </button>
+        <div class="expandable" id="rpi-research-more" role="region" aria-labelledby="rpi-research-more-btn" aria-hidden="true">
+          <div class="expandable-panel">
+            <div class="expandable-inner">
+              <p>Built ETL pipelines using SQLite and NumPy on AWS EC2 and RDS to process GTEx co-expression data at scale.</p>
+              <p>Created high-performance graph visualizations that use coarsening techniques to surface meaningful structure in a human-readable format.</p>
+              <a class="more-link viz-btn" href="coexpression.html">
+                <span class="arrow" aria-hidden="true">&gt;</span> Current Progress
+              </a>
+              <a class="more-link viz-btn" href="GTEx/network.html">
+                <span class="arrow" aria-hidden="true">&gt;</span> Launch Interactive Visualization
+              </a>
+            </div>
+          </div>
+        </div>
+        <ul class="tags" aria-label="Skills">
+          <li class="tag">Python</li>
+          <li class="tag">NumPy</li>
+          <li class="tag">SQLite</li>
+          <li class="tag">AWS</li>
+          <li class="tag">Graph Viz</li>
+        </ul>
+      </article>
+
+      <article class="entry">
+        <h3 class="entry-title">Event Organizer</h3>
+        <p class="entry-meta">GDG Hudson · Troy, NY · <time datetime="2025-01">Jan 2025</time> – Present</p>
+        <p class="entry-body">Coordinated speakers, resources, and marketing for a multi-track conference serving the Capital District and RPI. Ran workshops and hackathons on data science in Python and cloud deployment on AWS EC2 and GCP Compute Engine.</p>
+        <ul class="tags" aria-label="Skills">
+          <li class="tag">Leadership</li>
+          <li class="tag">Python</li>
+          <li class="tag">AWS</li>
+          <li class="tag">GCP</li>
+        </ul>
+      </article>
+
+      <article class="entry">
+        <h3 class="entry-title">Software Developer</h3>
+        <p class="entry-meta">ReMo · Remote · <time datetime="2025-05/2025-09">May – Sep 2025</time></p>
+        <p class="entry-body">Rebuilt the marketing website and deployed it on AWS, eliminating HubSpot dependency and cutting cloud spend 80% year-over-year.</p>
+        <ul class="tags" aria-label="Skills">
+          <li class="tag">AWS</li>
+          <li class="tag">Web Dev</li>
+        </ul>
+      </article>
+
+      <article class="entry">
+        <h3 class="entry-title">Data Science Intern</h3>
+        <p class="entry-meta">Merck &amp; Co. · Cambridge, MA · <time datetime="2024-05/2024-08">May – Aug 2024</time></p>
+        <p class="entry-body">Built standardized GitHub Actions that accelerated model deployment from 2–3 weeks to 2–3 days across data science teams.</p>
+        <button type="button" class="more-link" id="merck-more-btn" data-expand aria-expanded="false" aria-controls="merck-more">
+          <span class="arrow" aria-hidden="true">&gt;</span> Read more
+        </button>
+        <div class="expandable" id="merck-more" role="region" aria-labelledby="merck-more-btn" aria-hidden="true">
+          <div class="expandable-panel">
+            <div class="expandable-inner">
+              <p>Used the Databricks API to configure model training jobs and IAM for deployment monitoring.</p>
+              <p>Authored documentation in Atlassian Confluence for CI/CD orchestration and maintenance within the MLOps template, improving developer onboarding and system reliability.</p>
+            </div>
+          </div>
+        </div>
+        <ul class="tags" aria-label="Skills">
+          <li class="tag">MLOps</li>
+          <li class="tag">GitHub Actions</li>
+          <li class="tag">Databricks</li>
+          <li class="tag">CI/CD</li>
+        </ul>
+      </article>
+    </section>
+
+    <section aria-labelledby="graduate-heading">
+      <h2 id="graduate-heading" class="section-label">Graduate Work</h2>
+
+      <article class="entry">
+        <h3 class="entry-title">Teaching Assistant</h3>
+        <p class="entry-meta">Rensselaer Polytechnic Institute</p>
+        <p class="entry-body">Taught Python fundamentals, logical reasoning, web development, and Git best practices.</p>
+        <ul class="tags" aria-label="Skills">
+          <li class="tag">Python</li>
+          <li class="tag">Web Dev</li>
+          <li class="tag">Git</li>
+          <li class="tag">Agile</li>
+        </ul>
+      </article>
+
+      <article class="entry">
+        <h3 class="entry-title">President, GDG on Campus @ RPI</h3>
+        <p class="entry-meta">Google Developer Groups · Member → E-Board → President</p>
+        <p class="entry-body">Won the Open Data Hackathon 2025. Organized speaker events and MLOps workshops.</p>
+        <ul class="tags" aria-label="Skills">
+          <li class="tag">MLOps</li>
+          <li class="tag">Leadership</li>
+          <li class="tag">Community</li>
+        </ul>
+      </article>
+
+      <article class="entry">
+        <h3 class="entry-title">Foundations of Human Computer Interaction</h3>
+        <p class="entry-meta">Design · Cognitive Science · Information Architecture</p>
+        <p class="entry-body">Learned how to analyze the way information is presented.</p>
+        <button type="button" class="more-link" id="hci-more-btn" data-expand aria-expanded="false" aria-controls="hci-more">
+          <span class="arrow" aria-hidden="true">&gt;</span> Read more
+        </button>
+        <div class="expandable" id="hci-more" role="region" aria-labelledby="hci-more-btn" aria-hidden="true">
+          <div class="expandable-panel">
+            <div class="expandable-inner">
+              <p>I started this class thinking it was entirely pointless to me.</p>
+              <p>Then we watched a documentary about Helvetica and I ended up in a passionate debate with the professor. Long story short: if you try to imagine a world without design, you will quickly come to a logical contradiction.</p>
+              <p>Reading Don Norman's "Design for a Better World" reframed how I imagine my technical impact.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <h3 class="entry-title">Bioinformatics &amp; Sequence Analysis</h3>
+        <p class="entry-meta">Computational Biology · Deep Learning · Sequence Data</p>
+        <p class="entry-body">Coursework that fundamentally changed how I think about computation and biological data.</p>
+        <button type="button" class="more-link" id="bio-more-btn" data-expand aria-expanded="false" aria-controls="bio-more">
+          <span class="arrow" aria-hidden="true">&gt;</span> Read more
+        </button>
+        <div class="expandable" id="bio-more" role="region" aria-labelledby="bio-more-btn" aria-hidden="true">
+          <div class="expandable-panel">
+            <div class="expandable-inner">
+              <p>This work gave purpose to every matrix decomposition and graph theory proof I'd ever done. It felt as though I had spent years learning how to do things to numbers and finally learned what the numbers actually mean.</p>
+              <p>The idea that biological sequences are just another kind of structured data subject to probabilistic tools reframed my entire approach to data science.</p>
+              <a class="more-link viz-btn" href="coexpression.html">
+                <span class="arrow" aria-hidden="true">&gt;</span> Current Progress
+              </a>
+              <a class="more-link viz-btn" href="GTEx/network.html">
+                <span class="arrow" aria-hidden="true">&gt;</span> Launch Interactive Visualization
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section aria-labelledby="undergrad-heading">
+      <h2 id="undergrad-heading" class="section-label">Undergraduate Work</h2>
+
+      <article class="entry">
+        <h3 class="entry-title">Spotify Artist Network Dataset</h3>
+        <p class="entry-meta">Data Analytics · Python · NetworkX · NLP</p>
+        <p class="entry-body">Built a social network connecting artists based on Spotify recommendation co-occurrence.</p>
+        <button type="button" class="more-link" id="spotify-more-btn" data-expand aria-expanded="false" aria-controls="spotify-more">
+          <span class="arrow" aria-hidden="true">&gt;</span> Read more
+        </button>
+        <div class="expandable" id="spotify-more" role="region" aria-labelledby="spotify-more-btn" aria-hidden="true">
+          <div class="expandable-panel">
+            <div class="expandable-inner">
+              <p>The project started by crawling recommendation paths. I scraped data from artist profile pages to build a behavioral co-occurrence graph.</p>
+              <p>The dataset revealed dense communities and unexpected bridges between genres. I used <strong>node2vec</strong> for embeddings and projected them using <strong>T-SNE</strong> and <strong>UMAP</strong> into 3D space.</p>
+              <a class="more-link viz-btn" href="visualizer.html">
+                <span class="arrow" aria-hidden="true">&gt;</span> Launch Interactive Visualization
+              </a>
+              <a class="more-link viz-btn" href="artist2vec.html">
+                <span class="arrow" aria-hidden="true">&gt;</span> Motivation and Methodology
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <h3 class="entry-title">Open Source Contributions</h3>
+        <p class="entry-meta">Java · JavaScript · RCOS</p>
+        <p class="entry-body">UI accessibility for logic engines and building testing infrastructure for energy dashboards.</p>
+        <button type="button" class="more-link" id="os-more-btn" data-expand aria-expanded="false" aria-controls="os-more">
+          <span class="arrow" aria-hidden="true">&gt;</span> Read more
+        </button>
+        <div class="expandable" id="os-more" role="region" aria-labelledby="os-more-btn" aria-hidden="true">
+          <div class="expandable-panel">
+            <div class="expandable-inner">
+              <p><strong>LEGUP:</strong> Most of my contributions focused on making the UI accessible for colorblind users — a feature I ended up needing myself 2 years later.</p>
+              <p><strong>OED:</strong> Built testing infrastructure for an Open Energy Dashboard designed to interface with smart meters via MQTT protocols.</p>
+              <p><strong>TMC:</strong> Led a team of 9 to build a full-stack cross-platform application to display a menu, manage orders, and fulfill deliveries for Thunder Mountain Curry.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>2026 Sravan Parakala</p>
+    <div class="footer-links">
+      <a href="https://github.com/sparakala21" rel="me noopener noreferrer">GitHub</a>
+      <a href="https://linkedin.com/in/sravan-parakala" rel="me noopener noreferrer">LinkedIn</a>
+    </div>
+  </footer>
+
+</div>
+
+<script src="main.js" defer></script>
 </body>
 </html>

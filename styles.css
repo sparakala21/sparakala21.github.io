@@ -1,0 +1,158 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: #fff;
+    color: #000;
+    font-family: sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+}
+
+header {
+    margin-bottom: 32px;
+}
+
+h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.tagline {
+    margin-top: 4px;
+}
+
+section { margin-bottom: 32px; }
+
+.section-label {
+    font-size: 1.15rem;
+    margin-bottom: 12px;
+}
+
+.entry {
+    margin-bottom: 20px;
+}
+
+.entry-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.entry-meta {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+}
+
+.entry-body { font-size: 0.95rem; }
+
+.more-link {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 0.9rem;
+    color: #00e;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    font-family: inherit;
+    text-decoration: underline;
+}
+
+.arrow { display: inline-block; }
+
+.more-link.open .arrow { transform: rotate(90deg); }
+
+.expandable {
+    display: none;
+}
+
+.expandable.open {
+    display: block;
+}
+
+.expandable-inner {
+    margin-top: 8px;
+    padding-left: 12px;
+    font-size: 0.95rem;
+}
+
+.expandable-inner p + p { margin-top: 8px; }
+
+.tags {
+    list-style: none;
+    margin-top: 6px;
+    font-size: 0.85rem;
+}
+
+.tag {
+    display: inline;
+}
+
+.tag:not(:last-child)::after {
+    content: ", ";
+}
+
+footer {
+    margin-top: 40px;
+    padding-top: 12px;
+    border-top: 1px solid #ccc;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer-links a {
+    color: #00e;
+    margin-left: 12px;
+}
+
+/* Project / prose pages */
+.prose p { margin-bottom: 1rem; }
+.prose h2 { margin-top: 1.5rem; margin-bottom: 0.5rem; }
+.prose h3 { margin-top: 1.25rem; margin-bottom: 0.4rem; }
+.prose hr { margin: 1.5rem 0; border: 0; border-top: 1px solid #ccc; }
+.prose a { color: #00e; }
+
+.meta-note {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.embed-container {
+    display: flex;
+    gap: 8px;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+}
+
+.cta-button {
+    display: inline-block;
+    color: #00e;
+    text-decoration: underline;
+}
+
+.visual-placeholder {
+    margin: 1rem 0;
+    padding: 1rem;
+    border: 1px dashed #999;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.technical-card {
+    margin: 1rem 0;
+    padding-left: 12px;
+}
+
+.technical-card h4 {
+    margin-bottom: 6px;
+}
+
+.technical-card p + p { margin-top: 6px; }
