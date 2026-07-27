@@ -3,84 +3,58 @@
 body {
     background: #fff;
     color: #000;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: sans-serif;
     font-size: 16px;
-    line-height: 1.6;
-    min-height: 100vh;
+    line-height: 1.5;
 }
 
 .container {
-    max-width: 680px;
+    max-width: 640px;
     margin: 0 auto;
-    padding: 40px 20px 80px;
+    padding: 24px 16px 48px;
 }
 
 header {
-    margin-bottom: 40px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #ccc;
-}
-
-.eyebrow {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 8px;
+    margin-bottom: 32px;
 }
 
 h1 {
-    font-size: 2rem;
-    font-weight: normal;
-    line-height: 1.2;
-}
-
-h1 em {
-    font-style: italic;
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
 .tagline {
-    margin-top: 12px;
-    color: #555;
-    font-size: 15px;
+    margin-top: 4px;
 }
 
-section { margin-bottom: 40px; }
-
-h2.section-label,
-h3.entry-title {
-    font-weight: normal;
-}
+section { margin-bottom: 32px; }
 
 .section-label {
-    font-size: 1.1rem;
-    margin-bottom: 16px;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 4px;
+    font-size: 1.15rem;
+    margin-bottom: 12px;
 }
 
 .entry {
-    padding: 16px 0;
-    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
 }
 
-.entry:last-child { border-bottom: none; }
-
 .entry-title {
-    font-size: 1.05rem;
-    margin-bottom: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 2px;
 }
 
 .entry-meta {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
 }
 
-.entry-body { font-size: 15px; }
+.entry-body { font-size: 0.95rem; }
 
 .more-link {
     display: inline-block;
-    margin-top: 10px;
-    font-size: 14px;
+    margin-top: 6px;
+    font-size: 0.9rem;
     color: #00e;
     cursor: pointer;
     border: none;
@@ -90,69 +64,45 @@ h3.entry-title {
     text-decoration: underline;
 }
 
-.more-link:hover { color: #00c; }
-
-.arrow {
-    display: inline-block;
-    font-size: 12px;
-    text-decoration: none;
-}
+.arrow { display: inline-block; }
 
 .more-link.open .arrow { transform: rotate(90deg); }
 
 .expandable {
-    display: grid;
-    grid-template-rows: 0fr;
-    opacity: 0;
-    transition: grid-template-rows 0.3s ease, opacity 0.25s ease;
+    display: none;
 }
 
 .expandable.open {
-    grid-template-rows: 1fr;
-    opacity: 1;
-}
-
-.expandable-panel {
-    overflow: hidden;
-    min-height: 0;
+    display: block;
 }
 
 .expandable-inner {
-    margin-top: 12px;
-    padding: 12px 0 0 16px;
-    border-left: 2px solid #ccc;
-    font-size: 15px;
+    margin-top: 8px;
+    padding-left: 12px;
+    font-size: 0.95rem;
 }
 
-.expandable-inner p + p { margin-top: 10px; }
-
-.undergrad-note {
-    font-style: italic;
-    color: #555;
-    margin-bottom: 20px;
-}
+.expandable-inner p + p { margin-top: 8px; }
 
 .tags {
     list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 10px;
+    margin-top: 6px;
+    font-size: 0.85rem;
 }
 
 .tag {
-    font-size: 13px;
-    color: #555;
+    display: inline;
 }
 
-.tag::before { content: "#"; }
+.tag:not(:last-child)::after {
+    content: ", ";
+}
 
 footer {
-    margin-top: 48px;
-    padding-top: 16px;
+    margin-top: 40px;
+    padding-top: 12px;
     border-top: 1px solid #ccc;
-    font-size: 14px;
-    color: #555;
+    font-size: 0.9rem;
     display: flex;
     justify-content: space-between;
 }
@@ -163,23 +113,22 @@ footer {
 }
 
 /* Project / prose pages */
-.prose p { margin-bottom: 1.25rem; }
-.prose h2 { margin-top: 2rem; margin-bottom: 0.75rem; font-weight: normal; }
-.prose h3 { margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: normal; }
-.prose hr { margin: 2rem 0; border: 0; border-top: 1px solid #ccc; }
+.prose p { margin-bottom: 1rem; }
+.prose h2 { margin-top: 1.5rem; margin-bottom: 0.5rem; }
+.prose h3 { margin-top: 1.25rem; margin-bottom: 0.4rem; }
+.prose hr { margin: 1.5rem 0; border: 0; border-top: 1px solid #ccc; }
 .prose a { color: #00e; }
 
 .meta-note {
     display: block;
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
 }
 
 .embed-container {
     display: flex;
     gap: 8px;
-    margin: 1.5rem 0;
+    margin: 1rem 0;
     flex-wrap: wrap;
 }
 
@@ -190,23 +139,20 @@ footer {
 }
 
 .visual-placeholder {
-    margin: 1.5rem 0;
-    padding: 1.5rem;
+    margin: 1rem 0;
+    padding: 1rem;
     border: 1px dashed #999;
     text-align: center;
-    font-size: 14px;
-    color: #555;
+    font-size: 0.9rem;
 }
 
 .technical-card {
-    margin: 1.5rem 0;
-    padding: 12px 0 12px 16px;
-    border-left: 2px solid #ccc;
+    margin: 1rem 0;
+    padding-left: 12px;
 }
 
 .technical-card h4 {
-    font-weight: normal;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
-.technical-card p + p { margin-top: 8px; }
+.technical-card p + p { margin-top: 6px; }
